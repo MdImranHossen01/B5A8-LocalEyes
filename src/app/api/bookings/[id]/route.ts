@@ -2,23 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Booking from '@/models/Booking';
 
-export async function PATCH(
+export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
     await dbConnect();
     
-    const { status } = await request.json();
-    
-    const booking = await Booking.findByIdAndUpdate(
-      params.id,
-      { status },
-      { new: true }
-    )
-      .populate('tourist', 'name profilePic')
-      .populate('guide', 'name profilePic')
-      .populate('tour', 'title images tourFee');
+    const booking = await Booking.findById(params.id)
+      .populate('tourist', 'name profilePic email')
+      .populate('guide', 'name profilePic email')
+      .populate('tour', 'title description images meetingPoint duration tourFee');
 
     if (!booking) {
       return NextResponse.json(
@@ -29,7 +23,7 @@ export async function PATCH(
 
     return NextResponse.json({ booking });
   } catch (error) {
-    console.error('Update booking error:', error);
+    console.error('Get booking error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

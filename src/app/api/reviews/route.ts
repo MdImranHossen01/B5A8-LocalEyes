@@ -43,6 +43,8 @@ export async function POST(request: NextRequest) {
   }
 }
 
+
+
 export async function GET(request: NextRequest) {
   try {
     await dbConnect();
@@ -50,13 +52,17 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const guideId = searchParams.get('guideId');
     const tourId = searchParams.get('tourId');
+    const touristId = searchParams.get('touristId');
 
     let query = {};
     if (guideId) query = { guide: guideId };
     if (tourId) query = { tour: tourId };
+    if (touristId) query = { tourist: touristId };
 
     const reviews = await Review.find(query)
       .populate('tourist', 'name profilePic')
+      .populate('guide', 'name profilePic')
+      .populate('tour', 'title')
       .sort({ createdAt: -1 });
 
     return NextResponse.json({ reviews });

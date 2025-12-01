@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const minPrice = searchParams.get('minPrice');
     const maxPrice = searchParams.get('maxPrice');
     const language = searchParams.get('language');
-    const date = searchParams.get('date');
+    const guideId = searchParams.get('guideId');
 
     let query: any = { isActive: true };
 
@@ -36,6 +36,10 @@ export async function GET(request: NextRequest) {
     // Language filter (through guide's languages)
     if (language) {
       query['guide.languages'] = { $in: [new RegExp(language, 'i')] };
+    }
+
+        if (guideId) {
+      query.guide = guideId;
     }
 
     // Note: Date filtering would require availability system

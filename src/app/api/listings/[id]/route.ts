@@ -31,6 +31,8 @@ export async function GET(
   }
 }
 
+
+
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -66,11 +68,7 @@ export async function DELETE(
   try {
     await dbConnect();
     
-    const tour = await Tour.findByIdAndUpdate(
-      params.id,
-      { isActive: false },
-      { new: true }
-    );
+    const tour = await Tour.findByIdAndDelete(params.id);
 
     if (!tour) {
       return NextResponse.json(
