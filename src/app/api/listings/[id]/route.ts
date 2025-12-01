@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Tour from '@/models/Tour';
 
+
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -10,7 +12,7 @@ export async function GET(
     await dbConnect();
     
     const tour = await Tour.findById(params.id)
-      .populate('guide', 'name profilePic bio rating reviewsCount languages expertise');
+      .populate('guide', 'name profilePic bio rating reviewsCount languages expertise isVerified');
 
     if (!tour) {
       return NextResponse.json(
