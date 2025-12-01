@@ -9,13 +9,21 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^8.5.3",
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.8.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.0.0",
     "next": "16.0.6",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "stripe": "^20.0.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20.19.25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
