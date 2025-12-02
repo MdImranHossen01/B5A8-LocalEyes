@@ -3,25 +3,19 @@ import dbConnect from '@/lib/db';
 import User from '@/models/User';
 import { verifyPassword, generateToken } from '@/lib/auth';
 
-// Development demo bypass (remove in production)
-if (process.env.NODE_ENV === 'development' && password === '123456' && email.includes('@demo.com')) {
-  // Allow demo users to login with simple password
-} else {
-  // Normal password verification
-  const isValidPassword = await verifyPassword(password, user.password);
-  if (!isValidPassword) {
-    return NextResponse.json(
-      { error: 'Invalid credentials' },
-      { status: 401 }
-    );
-  }
-}
-
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();
     
     const { email, password } = await request.json();
+
+    // Validate input
+    if (!email || !password) {
+      return NextResponse.json(
+        { error: 'Email and password are required' },
+        { status: 400 }
+      );
+    }
 
     // Find user
     const user = await User.findOne({ email });
@@ -32,13 +26,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify password
-    const isValidPassword = await verifyPassword(password, user.password);
-    if (!isValidPassword) {
-      return NextResponse.json(
-        { error: 'Invalid credentials' },
-        { status: 401 }
-      );
+    // Development demo bypass (remove in production)
+    if (process.env.NODE_ENV === 'development' && password === '123456' && email.includes('@demo.com')) {
+      // Allow demo users to login with simple password
+      console.log('Demo user login:', email);
+    } else {
+      // Normal password verification for non-demo users
+      const isValidPassword = await verifyPassword(password, user.password);
+      if (!isValidPassword) {
+        return NextResponse.json(
+          { error: 'Invalid credentials' },
+          { status: 401 }
+        );
+      }
     }
 
     // Generate token

@@ -1,18 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Tour from '@/models/Tour';
+import User from '@/models/User'; // Import User model
 
-
+interface RouteContext {
+  params: Promise<{
+    id: string;
+  }>;
+}
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: RouteContext
 ) {
   try {
     await dbConnect();
     
-    const tour = await Tour.findById(params.id)
-      .populate('guide', 'name profilePic bio rating reviewsCount languages expertise isVerified');
+    // Await params first
+    const { id } = await params;
+    
+    console.log('Fetching tour with ID:', id);
+
+    if (!id) {
+      return NextResponse.json(
+        { error: 'Tour ID is required' },
+        { status: 400 }
+      );
+    }
+
+    // First, check if the User model is registered
+    try {
+      // This will ensure the model is registered
+      require('@/models/User');
+    } catch (error) {
+      console.error('Error loading User model:', error);
+    }
+
+    const tour = await Tour.findById(id)
+      .populate({
+        path: 'guide',
+        select: 'name email profilePic rating reviewsCount bio languages expertise',
+        model: User // Explicitly specify the model
+      })
+      .lean();
 
     if (!tour) {
       return NextResponse.json(
@@ -21,65 +51,12 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ tour });
-  } catch (error) {
-    console.error('Get tour error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { tour },
+      { status: 200 }
     );
-  }
-}
-
-
-
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    await dbConnect();
-    
-    const updates = await request.json();
-    const tour = await Tour.findByIdAndUpdate(params.id, updates, { new: true })
-      .populate('guide', 'name profilePic rating reviewsCount languages');
-
-    if (!tour) {
-      return NextResponse.json(
-        { error: 'Tour not found' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({ tour });
   } catch (error) {
-    console.error('Update tour error:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
-}
-
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    await dbConnect();
-    
-    const tour = await Tour.findByIdAndDelete(params.id);
-
-    if (!tour) {
-      return NextResponse.json(
-        { error: 'Tour not found' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({ message: 'Tour deleted successfully' });
-  } catch (error) {
-    console.error('Delete tour error:', error);
+    console.error('Error fetching tour:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

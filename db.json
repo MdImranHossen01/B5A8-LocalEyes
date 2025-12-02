@@ -1,0 +1,202 @@
+[
+  {
+    "title": "Historic Old Dhaka Walking Tour",
+    "description": "Explore the vibrant streets and hidden gems of Old Dhaka, the historical heart of Bangladesh. Discover 400 years of history through Mughal architecture, bustling markets, and authentic street food.",
+    "itinerary": "Start at Lalbagh Fort (10 AM) → Visit Ahsan Manzil (Pink Palace) → Explore Sadarghat River Port → Old Dhaka street food tasting → Star Mosque visit → Local market exploration → End at Shakhari Bazar (3 PM)",
+    "tourFee": 25,
+    "duration": 5,
+    "meetingPoint": "Lalbagh Fort main gate, Old Dhaka",
+    "maxGroupSize": 8,
+    "images": [
+      "https://images.unsplash.com/photo-1628771065518-0d82f1938462?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1593693397693-a206811abe6c?w-800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1580136579312-94651dfd596d?w=800&auto=format&fit=crop"
+    ],
+    "category": "Cultural",
+    "city": "Dhaka",
+    "guide": "692e675532848cdb85aec623",
+    "isActive": true,
+    "rating": 4.8,
+    "reviewsCount": 42
+  },
+  {
+    "title": "Sundarbans Mangrove Forest Adventure",
+    "description": "Embark on an unforgettable journey through the world's largest mangrove forest. Spot Royal Bengal Tigers, cruise through mysterious waterways, and experience unique biodiversity.",
+    "itinerary": "Day 1: Khulna arrival → Boat cruise to Karamjal → Crocodile breeding center → Evening cultural show\nDay 2: Early morning jungle trek → Wildlife spotting → Visit fisherman villages → Night stay at forest camp\nDay 3: Bird watching → Return to Khulna",
+    "tourFee": 150,
+    "duration": 48,
+    "meetingPoint": "Mongla Port, Bagerhat",
+    "maxGroupSize": 6,
+    "images": [
+      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505142468610-359e7d316be0?w=800&auto=format&fit=crop"
+    ],
+    "category": "Adventure",
+    "city": "Khulna",
+    "guide": "692e675532848cdb85aec623",
+    "isActive": true,
+    "rating": 4.9,
+    "reviewsCount": 28
+  },
+  {
+    "title": "Cox's Bazar Beach Sunrise & Local Life",
+    "description": "Experience the world's longest natural sea beach at sunrise, followed by immersion in local fishing communities and traditional seafood cuisine.",
+    "itinerary": "5:30 AM: Sunrise at Laboni Point → Beach walking (2 hours) → Visit fishing harbor → Local breakfast at Himchori → Traditional fishing boat experience → Local market visit → Seafood cooking demo → End at 2 PM",
+    "tourFee": 35,
+    "duration": 8,
+    "meetingPoint": "Laboni Point, Cox's Bazar",
+    "maxGroupSize": 10,
+    "images": [
+      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1552465011-b4e30bf7349d?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1516496636080-14fb876e029d?w=800&auto=format&fit=crop"
+    ],
+    "category": "Beach",
+    "city": "Cox's Bazar",
+    "guide": "692e675532848cdb85aec623",
+    "isActive": true,
+    "rating": 4.7,
+    "reviewsCount": 36
+  },
+  {
+    "title": "Sylhet Tea Garden & Waterfall Discovery",
+    "description": "Wander through endless tea gardens, visit historic tea factories, and discover stunning waterfalls in the picturesque hills of Sylhet.",
+    "itinerary": "8 AM: Malnichara Tea Garden tour → Tea tasting session → Visit 150-year-old tea factory → Lunch at local restaurant → Ratargul Swamp Forest boat ride → Bisnakandi waterfall visit → Return by 6 PM",
+    "tourFee": 45,
+    "duration": 10,
+    "meetingPoint": "Sylhet Railway Station",
+    "maxGroupSize": 8,
+    "images": [
+      "https://images.unsplash.com/photo-1591803264777-7a09e2eab7e4?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&auto=format&fit=crop"
+    ],
+    "category": "Nature",
+    "city": "Sylhet",
+    "guide": "692e675532848cdb85aec623",
+    "isActive": true,
+    "rating": 4.8,
+    "reviewsCount": 31
+  },
+  {
+    "title": "Dhaka Street Food Crawl",
+    "description": "A culinary adventure through Dhaka's most famous street food spots. Taste authentic Bengali snacks, sweets, and local delicacies with a food expert.",
+    "itinerary": "6 PM: Start at Nilkhet → Fuchka/panipuri tasting → Chotpoti and jhalmuri experience → Traditional biryani stop → Kebab and paratha tasting → Roshogolla and mishti doi (sweets) → Local tea/coffee → End at 9:30 PM",
+    "tourFee": 20,
+    "duration": 3.5,
+    "meetingPoint": "Nilkhet Crossing, Dhaka University Area",
+    "maxGroupSize": 6,
+    "images": [
+      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&auto=format&fit=crop"
+    ],
+    "category": "Food",
+    "city": "Dhaka",
+    "guide": "692e675532848cdb85aec623",
+    "isActive": true,
+    "rating": 4.9,
+    "reviewsCount": 55
+  },
+  {
+    "title": "Rangamati Hill Tracts & Tribal Culture",
+    "description": "Immerse yourself in the rich tribal culture of the Chittagong Hill Tracts. Visit indigenous communities, cruise on Kaptai Lake, and learn traditional crafts.",
+    "itinerary": "Day 1: Arrival in Rangamati → Kaptai Lake boat cruise → Visit tribal villages → Traditional lunch → Buddhist temple visit\nDay 2: Handicraft market → Tribal museum → Traditional weaving demonstration → Cultural performance → Return",
+    "tourFee": 85,
+    "duration": 36,
+    "meetingPoint": "Rangamati Bus Terminal",
+    "maxGroupSize": 6,
+    "images": [
+      "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1536152470826-9431b9e3bcec?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1544551763-77efc0c4e4bc?w=800&auto=format&fit=crop"
+    ],
+    "category": "Cultural",
+    "city": "Rangamati",
+    "guide": "692e675532848cdb85aec623",
+    "isActive": true,
+    "rating": 4.7,
+    "reviewsCount": 19
+  },
+  {
+    "title": "Srimangal: Land of Two Leaves & a Bud",
+    "description": "Explore Bangladesh's tea capital. Visit organic tea gardens, learn tea processing, and experience the unique culture of tea plantation workers.",
+    "itinerary": "7 AM: Lawachara Rainforest trek → Spot hoolock gibbons → Organic tea garden visit → Tea plucking experience → Tea factory tour and tasting → Seven-layer tea experience → Tribal village visit → Return by 5 PM",
+    "tourFee": 40,
+    "duration": 10,
+    "meetingPoint": "Srimangal Railway Station",
+    "maxGroupSize": 8,
+    "images": [
+      "https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1561047029-3000c68339ca?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1558160074-4d7d8bdf4256?w=800&auto=format&fit=crop"
+    ],
+    "category": "Nature",
+    "city": "Srimangal",
+    "guide": "692e675532848cdb85aec623",
+    "isActive": true,
+    "rating": 4.8,
+    "reviewsCount": 27
+  },
+  {
+    "title": "Dhaka Rickshaw Art & Craft Tour",
+    "description": "Discover the vibrant world of Bangladeshi rickshaw art. Meet artists, visit workshops, and learn about this unique folk art tradition.",
+    "itinerary": "10 AM: Start at New Market → Visit rickshaw painting workshops → Meet traditional artists → Rickshaw decoration demonstration → Art materials market → Create your own rickshaw art souvenir → Rickshaw ride through old city → End at 2 PM",
+    "tourFee": 30,
+    "duration": 4,
+    "meetingPoint": "New Market Gate, Dhaka",
+    "maxGroupSize": 6,
+    "images": [
+      "https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&auto=format&fit=crop"
+    ],
+    "category": "Art",
+    "city": "Dhaka",
+    "guide": "692e675532848cdb85aec623",
+    "isActive": true,
+    "rating": 4.6,
+    "reviewsCount": 23
+  },
+  {
+    "title": "Saint Martin's Island Coral & Marine Life",
+    "description": "Explore Bangladesh's only coral island. Snorkel in crystal clear waters, discover marine life, and experience island culture.",
+    "itinerary": "Day 1: Boat to Saint Martin's → Check-in → Beach exploration → Sunset viewing\nDay 2: Morning snorkeling → Coral reef exploration → Local fishing village visit → Seafood BBQ lunch → Island cycling\nDay 3: Sunrise at Chera Dwip → Return to mainland",
+    "tourFee": 120,
+    "duration": 60,
+    "meetingPoint": "Teknaf Ferry Terminal",
+    "maxGroupSize": 8,
+    "images": [
+      "https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1464536194743-0c49f0766ef6?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1544551763-92ab472cad5d?w=800&auto=format&fit=crop"
+    ],
+    "category": "Beach",
+    "city": "Cox's Bazar",
+    "guide": "692e675532848cdb85aec623",
+    "isActive": true,
+    "rating": 4.9,
+    "reviewsCount": 34
+  },
+  {
+    "title": "Paharpur Buddhist Monastery Archaeological Tour",
+    "description": "Step back in time at the largest Buddhist monastery south of the Himalayas. Explore ancient ruins and learn about Bengal's rich Buddhist heritage.",
+    "itinerary": "8 AM: Start at Paharpur → Main temple complex exploration → Museum visit → Terracotta artwork study → Meditation at ancient site → Local lunch → Visit nearby Jain temple → Return by 4 PM",
+    "tourFee": 35,
+    "duration": 8,
+    "meetingPoint": "Paharpur Museum entrance",
+    "maxGroupSize": 10,
+    "images": [
+      "https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=800&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1528181304800-259b08848526?w=800&auto=format&fit=crop"
+    ],
+    "category": "Historical",
+    "city": "Naogaon",
+    "guide": "692e675532848cdb85aec623",
+    "isActive": true,
+    "rating": 4.5,
+    "reviewsCount": 18
+  }
+]

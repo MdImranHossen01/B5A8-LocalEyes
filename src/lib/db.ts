@@ -1,9 +1,15 @@
+
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/localguide';
+const MONGODB_URI = process.env.MONGODB_URI as string;
+const DB_NAME = process.env.DB_NAME as string;
 
 if (!MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable');
+}
+
+if (!DB_NAME) {
+  throw new Error('Please define the DB_NAME environment variable');
 }
 
 interface MongooseCache {
@@ -15,7 +21,7 @@ declare global {
   var mongoose: MongooseCache | undefined;
 }
 
-let cached: MongooseCache = global.mongoose || {
+const cached: MongooseCache = global.mongoose || {
   conn: null,
   promise: null,
 };
@@ -24,7 +30,7 @@ if (!global.mongoose) {
   global.mongoose = cached;
 }
 
-async function dbConnect() {
+async function connectDB() {
   if (cached.conn) {
     return cached.conn;
   }
@@ -32,6 +38,7 @@ async function dbConnect() {
   if (!cached.promise) {
     const opts = {
       bufferCommands: false,
+      dbName: DB_NAME,
     };
 
     cached.promise = mongoose.connect(MONGODB_URI, opts);
@@ -39,12 +46,13 @@ async function dbConnect() {
 
   try {
     cached.conn = await cached.promise;
-  } catch (e) {
+    console.log('MongoDB connected successfully');
+    return cached.conn;
+  } catch (error) {
     cached.promise = null;
-    throw e;
+    console.error('MongoDB connection error:', error);
+    throw error;
   }
-
-  return cached.conn;
 }
 
-export default dbConnect;
+export default connectDB;

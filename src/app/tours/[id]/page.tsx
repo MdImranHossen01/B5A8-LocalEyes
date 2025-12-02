@@ -3,15 +3,16 @@ import { notFound } from 'next/navigation';
 import { TourDetailsClient } from '@/components/tours/TourDetailsClient';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 async function getTour(id: string) {
   try {
-    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/listings/${id}`, {
-      next: { revalidate: 60 }, // Cache for 60 seconds
+    // Use relative URL for API calls
+    const res = await fetch(`http://localhost:3000/api/listings/${id}`, {
+      cache: 'no-store',
     });
 
     if (!res.ok) {
@@ -27,7 +28,9 @@ async function getTour(id: string) {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const tour = await getTour(params.id);
+  // Await params first
+  const { id } = await params;
+  const tour = await getTour(id);
 
   if (!tour) {
     return {
@@ -47,7 +50,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function TourDetailsPage({ params }: PageProps) {
-  const tour = await getTour(params.id);
+  // Await params first
+  const { id } = await params;
+  const tour = await getTour(id);
 
   if (!tour) {
     notFound();

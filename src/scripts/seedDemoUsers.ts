@@ -1,10 +1,11 @@
-import dbConnect from '@/lib/db';
+// src/scripts/seedDemoUsers.ts
+import { connectDBForSeed } from './db-config';
 import User from '@/models/User';
 import { hashPassword } from '@/lib/auth';
 
 async function seedDemoUsers() {
   try {
-    await dbConnect();
+    await connectDBForSeed();
 
     // Clear existing demo users
     await User.deleteMany({ 
@@ -48,20 +49,17 @@ async function seedDemoUsers() {
     await User.insertMany(demoUsers);
     console.log('Demo users created successfully!');
     
-    // Log the demo credentials
     console.log('\nDemo Login Credentials:');
     console.log('Tourist: tourist@demo.com / 123456');
     console.log('Guide: guide@demo.com / 123456');
     console.log('Admin: admin@demo.com / 123456');
     
+    process.exit(0);
   } catch (error) {
     console.error('Error seeding demo users:', error);
+    process.exit(1);
   }
 }
 
-// Run if called directly
-if (require.main === module) {
-  seedDemoUsers();
-}
-
-export { seedDemoUsers };
+// Run the function
+seedDemoUsers();

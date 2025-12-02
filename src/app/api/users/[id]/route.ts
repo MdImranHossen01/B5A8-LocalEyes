@@ -2,14 +2,23 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
 
+interface RouteContext {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: RouteContext
 ) {
   try {
     await dbConnect();
     
-    const user = await User.findById(params.id).select('-password');
+    // Await params first
+    const { id } = await params;
+    
+    const user = await User.findById(id).select('-password');
     if (!user) {
       return NextResponse.json(
         { error: 'User not found' },
@@ -29,18 +38,20 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: RouteContext
 ) {
   try {
     await dbConnect();
     
+    // Await params first
+    const { id } = await params;
     const updates = await request.json();
     
     // Remove password from updates if present
     delete updates.password;
 
     const user = await User.findByIdAndUpdate(
-      params.id,
+      id,
       updates,
       { new: true }
     ).select('-password');
