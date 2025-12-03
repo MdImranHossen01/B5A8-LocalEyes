@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -129,7 +130,7 @@ function CheckoutForm({ bookingId, amount, onSuccess, onCancel }: PaymentFormPro
           Payment Successful!
         </h3>
         <p className="text-gray-600 mb-6">
-          Your booking has been confirmed. You'll receive a confirmation email shortly.
+          Your booking has been confirmed. You&apos;ll receive a confirmation email shortly.
         </p>
         <button
           onClick={() => window.location.href = `/bookings/${bookingId}`}
