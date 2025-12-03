@@ -5,13 +5,11 @@ import { TopRatedGuides } from '@/components/home/TopRatedGuides';
 import { Testimonials } from '@/components/home/Testimonials';
 import { WhyChooseUs } from '@/components/home/WhyChooseUs';
 import { TourCategories } from '@/components/home/TourCategories';
-import { Navigation } from '@/components/layout/Navigation';
-import { Footer } from '@/components/layout/Footer';
 
 export default function Home() {
   return (
     <div className="min-h-screen">
-      <Navigation />
+    
       
       <main>
         <HeroSection />
@@ -23,7 +21,7 @@ export default function Home() {
         <TourCategories />
       </main>
 
-      <Footer />
+    
     </div>
   );
 }

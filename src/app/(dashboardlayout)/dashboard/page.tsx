@@ -1,6 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Metadata } from 'next';
-import { redirect } from 'next/navigation';
-import { getServerSession } from 'next-auth';
 import { DashboardClient } from '@/components/dashboard/DashboardClient';
 
 export const metadata: Metadata = {

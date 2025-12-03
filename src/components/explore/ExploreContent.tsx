@@ -1,9 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Navigation } from '@/components/layout/Navigation';
-import { Footer } from '@/components/layout/Footer';
 import { SearchFilters } from '@/components/explore/SearchFilters';
 import { TourGrid } from '@/components/explore/TourGrid';
 import { MapView } from '@/components/explore/MapView';
@@ -96,7 +95,7 @@ export function ExploreContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+    
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -174,7 +173,7 @@ export function ExploreContent() {
         </div>
       </main>
 
-      <Footer />
+    
     </div>
   );
 }

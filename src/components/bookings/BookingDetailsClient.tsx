@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { Navigation } from "@/components/layout/Navigation";
-import { Footer } from "@/components/layout/Footer";
 import { PaymentModal } from "../payment/PaymentModal";
 
 interface Booking {
@@ -123,13 +122,13 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
   if (!isOwnBooking && user?.role !== "admin") {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+        
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
             Access Denied
           </h1>
           <p className="text-gray-600 mb-8">
-            You don't have permission to view this booking.
+            You don&apos;t have permission to view this booking.
           </p>
           <button
             onClick={() => router.push("/dashboard")}
@@ -138,14 +137,14 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
             Go to Dashboard
           </button>
         </div>
-        <Footer />
+       
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+     
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -494,7 +493,7 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
   />
 )}
 
-      <Footer />
+     
     </div>
   );
 }

@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { Navigation } from '@/components/layout/Navigation';
-import { Footer } from '@/components/layout/Footer';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { GuideProfileContent } from '@/components/profile/GuideProfileContent';
 import { TouristProfileContent } from '@/components/profile/TouristProfileContent';
@@ -92,7 +90,7 @@ export function ProfileClient({ user }: ProfileClientProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+      
       
       <main>
         {/* Profile Header */}
@@ -187,7 +185,7 @@ export function ProfileClient({ user }: ProfileClientProps) {
         </div>
       </main>
 
-      <Footer />
+      
 
       {/* Edit Profile Modal */}
       {isEditModalOpen && (

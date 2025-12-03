@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { Navigation } from '@/components/layout/Navigation';
-import { Footer } from '@/components/layout/Footer';
 import { ImageGallery } from '@/components/tours/ImageGallery';
 import { BookingWidget } from '@/components/tours/BookingWidget';
 import { GuideProfile } from '@/components/tours/GuideProfile';
@@ -50,7 +49,7 @@ export function TourDetailsClient({ tour }: TourDetailsClientProps) {
   if (!tour.isActive) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+        
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Tour Not Available</h1>
           <p className="text-gray-600 mb-8">This tour is no longer available.</p>
@@ -61,7 +60,7 @@ export function TourDetailsClient({ tour }: TourDetailsClientProps) {
             Browse Other Tours
           </button>
         </div>
-        <Footer />
+       
       </div>
     );
   }
@@ -76,7 +75,7 @@ export function TourDetailsClient({ tour }: TourDetailsClientProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+     
       
       <main>
         {/* Image Gallery */}
@@ -154,7 +153,7 @@ export function TourDetailsClient({ tour }: TourDetailsClientProps) {
                     </div>
 
                     <div className="bg-blue-50 rounded-lg p-6">
-                      <h3 className="font-semibold text-gray-900 mb-3">What's included</h3>
+                      <h3 className="font-semibold text-gray-900 mb-3">What&apos;s included</h3>
                       <ul className="space-y-2 text-gray-700">
                         <li className="flex items-center">
                           <span className="mr-2">✅</span>
@@ -210,7 +209,7 @@ export function TourDetailsClient({ tour }: TourDetailsClientProps) {
         </div>
       </main>
 
-      <Footer />
+   
     </div>
   );
 }

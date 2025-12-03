@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
-import { Navigation } from '@/components/layout/Navigation';
-import { Footer } from '@/components/layout/Footer';
 import { TouristDashboard } from '@/components/dashboard/TouristDashboard';
 import { GuideDashboard } from '@/components/dashboard/GuideDashboard';
 import { AdminDashboard } from '@/components/dashboard/AdminDashboard';
@@ -61,7 +60,7 @@ export function DashboardClient() {
   if (isLoading || isLoadingData) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+    
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-300 rounded w-1/4 mb-8"></div>
@@ -72,7 +71,7 @@ export function DashboardClient() {
             </div>
           </div>
         </div>
-        <Footer />
+        
       </div>
     );
   }
@@ -96,11 +95,11 @@ export function DashboardClient() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+     
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {renderDashboard()}
       </main>
-      <Footer />
+    
     </div>
   );
 }

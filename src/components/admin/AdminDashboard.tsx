@@ -1,9 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
-import { Navigation } from '@/components/layout/Navigation';
-import { Footer } from '@/components/layout/Footer';
 
 interface PlatformStats {
   totalUsers: number;
@@ -70,7 +69,7 @@ export function AdminDashboard() {
   if (isLoading || isLoadingData) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+        
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-300 rounded w-1/4 mb-8"></div>
@@ -81,14 +80,14 @@ export function AdminDashboard() {
             </div>
           </div>
         </div>
-        <Footer />
+        
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+    
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -304,7 +303,7 @@ export function AdminDashboard() {
         </div>
       </main>
 
-      <Footer />
+    
     </div>
   );
 }

@@ -4,8 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
-import { Navigation } from '@/components/layout/Navigation';
-import { Footer } from '@/components/layout/Footer';
+
 
 interface Booking {
   _id: string;
@@ -103,7 +102,7 @@ export function MyBookingsClient() {
   if (isLoading || isLoadingData) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+        
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-300 rounded w-1/4 mb-8"></div>
@@ -114,7 +113,7 @@ export function MyBookingsClient() {
             </div>
           </div>
         </div>
-        <Footer />
+     
       </div>
     );
   }
@@ -125,7 +124,7 @@ export function MyBookingsClient() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+      
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -320,7 +319,7 @@ export function MyBookingsClient() {
         )}
       </main>
 
-      <Footer />
+      
     </div>
   );
 }
