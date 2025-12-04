@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
     
     const reviewData = await request.json();
     const review = await Review.create(reviewData);
+    const reviewDoc = Array.isArray(review) ? review[0] : review;
 
     // Update guide rating
     const guideReviews = await Review.find({ guide: reviewData.guide });
@@ -28,11 +29,11 @@ export async function POST(request: NextRequest) {
       rating: tourAvgRating,
       reviewsCount: tourReviews.length,
     });
-
-    await review.populate('tourist', 'name profilePic')
+    await reviewDoc.populate('tourist', 'name profilePic')
       .populate('guide', 'name profilePic')
       .populate('tour', 'title');
 
+    return NextResponse.json({ review: reviewDoc }, { status: 201 });
     return NextResponse.json({ review }, { status: 201 });
   } catch (error) {
     console.error('Create review error:', error);
