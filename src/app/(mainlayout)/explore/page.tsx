@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 import { ExploreContent } from '@/components/explore/ExploreContent';
+import ExploreLoading from './loading';
 
 export const metadata: Metadata = {
   title: 'Explore Tours - Local Guide Platform',
@@ -7,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function ExplorePage() {
-  return <ExploreContent />;
+  return (
+    <Suspense fallback={<ExploreLoading />}>
+      <ExploreContent />
+    </Suspense>
+  );
 }
