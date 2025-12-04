@@ -4,11 +4,13 @@ import User from '@/models/User';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
     
+    // Await params to get the actual values
+    const { id } = await params;
     const { role } = await request.json();
     
     // Validate input
@@ -21,7 +23,7 @@ export async function PATCH(
     }
 
     // Prevent self-demotion (admin can't remove their own admin role)
-    const currentUser = await User.findById(params.id);
+    const currentUser = await User.findById(id);
     if (!currentUser) {
       return NextResponse.json(
         { error: 'User not found' },
@@ -31,7 +33,7 @@ export async function PATCH(
 
     // Find and update user
     const user = await User.findByIdAndUpdate(
-      params.id,
+      id,
       { role },
       { new: true }
     ).select('-password');
@@ -67,12 +69,15 @@ export async function PATCH(
 // Optional: GET endpoint to check user role
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
     
-    const user = await User.findById(params.id)
+    // Await params to get the actual values
+    const { id } = await params;
+    
+    const user = await User.findById(id)
       .select('_id name email role');
 
     if (!user) {

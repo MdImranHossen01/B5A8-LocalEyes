@@ -4,11 +4,13 @@ import User from '@/models/User';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
     
+    // Await params first
+    const { id } = await params;
     const { isActive } = await request.json();
     
     // Validate input
@@ -21,7 +23,7 @@ export async function PATCH(
 
     // Find and update user
     const user = await User.findByIdAndUpdate(
-      params.id,
+      id,  // Use the destructured id, not params.id
       { isActive },
       { new: true }
     ).select('-password');
@@ -33,7 +35,7 @@ export async function PATCH(
       );
     }
 
-    // Log the action (in a real app, you'd want to log admin actions)
+    // Log the action
     console.log(`Admin: User ${user._id} status changed to ${isActive ? 'active' : 'inactive'}`);
 
     return NextResponse.json({
@@ -49,15 +51,18 @@ export async function PATCH(
   }
 }
 
-// Optional: GET endpoint to check user status
+// GET endpoint to check user status
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }  // Updated to Promise
 ) {
   try {
     await dbConnect();
     
-    const user = await User.findById(params.id)
+    // Await params first
+    const { id } = await params;
+    
+    const user = await User.findById(id)  // Use the destructured id
       .select('_id name email isActive role');
 
     if (!user) {

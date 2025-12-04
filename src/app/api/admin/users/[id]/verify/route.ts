@@ -4,11 +4,13 @@ import User from '@/models/User';
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }  // Updated to Promise
 ) {
   try {
     await dbConnect();
     
+    // Await params first
+    const { id } = await params;
     const { isVerified } = await request.json();
     
     // Validate input
@@ -20,7 +22,7 @@ export async function PATCH(
     }
 
     // Find user
-    const user = await User.findById(params.id);
+    const user = await User.findById(id);  // Use destructured id
     
     if (!user) {
       return NextResponse.json(
@@ -39,7 +41,7 @@ export async function PATCH(
 
     // Update verification status
     const updatedUser = await User.findByIdAndUpdate(
-      params.id,
+      id,  // Use destructured id
       { isVerified },
       { new: true }
     ).select('-password');
@@ -65,15 +67,18 @@ export async function PATCH(
   }
 }
 
-// Optional: GET endpoint to check verification status
+// GET endpoint to check verification status
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }  // Updated to Promise
 ) {
   try {
     await dbConnect();
     
-    const user = await User.findById(params.id)
+    // Await params first
+    const { id } = await params;
+    
+    const user = await User.findById(id)  // Use destructured id
       .select('_id name email role isVerified');
 
     if (!user) {
@@ -93,7 +98,7 @@ export async function GET(
   }
 }
 
-// Optional: POST endpoint for bulk verification
+// POST endpoint for bulk verification
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();

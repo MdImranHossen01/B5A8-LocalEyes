@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create user (in a real app, you'd generate a temporary password)
-    const user = await User.create({
+    const user: any = await User.create({
       ...userData,
       isActive: true,
       isVerified: userData.role === 'guide' ? false : true,
