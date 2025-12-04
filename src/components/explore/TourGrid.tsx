@@ -32,6 +32,16 @@ interface TourGridProps {
 export function TourGrid({ tours, isLoading }: TourGridProps) {
   const router = useRouter();
 
+  // Function to get initials from name
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -93,13 +103,20 @@ export function TourGrid({ tours, isLoading }: TourGridProps) {
         >
           {/* Tour Image */}
           <div className="relative h-48">
-            <Image
-              src={tour.images?.[0] || "/profile.jpg"}
-              alt={tour.title}
-              height={400}
-              width={400}
-              className="w-full h-full object-cover"
-            />
+            {tour.images?.[0] ? (
+              <Image
+                src={tour.images[0]}
+                alt={tour.title}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="w-full h-full object-cover"
+                priority={false}
+              />
+            ) : (
+              <div className="w-full h-full bg-blue-600 flex items-center justify-center">
+                <span className="text-white text-xl font-bold">Tour Image</span>
+              </div>
+            )}
             <div className="absolute top-3 left-3">
               <span className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-sm font-semibold text-gray-900">
                 ${tour.tourFee}
@@ -116,12 +133,23 @@ export function TourGrid({ tours, isLoading }: TourGridProps) {
           <div className="p-6">
             {/* Guide Info */}
             <div className="flex items-center mb-4">
-              <Image
-                src={tour.guide.profilePic || "/profile.jpg"}
-                alt={tour.guide.name}
-                fill
-                className="w-10 h-10 rounded-full object-cover mr-3"
-              />
+              {tour.guide.profilePic ? (
+                <div className="relative w-10 h-10 rounded-full mr-3 overflow-hidden">
+                  <Image
+                    src={tour.guide.profilePic}
+                    alt={tour.guide.name}
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
+                  <span className="text-white text-sm font-bold">
+                    {getInitials(tour.guide.name)}
+                  </span>
+                </div>
+              )}
               <div className="flex-1">
                 <h4 className="font-semibold text-gray-900 text-sm">
                   {tour.guide.name}
