@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState } from 'react';
@@ -43,6 +44,7 @@ interface MonthlyEarning {
 interface ChartData {
   name: string;
   value: number;
+  [key: string]: any;
 }
 
 const EarningsPage = () => {
