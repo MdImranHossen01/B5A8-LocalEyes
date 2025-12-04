@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { PaymentModal } from "../payment/PaymentModal";
+import Image from "next/image";
 
 interface Booking {
   _id: string;
@@ -285,13 +286,15 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Tourist Info */}
                 <div className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg">
-                  <div className="flex-shrink-0">
-                    <img
+                  <div className="shrink-0">
+                    <Image
                       src={
                         booking.tourist.profilePic ||
-                        "/api/placeholder/60/60?text=T"
+                        '/profile.jpg'
                       }
                       alt={booking.tourist.name}
+                      width={48}
+                      height={48}
                       className="w-12 h-12 rounded-full object-cover"
                     />
                   </div>
@@ -308,13 +311,15 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
 
                 {/* Guide Info */}
                 <div className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg">
-                  <div className="flex-shrink-0">
-                    <img
+                  <div className="shrink-0">
+                    <Image
                       src={
                         booking.guide.profilePic ||
-                        "/api/placeholder/60/60?text=G"
+                        '/profile.jpg'
                       }
                       alt={booking.guide.name}
+                      width={48}
+                      height={48}
                       className="w-12 h-12 rounded-full object-cover"
                     />
                   </div>
@@ -424,7 +429,7 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
 
               <div className="space-y-4">
                 <div className="flex items-start">
-                  <div className="flex-shrink-0 w-2 h-2 mt-2 bg-green-500 rounded-full"></div>
+                  <div className="shrink-0 w-2 h-2 mt-2 bg-green-500 rounded-full"></div>
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-900">
                       Booking Created
@@ -437,7 +442,7 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
 
                 {status === "confirmed" && (
                   <div className="flex items-start">
-                    <div className="flex-shrink-0 w-2 h-2 mt-2 bg-blue-500 rounded-full"></div>
+                    <div className="shrink-0 w-2 h-2 mt-2 bg-blue-500 rounded-full"></div>
                     <div className="ml-4">
                       <p className="text-sm font-medium text-gray-900">
                         Booking Confirmed
@@ -451,7 +456,7 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
 
                 {status === "completed" && (
                   <div className="flex items-start">
-                    <div className="flex-shrink-0 w-2 h-2 mt-2 bg-purple-500 rounded-full"></div>
+                    <div className="shrink-0 w-2 h-2 mt-2 bg-purple-500 rounded-full"></div>
                     <div className="ml-4">
                       <p className="text-sm font-medium text-gray-900">
                         Tour Completed
@@ -462,7 +467,7 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
                 )}
 
                 <div className="flex items-start">
-                  <div className="flex-shrink-0 w-2 h-2 mt-2 bg-gray-300 rounded-full"></div>
+                  <div className="shrink-0 w-2 h-2 mt-2 bg-gray-300 rounded-full"></div>
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-900">
                       Upcoming Tour

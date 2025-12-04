@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
 interface Testimonial {
@@ -21,7 +22,7 @@ export function Testimonials() {
       id: '1',
       name: 'Sarah Johnson',
       location: 'From Canada',
-      avatar: '/api/placeholder/80/80?text=SJ',
+      avatar: 'https://i.ibb.co.com/DDnRCVN7/lawyer-10.jpg', // Using your provided image
       rating: 5,
       comment: 'My guide Maria showed me parts of Barcelona I would never have found on my own. The tapas tour was incredible!',
       tour: 'Barcelona Food & Culture Tour',
@@ -31,7 +32,7 @@ export function Testimonials() {
       id: '2',
       name: 'Michael Chen',
       location: 'From Australia',
-      avatar: '/api/placeholder/80/80?text=MC',
+      avatar: 'https://i.ibb.co.com/PzjtJT3K/lawyer-9.jpg', // Using your provided image
       rating: 5,
       comment: 'Kenji-san made our Tokyo experience unforgettable. His knowledge of hidden temples and local cuisine was outstanding.',
       tour: 'Tokyo Hidden Gems Tour',
@@ -41,7 +42,7 @@ export function Testimonials() {
       id: '3',
       name: 'Emma Williams',
       location: 'From UK',
-      avatar: '/api/placeholder/80/80?text=EW',
+      avatar: 'https://i.ibb.co.com/8Dj17xYJ/lawyer-11.jpg', // Using your provided image
       rating: 5,
       comment: 'Sophie brought Parisian art to life in a way no museum tour ever could. An absolutely magical experience!',
       tour: 'Paris Art Walk',
@@ -59,6 +60,16 @@ export function Testimonials() {
     return () => clearInterval(interval);
   }, [testimonials.length]);
 
+  // Function to get initials from name
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   return (
     <section className="py-16 bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,7 +78,7 @@ export function Testimonials() {
             Traveler Stories
           </h2>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Don't just take our word for it - hear from travelers who've explored with our guides
+            Don&apos;t just take our word for it - hear from travelers who&apos;ve explored with our guides
           </p>
         </div>
 
@@ -83,15 +94,26 @@ export function Testimonials() {
             </div>
             
             <blockquote className="text-xl md:text-2xl font-light mb-8 leading-relaxed">
-              "{testimonials[currentTestimonial].comment}"
+              &quot;{testimonials[currentTestimonial].comment}&quot;
             </blockquote>
 
             <div className="flex items-center justify-center mb-4">
-              <img
-                src={testimonials[currentTestimonial].avatar}
-                alt={testimonials[currentTestimonial].name}
-                className="w-16 h-16 rounded-full mr-4"
-              />
+              {/* Avatar with fallback */}
+              <div className="relative w-16 h-16 rounded-full mr-4 overflow-hidden bg-blue-600 flex items-center justify-center">
+                {testimonials[currentTestimonial].avatar ? (
+                  <Image
+                    src={testimonials[currentTestimonial].avatar}
+                    alt={testimonials[currentTestimonial].name}
+                    fill
+                    className="rounded-full object-cover"
+                    
+                  />
+                ) : (
+                  <span className="text-white text-xl font-bold">
+                    {getInitials(testimonials[currentTestimonial].name)}
+                  </span>
+                )}
+              </div>
               <div className="text-left">
                 <div className="font-semibold text-lg">
                   {testimonials[currentTestimonial].name}

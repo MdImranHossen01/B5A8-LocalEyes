@@ -28,14 +28,6 @@ export async function GET(
       );
     }
 
-    // First, check if the User model is registered
-    try {
-      // This will ensure the model is registered
-      require('@/models/User');
-    } catch (error) {
-      console.error('Error loading User model:', error);
-    }
-
     const tour = await Tour.findById(id)
       .populate({
         path: 'guide',

@@ -1,5 +1,7 @@
 'use client';
 
+import Image from "next/image";
+
 interface User {
   _id: string;
   name: string;
@@ -45,9 +47,10 @@ export function ProfileHeader({ user, isOwnProfile, onEditProfile }: ProfileHead
           <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-6">
             {/* Profile Picture */}
             <div className="relative">
-              <img
-                src={user.profilePic || '/api/placeholder/150/150?text=Avatar'}
+              <Image
+                src={user.profilePic || '/profile.jpg'}
                 alt={user.name}
+                fill
                 className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
               />
               {user.isVerified && user.role === 'guide' && (

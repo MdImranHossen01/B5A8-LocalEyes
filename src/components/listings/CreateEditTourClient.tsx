@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
+import Image from 'next/image';
 
 
 interface Tour {
@@ -422,12 +423,14 @@ export function CreateEditTourClient({ tour }: CreateEditTourClientProps) {
             <div className="space-y-4">
               {imageUrls.map((url, index) => (
                 <div key={index} className="flex items-start space-x-4">
-                  <div className="flex-shrink-0">
+                  <div className="shrink-0">
                     <div className="w-16 h-16 bg-gray-100 border border-gray-300 rounded flex items-center justify-center">
                       {url ? (
-                        <img
+                        <Image
                           src={url}
                           alt={`Tour image ${index + 1}`}
+                          width={400}
+                          height={400}
                           className="w-full h-full object-cover rounded"
                         />
                       ) : (

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
+import Image from 'next/image';
 
 
 interface Tour {
@@ -274,9 +275,11 @@ export function ListingManagementClient() {
               >
                 {/* Tour Image */}
                 <div className="relative h-48">
-                  <img
-                    src={tour.images?.[0] || '/api/placeholder/400/300?text=Tour+Image'}
+                  <Image
+                    src={tour.images?.[0] || '/profile.jpg'}
                     alt={tour.title}
+                    width={400}
+                    height={400}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-3 left-3">

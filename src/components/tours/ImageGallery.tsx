@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 
 interface ImageGalleryProps {
@@ -11,7 +12,7 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const displayedImages = images.length > 0 ? images : ['/api/placeholder/800/600?text=Tour+Image'];
+  const displayedImages = images.length > 0 ? images : ['/api//800/600?text=Tour+Image'];
 
   const mainImage = displayedImages[selectedImage];
 
@@ -22,9 +23,10 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
           <div className="relative">
             {/* Main Image */}
             <div className="aspect-w-16 aspect-h-9 lg:aspect-h-7">
-              <img
+              <Image
                 src={mainImage}
                 alt={title}
+                fill
                 className="w-full h-64 lg:h-96 object-cover cursor-pointer"
                 onClick={() => setIsModalOpen(true)}
               />
@@ -38,13 +40,15 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
                     <button
                       key={index}
                       onClick={() => setSelectedImage(index)}
-                      className={`flex-shrink-0 w-16 h-16 rounded border-2 ${
+                      className={`shrink-0 w-16 h-16 rounded border-2 ${
                         selectedImage === index ? 'border-white' : 'border-transparent'
                       }`}
                     >
-                      <img
+                      <Image
                         src={image}
                         alt={`${title} ${index + 1}`}
+                        width={400}
+                        height={300}
                         className="w-full h-full object-cover rounded"
                       />
                     </button>
@@ -73,9 +77,11 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
             </button>
             
             <div className="flex items-center justify-center">
-              <img
+              <Image
                 src={mainImage}
                 alt={title}
+                width={400}
+                height={300}
                 className="max-w-full max-h-[90vh] object-contain"
               />
             </div>
@@ -90,9 +96,11 @@ export function ImageGallery({ images, title }: ImageGalleryProps) {
                       selectedImage === index ? 'border-white' : 'border-gray-600'
                     }`}
                   >
-                    <img
+                    <Image
                       src={image}
                       alt={`${title} ${index + 1}`}
+                      width={100}
+                      height={75}
                       className="w-full h-full object-cover rounded"
                     />
                   </button>

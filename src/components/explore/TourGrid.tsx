@@ -1,6 +1,7 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface Tour {
   _id: string;
@@ -35,7 +36,10 @@ export function TourGrid({ tours, isLoading }: TourGridProps) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {[...Array(6)].map((_, index) => (
-          <div key={index} className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse">
+          <div
+            key={index}
+            className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse"
+          >
             <div className="h-48 bg-gray-300"></div>
             <div className="p-6 space-y-4">
               <div className="h-4 bg-gray-300 rounded w-3/4"></div>
@@ -59,7 +63,7 @@ export function TourGrid({ tours, isLoading }: TourGridProps) {
           Try adjusting your search filters or browse all categories
         </p>
         <button
-          onClick={() => router.push('/explore')}
+          onClick={() => router.push("/explore")}
           className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
         >
           Browse All Tours
@@ -74,7 +78,7 @@ export function TourGrid({ tours, isLoading }: TourGridProps) {
 
   const formatDuration = (hours: number) => {
     if (hours < 1) return `${Math.round(hours * 60)}min`;
-    if (hours === 1) return '1 hour';
+    if (hours === 1) return "1 hour";
     if (hours < 24) return `${hours} hours`;
     return `${Math.round(hours / 24)} days`;
   };
@@ -89,9 +93,11 @@ export function TourGrid({ tours, isLoading }: TourGridProps) {
         >
           {/* Tour Image */}
           <div className="relative h-48">
-            <img
-              src={tour.images?.[0] || '/api/placeholder/400/300?text=Tour+Image'}
+            <Image
+              src={tour.images?.[0] || "/profile.jpg"}
               alt={tour.title}
+              height={400}
+              width={400}
               className="w-full h-full object-cover"
             />
             <div className="absolute top-3 left-3">
@@ -110,9 +116,10 @@ export function TourGrid({ tours, isLoading }: TourGridProps) {
           <div className="p-6">
             {/* Guide Info */}
             <div className="flex items-center mb-4">
-              <img
-                src={tour.guide.profilePic || '/api/placeholder/40/40?text=G'}
+              <Image
+                src={tour.guide.profilePic || "/profile.jpg"}
                 alt={tour.guide.name}
+                fill
                 className="w-10 h-10 rounded-full object-cover mr-3"
               />
               <div className="flex-1">

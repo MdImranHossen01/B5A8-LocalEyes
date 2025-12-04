@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
+import Image from 'next/image';
 
 
 interface Booking {
@@ -246,10 +247,12 @@ export function MyBookingsClient() {
               >
                 <div className="flex flex-col md:flex-row md:items-center justify-between">
                   <div className="flex items-start space-x-4 mb-4 md:mb-0">
-                    <img
-                      src={booking.tour.images?.[0] || '/api/placeholder/80/80?text=Tour'}
+                    <Image
+                      src={booking.tour.images?.[0] || '/profile.jpg'}
                       alt={booking.tour.title}
-                      className="w-16 h-16 rounded-lg object-cover flex-shrink-0"
+                      width={400}
+                      height={400}
+                      className="w-16 h-16 rounded-lg object-cover shrink-0"
                     />
                     <div>
                       <h3 className="font-semibold text-gray-900">

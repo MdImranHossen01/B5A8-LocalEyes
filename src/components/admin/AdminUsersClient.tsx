@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
+import Image from 'next/image';
 
 
 interface User {
@@ -295,9 +296,11 @@ export function AdminUsersClient() {
                   <tr key={user._id} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="py-3 px-4">
                       <div className="flex items-center space-x-3">
-                        <img
-                          src={user.profilePic || '/api/placeholder/40/40?text=U'}
+                        <Image
+                          src={user.profilePic || '/profile.jpg'}
                           alt={user.name}
+                          width={40}
+                          height={40}
                           className="w-8 h-8 rounded-full object-cover"
                         />
                         <div>
@@ -393,9 +396,11 @@ export function AdminUsersClient() {
 
               <div className="p-6">
                 <div className="flex items-center space-x-4 mb-6">
-                  <img
-                    src={selectedUser.profilePic || '/api/placeholder/80/80?text=U'}
+                  <Image
+                    src={selectedUser.profilePic || '/profile.jpg'}
                     alt={selectedUser.name}
+                    width={64}
+                    height={64}
                     className="w-16 h-16 rounded-full object-cover"
                   />
                   <div>

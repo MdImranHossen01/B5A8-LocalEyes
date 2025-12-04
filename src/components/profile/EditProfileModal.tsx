@@ -13,6 +13,10 @@ interface User {
   expertise: string[];
   dailyRate?: number;
   travelPreferences: string[];
+  rating: number;
+  reviewsCount: number;
+  isVerified: boolean;
+  createdAt: string;
 }
 
 interface EditProfileModalProps {

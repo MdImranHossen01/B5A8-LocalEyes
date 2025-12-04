@@ -63,6 +63,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function BookingDetailsPage({ params }: PageProps) {
+  let booking;
+  
   try {
     // Await params to get the actual values
     const { id } = await params;
@@ -75,15 +77,15 @@ export default async function BookingDetailsPage({ params }: PageProps) {
       notFound();
     }
     
-    const booking = await getBooking(id);
+    booking = await getBooking(id);
 
     if (!booking) {
       notFound();
     }
-
-    return <BookingDetailsClient booking={booking} />;
   } catch (error) {
     console.error('Error in BookingDetailsPage:', error);
     notFound();
   }
+  
+  return <BookingDetailsClient booking={booking} />;
 }

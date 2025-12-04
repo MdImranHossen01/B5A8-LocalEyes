@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 interface Tour {
   _id: string;
@@ -102,7 +103,6 @@ export function MapView({ tours, isLoading }: MapViewProps) {
           {/* Mock Map Markers */}
           <div className="absolute inset-0">
             {tours.map((tour, index) => {
-              const coords = getMockCoordinates(tour);
               return (
                 <button
                   key={tour._id}
@@ -139,9 +139,11 @@ export function MapView({ tours, isLoading }: MapViewProps) {
       {selectedTour && (
         <div className="lg:w-80 bg-white rounded-2xl shadow-lg p-6">
           <div className="mb-4">
-            <img
-              src={selectedTour.images?.[0] || '/api/placeholder/400/300?text=Tour+Image'}
+            <Image
+              src={selectedTour.images?.[0] || '/profile.jpg'}
               alt={selectedTour.title}
+              width={500}
+              height={500}
               className="w-full h-32 object-cover rounded-lg mb-3"
             />
             
@@ -182,9 +184,10 @@ export function MapView({ tours, isLoading }: MapViewProps) {
 
             {/* Guide Info */}
             <div className="flex items-center mb-4 p-3 bg-gray-50 rounded-lg">
-              <img
-                src={selectedTour.guide.profilePic || '/api/placeholder/40/40?text=G'}
+              <Image
+                src={selectedTour.guide.profilePic || '/profile.jpg'}
                 alt={selectedTour.guide.name}
+                fill
                 className="w-8 h-8 rounded-full object-cover mr-3"
               />
               <div>

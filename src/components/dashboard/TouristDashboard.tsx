@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 interface DashboardData {
@@ -18,7 +20,6 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
 
   const upcomingBookings = bookings.filter(b => b.status === 'confirmed');
   const pendingBookings = bookings.filter(b => b.status === 'pending');
-  const pastBookings = bookings.filter(b => b.status === 'completed');
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -118,9 +119,11 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
                   onClick={() => router.push(`/bookings/${booking._id}`)}
                 >
                   <div className="flex items-center space-x-3">
-                    <img
-                      src={booking.tour?.images?.[0] || '/api/placeholder/60/60?text=Tour'}
+                    <Image
+                      src={booking.tour?.images?.[0] || '/profile.jpg'}
                       alt={booking.tour?.title}
+                      width={48}
+                      height={48}
                       className="w-12 h-12 rounded-lg object-cover"
                     />
                     <div>
@@ -167,9 +170,11 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
                   onClick={() => router.push(`/bookings/${booking._id}`)}
                 >
                   <div className="flex items-center space-x-3">
-                    <img
-                      src={booking.tour?.images?.[0] || '/api/placeholder/60/60?text=Tour'}
+                    <Image
+                      src={booking.tour?.images?.[0] || '/profile.jpg'}
                       alt={booking.tour?.title}
+                      width={48}
+                      height={48}
                       className="w-12 h-12 rounded-lg object-cover"
                     />
                     <div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import User from '@/models/User';
@@ -18,7 +19,7 @@ export async function GET(request: NextRequest) {
     const sortOrder = searchParams.get('sortOrder') || 'desc';
 
     // Build query
-    let query: any = {};
+    const query: any = {};
     
     // Role filter
     if (role && role !== 'all') {

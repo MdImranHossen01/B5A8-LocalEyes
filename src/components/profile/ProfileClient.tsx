@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { ProfileHeader } from '@/components/profile/ProfileHeader';
-import { GuideProfileContent } from '@/components/profile/GuideProfileContent';
-import { TouristProfileContent } from '@/components/profile/TouristProfileContent';
-import { EditProfileModal } from '@/components/profile/EditProfileModal';
+import { ProfileHeader } from './ProfileHeader';
+import { GuideProfileContent } from './GuideProfileContent';
+import { TouristProfileContent } from './TouristProfileContent';
+import { EditProfileModal } from './EditProfileModal';
 
-interface User {
+// Import the User interface from EditProfileModal to ensure consistency
+type User = {
   _id: string;
   name: string;
   email: string;
@@ -22,176 +23,153 @@ interface User {
   reviewsCount: number;
   isVerified: boolean;
   createdAt: string;
+};
+
+interface Tour {
+  _id: string;
+  title: string;
+  description: string;
+  tourFee: number;
+  duration: number;
+  city: string;
+  category: string;
+  images: string[];
+  rating: number;
+  reviewsCount: number;
+  isActive: boolean;
+}
+
+interface Review {
+  _id: string;
+  tourist: {
+    name: string;
+    profilePic?: string;
+  };
+  guide: {
+    name: string;
+    profilePic?: string;
+  };
+  rating: number;
+  comment: string;
+  createdAt: string;
+  tour: {
+    title: string;
+  };
 }
 
 interface ProfileClientProps {
-  user: User;
+  user: User | null;
+  tours?: Tour[];
+  reviews?: Review[];
 }
 
-export function ProfileClient({ user }: ProfileClientProps) {
+type GuideTabType = 'about' | 'tours' | 'reviews';
+type TouristTabType = 'about' | 'reviews';
+type TabType = GuideTabType | TouristTabType;
+
+export function ProfileClient({ user, tours = [], reviews = [] }: ProfileClientProps) {
   const { user: currentUser } = useAuth();
-  const [activeTab, setActiveTab] = useState<'about' | 'reviews' | 'tours'>('about');
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [userTours, setUserTours] = useState<any[]>([]);
-  const [userReviews, setUserReviews] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const isOwnProfile = currentUser?._id === user._id;
-
-  useEffect(() => {
-    if (user.role === 'guide') {
-      fetchGuideTours();
-      fetchGuideReviews();
-    } else if (user.role === 'tourist') {
-      fetchTouristReviews();
-    }
-  }, [user._id, user.role]);
-
-  const fetchGuideTours = async () => {
-    try {
-      const response = await fetch(`/api/listings?guideId=${user._id}`);
-      const data = await response.json();
-      if (response.ok) {
-        setUserTours(data.tours || []);
-      }
-    } catch (error) {
-      console.error('Error fetching guide tours:', error);
-    }
+  
+  // Initialize activeTab based on user role
+  const getInitialTab = (): TabType => {
+    if (!user) return 'about';
+    return 'about'; // Always start with 'about' tab
   };
+  
+  const [activeTab, setActiveTab] = useState<TabType>(getInitialTab());
+  const [showEditModal, setShowEditModal] = useState(false);
 
-  const fetchGuideReviews = async () => {
-    try {
-      const response = await fetch(`/api/reviews?guideId=${user._id}`);
-      const data = await response.json();
-      if (response.ok) {
-        setUserReviews(data.reviews || []);
-      }
-    } catch (error) {
-      console.error('Error fetching guide reviews:', error);
-    }
-  };
+  // Add safety checks
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">😔</div>
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">User Not Found</h1>
+          <p className="text-gray-600">The profile you&apos;re looking for doesn&apos;t exist.</p>
+        </div>
+      </div>
+    );
+  }
 
-  const fetchTouristReviews = async () => {
-    try {
-      const response = await fetch(`/api/reviews?touristId=${user._id}`);
-      const data = await response.json();
-      if (response.ok) {
-        setUserReviews(data.reviews || []);
-      }
-    } catch (error) {
-      console.error('Error fetching tourist reviews:', error);
-    }
+  const isOwnProfile = currentUser?.id === user._id;
+
+  const handleEditProfile = () => {
+    setShowEditModal(true);
   };
 
   const handleProfileUpdate = (updatedUser: User) => {
-    // This would typically refetch the user data
-    window.location.reload(); // Simple refresh for demo
+    console.log('Profile updated:', updatedUser);
+    window.location.reload();
+  };
+
+  // Define tabs based on user role
+  const guideTabs: { id: GuideTabType; label: string }[] = [
+    { id: 'about', label: 'About' },
+    { id: 'tours', label: 'Tours' },
+    { id: 'reviews', label: 'Reviews' },
+  ];
+
+  const touristTabs: { id: TouristTabType; label: string }[] = [
+    { id: 'about', label: 'About' },
+    { id: 'reviews', label: 'Reviews' },
+  ];
+
+  const tabs = user.role === 'guide' ? guideTabs : touristTabs;
+
+  const handleTabClick = (tabId: TabType) => {
+    setActiveTab(tabId);
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      
-      
-      <main>
-        {/* Profile Header */}
-        <ProfileHeader 
-          user={user}
-          isOwnProfile={isOwnProfile}
-          onEditProfile={() => setIsEditModalOpen(true)}
-        />
+      <ProfileHeader 
+        user={user} 
+        isOwnProfile={isOwnProfile}
+        onEditProfile={handleEditProfile}
+      />
 
-        {/* Profile Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Tabs */}
-          <div className="border-b border-gray-200 mb-8">
-            <nav className="-mb-px flex space-x-8">
-              {user.role === 'guide' ? (
-                <>
-                  <button
-                    onClick={() => setActiveTab('about')}
-                    className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
-                      activeTab === 'about'
-                        ? 'border-blue-500 text-blue-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
-                  >
-                    About
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('tours')}
-                    className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
-                      activeTab === 'tours'
-                        ? 'border-blue-500 text-blue-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
-                  >
-                    Tours ({userTours.length})
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('reviews')}
-                    className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
-                      activeTab === 'reviews'
-                        ? 'border-blue-500 text-blue-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
-                  >
-                    Reviews ({userReviews.length})
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button
-                    onClick={() => setActiveTab('about')}
-                    className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
-                      activeTab === 'about'
-                        ? 'border-blue-500 text-blue-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
-                  >
-                    About
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('reviews')}
-                    className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
-                      activeTab === 'reviews'
-                        ? 'border-blue-500 text-blue-600'
-                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                    }`}
-                  >
-                    Reviews ({userReviews.length})
-                  </button>
-                </>
-              )}
-            </nav>
-          </div>
-
-          {/* Tab Content */}
-          <div>
-            {user.role === 'guide' ? (
-              <GuideProfileContent
-                user={user}
-                activeTab={activeTab}
-                tours={userTours}
-                reviews={userReviews}
-              />
-            ) : (
-              <TouristProfileContent
-                user={user}
-                activeTab={activeTab}
-                reviews={userReviews}
-              />
-            )}
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Tabs */}
+        <div className="border-b border-gray-200 mb-8">
+          <nav className="-mb-px flex space-x-8">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => handleTabClick(tab.id)}
+                className={`py-3 px-1 font-medium text-sm border-b-2 transition-colors ${
+                  activeTab === tab.id
+                    ? 'border-blue-500 text-blue-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </nav>
         </div>
-      </main>
 
-      
+        {/* Tab Content */}
+        {user.role === 'guide' ? (
+          <GuideProfileContent
+            user={user}
+            activeTab={activeTab as GuideTabType}
+            tours={tours}
+            reviews={reviews}
+          />
+        ) : (
+          <TouristProfileContent
+            user={user}
+            activeTab={activeTab as TouristTabType}
+            reviews={reviews}
+          />
+        )}
+      </div>
 
-      {/* Edit Profile Modal */}
-      {isEditModalOpen && (
+      {showEditModal && (
         <EditProfileModal
           user={user}
-          onClose={() => setIsEditModalOpen(false)}
+          onClose={() => setShowEditModal(false)}
           onUpdate={handleProfileUpdate}
         />
       )}

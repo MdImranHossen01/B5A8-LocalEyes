@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -82,7 +84,7 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
               <span className="text-2xl">📋</span>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Today's Bookings</p>
+              <p className="text-sm text-gray-600">Today&apos;s Bookings</p>
               <p className="text-2xl font-bold text-gray-900">12</p>
             </div>
           </div>
@@ -319,9 +321,11 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                     <tr key={tour._id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-3 px-4">
                         <div className="flex items-center space-x-3">
-                          <img
-                            src={tour.images?.[0] || '/api/placeholder/40/40?text=T'}
+                          <Image
+                            src={tour.images?.[0] || '/profile.jpg'}
                             alt={tour.title}
+                            width={400}
+                            height={400}
                             className="w-10 h-10 rounded-lg object-cover"
                           />
                           <span className="text-sm font-medium text-gray-900">

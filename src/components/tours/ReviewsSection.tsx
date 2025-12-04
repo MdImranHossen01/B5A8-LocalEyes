@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import Image from 'next/image';
 
 interface Review {
   _id: string;
@@ -201,9 +202,10 @@ export function ReviewsSection({ tourId, guideId }: ReviewsSectionProps) {
               {/* Review Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center">
-                  <img
-                    src={review.tourist.profilePic || '/api/placeholder/40/40?text=T'}
+                  <Image
+                    src={review.tourist.profilePic || '/profile.jpg'}
                     alt={review.tourist.name}
+                    fill
                     className="w-10 h-10 rounded-full object-cover mr-3"
                   />
                   <div>

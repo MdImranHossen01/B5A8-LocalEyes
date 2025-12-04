@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 interface Guide {
@@ -35,9 +36,10 @@ export function GuideProfile({ guide }: GuideProfileProps) {
       <div className="text-center">
         {/* Guide Avatar */}
         <div className="relative inline-block mb-4">
-          <img
-            src={guide.profilePic || '/api/placeholder/100/100?text=G'}
+          <Image
+            src={guide.profilePic || '/profile.jpg'}
             alt={guide.name}
+            fill
             className="w-20 h-20 rounded-full object-cover mx-auto border-4 border-white shadow-lg"
           />
           {guide.isVerified && (

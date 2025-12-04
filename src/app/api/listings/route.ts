@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Tour from '@/models/Tour';
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
     const language = searchParams.get('language');
     const guideId = searchParams.get('guideId');
 
-    let query: any = { isActive: true };
+    const query: any = { isActive: true };
 
     // City search (case-insensitive partial match)
     if (city) {

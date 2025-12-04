@@ -40,7 +40,7 @@ export function WhyChooseUs() {
             Why Choose LocalGuide?
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            We're changing the way people travel by connecting you directly with passionate locals
+            We are changing the way people travel by connecting you directly with passionate locals
           </p>
         </div>
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe, webhookSecret } from '@/lib/stripe';
 import dbConnect from '@/lib/db';

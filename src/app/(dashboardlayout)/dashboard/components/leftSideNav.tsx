@@ -22,6 +22,7 @@ import {
   Clock,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import Image from "next/image";
 
 // Define a user type matching your Mongoose model
 interface AppUser {
@@ -244,9 +245,11 @@ const LeftSideNav = () => {
         <div className="flex items-center gap-3">
           <div className="relative">
             {appUser?.profilePic ? (
-              <img
+              <Image
                 src={appUser.profilePic}
                 alt={appUser.name || "User"}
+                width={48}
+                height={48}
                 className="w-12 h-12 rounded-full object-cover border-2 border-white"
               />
             ) : (

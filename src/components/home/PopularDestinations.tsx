@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 interface Destination {
@@ -19,7 +20,7 @@ export function PopularDestinations() {
       id: 'paris',
       name: 'Paris',
       country: 'France',
-      image: '/api/placeholder/400/300?text=Paris',
+      image: '/assets/paris.webp',
       guideCount: 142,
       description: 'The city of lights and love awaits with its rich history and culinary delights.',
     },
@@ -27,7 +28,7 @@ export function PopularDestinations() {
       id: 'tokyo',
       name: 'Tokyo',
       country: 'Japan',
-      image: '/api/placeholder/400/300?text=Tokyo',
+      image: '/assets/tokyo.webp',
       guideCount: 98,
       description: 'Experience the perfect blend of traditional culture and cutting-edge technology.',
     },
@@ -35,7 +36,7 @@ export function PopularDestinations() {
       id: 'new-york',
       name: 'New York',
       country: 'USA',
-      image: '/api/placeholder/400/300?text=New+York',
+      image: '/assets/newyork.webp',
       guideCount: 156,
       description: 'The city that never sleeps offers endless possibilities for exploration.',
     },
@@ -43,7 +44,7 @@ export function PopularDestinations() {
       id: 'barcelona',
       name: 'Barcelona',
       country: 'Spain',
-      image: '/api/placeholder/400/300?text=Barcelona',
+      image: '/assets/barcelona.webp',
       guideCount: 87,
       description: 'Gaudi architecture, vibrant streets, and Mediterranean charm.',
     },
@@ -51,7 +52,7 @@ export function PopularDestinations() {
       id: 'bali',
       name: 'Bali',
       country: 'Indonesia',
-      image: '/api/placeholder/400/300?text=Bali',
+      image: '/assets/bali.webp',
       guideCount: 76,
       description: 'Tropical paradise with rich cultural heritage and stunning landscapes.',
     },
@@ -59,7 +60,7 @@ export function PopularDestinations() {
       id: 'london',
       name: 'London',
       country: 'UK',
-      image: '/api/placeholder/400/300?text=London',
+      image: '/assets/london.webp',
       guideCount: 134,
       description: 'Historic landmarks meet modern creativity in this global capital.',
     },
@@ -77,7 +78,7 @@ export function PopularDestinations() {
             Popular Destinations
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover the world's most exciting cities with our local experts
+            Discover the world&apos;s most exciting cities with our local experts
           </p>
         </div>
 
@@ -89,9 +90,11 @@ export function PopularDestinations() {
               onClick={() => handleDestinationClick(destination.name)}
             >
               <div className="relative h-48">
-                <img
+                <Image
                   src={destination.image}
                   alt={destination.name}
+                  width={800}
+                  height={600}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">

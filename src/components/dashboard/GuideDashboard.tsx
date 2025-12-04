@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -148,9 +150,11 @@ export function GuideDashboard({ data }: GuideDashboardProps) {
                       onClick={() => router.push(`/bookings/${booking._id}`)}
                     >
                       <div className="flex items-center space-x-3">
-                        <img
-                          src={booking.tourist?.profilePic || '/api/placeholder/40/40?text=T'}
+                        <Image
+                          src={booking.tourist?.profilePic || '/profile.jpg'}
                           alt={booking.tourist?.name}
+                          width={40}
+                          height={40}
                           className="w-10 h-10 rounded-full object-cover"
                         />
                         <div>
@@ -217,9 +221,11 @@ export function GuideDashboard({ data }: GuideDashboardProps) {
                       onClick={() => router.push(`/bookings/${booking._id}`)}
                     >
                       <div className="flex items-center space-x-3">
-                        <img
-                          src={booking.tourist?.profilePic || '/api/placeholder/40/40?text=T'}
+                        <Image
+                          src={booking.tourist?.profilePic || '/profile.jpg'}
                           alt={booking.tourist?.name}
+                          width={40}
+                          height={40}
                           className="w-10 h-10 rounded-full object-cover"
                         />
                         <div>
@@ -253,7 +259,7 @@ export function GuideDashboard({ data }: GuideDashboardProps) {
               <div className="text-center py-12">
                 <div className="text-gray-400 text-6xl mb-4">📋</div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">No bookings yet</h3>
-                <p className="text-gray-600 mb-6">When travelers book your tours, they'll appear here.</p>
+                <p className="text-gray-600 mb-6">When travelers book your tours, they&apos;ll appear here.</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -273,9 +279,11 @@ export function GuideDashboard({ data }: GuideDashboardProps) {
                       <tr key={booking._id} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="py-3 px-4">
                           <div className="flex items-center space-x-3">
-                            <img
-                              src={booking.tourist?.profilePic || '/api/placeholder/40/40?text=T'}
+                            <Image
+                              src={booking.tourist?.profilePic || '/profile.jpg'}
                               alt={booking.tourist?.name}
+                              width={40}
+                              height={40}
                               className="w-8 h-8 rounded-full object-cover"
                             />
                             <span className="text-sm font-medium text-gray-900">
@@ -352,9 +360,11 @@ export function GuideDashboard({ data }: GuideDashboardProps) {
                     onClick={() => router.push(`/tours/${tour._id}`)}
                   >
                     <div className="relative h-40">
-                      <img
-                        src={tour.images?.[0] || '/api/placeholder/400/300?text=Tour+Image'}
+                      <Image
+                        src={tour.images?.[0] || '/profile.jpg'}
                         alt={tour.title}
+                        width={400}
+                        height={160}
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute top-3 left-3">

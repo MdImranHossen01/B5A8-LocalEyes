@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useState } from 'react';
@@ -22,6 +23,7 @@ import {
   AlertCircle
 } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import Image from 'next/image';
 
 interface Review {
   id: string;
@@ -222,7 +224,7 @@ const MyReviewsPage = () => {
       pending: { color: 'bg-yellow-100 text-yellow-800', icon: <Clock className="w-3 h-3" /> },
       hidden: { color: 'bg-gray-100 text-gray-800', icon: <XCircle className="w-3 h-3" /> },
       reported: { color: 'bg-red-100 text-red-800', icon: <AlertCircle className="w-3 h-3" /> },
-    }[status];
+    }[status] || { color: 'bg-gray-100 text-gray-800', icon: <AlertCircle className="w-3 h-3" /> };
 
     return (
       <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${config.color}`}>
@@ -589,10 +591,12 @@ const MyReviewsPage = () => {
                   {review.photos.length > 0 && (
                     <div className="flex gap-2 mt-4">
                       {review.photos.map((photo, index) => (
-                        <img
+                        <Image
                           key={index}
                           src={photo}
                           alt="Review"
+                          width={80}
+                          height={80}
                           className="w-20 h-20 object-cover rounded-lg"
                         />
                       ))}

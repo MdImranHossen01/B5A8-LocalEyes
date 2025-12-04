@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 interface User {
@@ -201,9 +202,11 @@ export function GuideProfileContent({ user, activeTab, tours, reviews }: GuidePr
                   onClick={() => handleTourClick(tour._id)}
                 >
                   <div className="relative h-48">
-                    <img
-                      src={tour.images?.[0] || '/api/placeholder/400/300?text=Tour+Image'}
+                    <Image
+                      src={tour.images?.[0] || '/profile.jpg'}
                       alt={tour.title}
+                      width={400}
+                      height={300}
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-3 left-3">
@@ -270,9 +273,10 @@ export function GuideProfileContent({ user, activeTab, tours, reviews }: GuidePr
                 <div key={review._id} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center">
-                      <img
-                        src={review.tourist.profilePic || '/api/placeholder/40/40?text=T'}
+                      <Image
+                        src={review.tourist.profilePic || '/profile.jpg'}
                         alt={review.tourist.name}
+                        fill
                         className="w-10 h-10 rounded-full object-cover mr-3"
                       />
                       <div>
