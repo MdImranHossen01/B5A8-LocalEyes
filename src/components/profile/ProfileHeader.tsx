@@ -46,20 +46,24 @@ export function ProfileHeader({ user, isOwnProfile, onEditProfile }: ProfileHead
         <div className="py-8">
           <div className="flex flex-col md:flex-row items-start md:items-center space-y-6 md:space-y-0 md:space-x-6">
             {/* Profile Picture */}
-            <div className="relative">
-              <Image
-                src={user.profilePic || '/profile.jpg'}
-                alt={user.name}
-                fill
-                className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
-              />
-              {user.isVerified && user.role === 'guide' && (
-                <div className="absolute bottom-2 right-2 bg-blue-500 text-white p-1 rounded-full">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              )}
+            <div className="relative w-32 h-32">
+              <div className="relative w-full h-full">
+                <Image
+                  src={user.profilePic || '/profile.jpg'}
+                  alt={user.name}
+                  fill
+                  className="rounded-full object-cover border-4 border-white shadow-lg"
+                  sizes="(max-width: 128px) 100vw, 128px"
+                  priority
+                />
+                {user.isVerified && user.role === 'guide' && (
+                  <div className="absolute bottom-2 right-2 bg-blue-500 text-white p-1 rounded-full">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Profile Info */}
