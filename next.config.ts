@@ -1,36 +1,46 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  // Disable source maps in development to fix the source map errors
-  productionBrowserSourceMaps: false,
-
-  // Configure images if you're using external image sources
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "**", // Allow all HTTPS images (update this for production)
+        protocol: 'https',
+        hostname: 'cdn-icons-png.flaticon.com',
       },
       {
         protocol: "https",
         hostname: "i.ibb.co",
       },
-      // Remove this duplicate - it's incorrect
       {
         protocol: "https",
         hostname: "i.ibb.co.com",
       },
       {
         protocol: "https",
-        hostname: "images.unsplash.com/",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "avatar.vercel.sh",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
       },
     ],
+    formats: ["image/avif", "image/webp"],
+    minimumCacheTTL: 86400,
   },
+  compress: true,
+  poweredByHeader: false,
+  reactStrictMode: true,
 
-  // Environment variables configuration
-  env: {
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL || "http://localhost:3000",
-  },
+  // Only enable these optimizations in production
+  compiler:
+    process.env.NODE_ENV === "production"
+      ? {
+        removeConsole: true,
+      }
+      : undefined,
 };
 
 export default nextConfig;

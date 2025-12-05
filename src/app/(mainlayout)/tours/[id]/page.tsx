@@ -10,9 +10,14 @@ interface PageProps {
 
 async function getTour(id: string) {
   try {
-    // Use relative URL for API calls
-    const res = await fetch(`http://localhost:3000/api/listings/${id}`, {
+    // Use relative URL instead of hardcoded localhost
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+    const res = await fetch(`${baseUrl}/api/listings/${id}`, {
       cache: 'no-store',
+      // Add headers if needed
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
 
     if (!res.ok) {
@@ -26,7 +31,6 @@ async function getTour(id: string) {
     return null;
   }
 }
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   // Await params first
   const { id } = await params;
