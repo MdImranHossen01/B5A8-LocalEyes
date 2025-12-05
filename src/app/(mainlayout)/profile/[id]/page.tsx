@@ -7,9 +7,20 @@ interface PageProps {
   }>;
 }
 
+// Helper function to get the base URL
+function getBaseUrl() {
+  // In production (Vercel), use the environment variable or current origin
+  if (process.env.NODE_ENV === 'production') {
+    return process.env.NEXT_PUBLIC_APP_URL || 'https://localeyes-psi.vercel.app';
+  }
+  // In development, use localhost
+  return 'http://localhost:3000';
+}
+
 async function getUser(id: string) {
   try {
-    const res = await fetch(`http://localhost:3000/api/users/${id}`, {
+    const baseUrl = getBaseUrl();
+    const res = await fetch(`${baseUrl}/api/users/${id}`, {
       cache: 'no-store',
     });
 
@@ -28,7 +39,8 @@ async function getUser(id: string) {
 
 async function getUserTours(guideId: string) {
   try {
-    const res = await fetch(`http://localhost:3000/api/listings?guideId=${guideId}`, {
+    const baseUrl = getBaseUrl();
+    const res = await fetch(`${baseUrl}/api/listings?guideId=${guideId}`, {
       cache: 'no-store',
     });
 
@@ -46,11 +58,12 @@ async function getUserTours(guideId: string) {
 
 async function getUserReviews(userId: string, role: string) {
   try {
+    const baseUrl = getBaseUrl();
     const endpoint = role === 'guide' 
       ? `/api/reviews?guideId=${userId}`
       : `/api/reviews?touristId=${userId}`;
     
-    const res = await fetch(`http://localhost:3000${endpoint}`, {
+    const res = await fetch(`${baseUrl}${endpoint}`, {
       cache: 'no-store',
     });
 
