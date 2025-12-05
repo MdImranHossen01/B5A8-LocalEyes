@@ -10,7 +10,8 @@ interface PageProps {
 
 async function getUserProfile(id: string) {
   try {
-    const res = await fetch(`${process.env.NEXTAUTH_URL}/api/users/${id}`, {
+     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || '';
+    const res = await fetch(`${baseUrl}/api/users/${id}`, {
       next: { revalidate: 60 }, // Cache for 60 seconds
     });
 
