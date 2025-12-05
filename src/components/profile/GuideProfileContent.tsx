@@ -272,7 +272,7 @@ export function GuideProfileContent({ user, activeTab, tours, reviews }: GuidePr
               {reviews.map((review) => (
                 <div key={review._id} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                   <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center">
+                    <div className="flex relative items-center">
                       <Image
                         src={review.tourist.profilePic || '/profile.jpg'}
                         alt={review.tourist.name}

@@ -201,7 +201,7 @@ export function ReviewsSection({ tourId, guideId }: ReviewsSectionProps) {
             <div key={review._id} className="bg-white border border-gray-200 rounded-lg p-6">
               {/* Review Header */}
               <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center">
+                <div className="flex relative items-center">
                   <Image
                     src={review.tourist.profilePic || '/profile.jpg'}
                     alt={review.tourist.name}

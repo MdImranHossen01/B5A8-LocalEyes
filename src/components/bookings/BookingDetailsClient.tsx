@@ -286,15 +286,14 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Tourist Info */}
                 <div className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg">
-                  <div className="shrink-0">
+                  <div className="relative shrink-0">
                     <Image
                       src={
                         booking.tourist.profilePic ||
                         '/profile.jpg'
                       }
                       alt={booking.tourist.name}
-                      width={48}
-                      height={48}
+                      fill
                       className="w-12 h-12 rounded-full object-cover"
                     />
                   </div>
@@ -311,15 +310,14 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
 
                 {/* Guide Info */}
                 <div className="flex items-start space-x-4 p-4 border border-gray-200 rounded-lg">
-                  <div className="shrink-0">
+                  <div className="relative shrink-0">
                     <Image
                       src={
                         booking.guide.profilePic ||
                         '/profile.jpg'
                       }
                       alt={booking.guide.name}
-                      width={48}
-                      height={48}
+                      fill
                       className="w-12 h-12 rounded-full object-cover"
                     />
                   </div>

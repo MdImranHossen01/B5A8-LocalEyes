@@ -424,7 +424,7 @@ export function CreateEditTourClient({ tour }: CreateEditTourClientProps) {
               {imageUrls.map((url, index) => (
                 <div key={index} className="flex items-start space-x-4">
                   <div className="shrink-0">
-                    <div className="w-16 h-16 bg-gray-100 border border-gray-300 rounded flex items-center justify-center">
+                    <div className="w-16 h-16 relative bg-gray-100 border border-gray-300 rounded flex items-center justify-center">
                       {url ? (
                         <Image
                           src={url}

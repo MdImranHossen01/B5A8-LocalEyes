@@ -22,6 +22,16 @@ interface GuideProfileProps {
 export function GuideProfile({ guide }: GuideProfileProps) {
   const router = useRouter();
 
+  // Function to get initials from name
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
   const handleMessageGuide = () => {
     // In a real app, this would open a chat/message interface
     alert('Message feature coming soon!');
@@ -36,12 +46,25 @@ export function GuideProfile({ guide }: GuideProfileProps) {
       <div className="text-center">
         {/* Guide Avatar */}
         <div className="relative inline-block mb-4">
-          <Image
-            src={guide.profilePic || '/profile.jpg'}
-            alt={guide.name}
-            fill
-            className="w-20 h-20 rounded-full object-cover mx-auto border-4 border-white shadow-lg"
-          />
+          {guide.profilePic ? (
+            <div className="relative w-20 h-20 rounded-full mx-auto border-4 border-white shadow-lg overflow-hidden">
+              <Image
+                src={guide.profilePic}
+                alt={guide.name}
+                fill
+                sizes="80px"
+                className="object-cover"
+                priority={false}
+              />
+            </div>
+          ) : (
+            <div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center mx-auto border-4 border-white shadow-lg">
+              <span className="text-white text-xl font-bold">
+                {getInitials(guide.name)}
+              </span>
+            </div>
+          )}
+          
           {guide.isVerified && (
             <div className="absolute bottom-0 right-0 bg-blue-500 text-white p-1 rounded-full">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -55,18 +78,18 @@ export function GuideProfile({ guide }: GuideProfileProps) {
         <h3 className="text-xl font-semibold text-gray-900 mb-2">{guide.name}</h3>
         
         <div className="flex items-center justify-center mb-4">
-          <div className="flex text-yellow-400 mr-2">
-            {'★'.repeat(5).split('').map((star, index) => (
+          <div className="flex mr-2">
+            {[...Array(5)].map((_, index) => (
               <span
                 key={index}
                 className={index < Math.floor(guide.rating) ? 'text-yellow-400' : 'text-gray-300'}
               >
-                {star}
+                ★
               </span>
             ))}
           </div>
           <span className="text-sm text-gray-600">
-            {guide.rating} ({guide.reviewsCount} reviews)
+            {guide.rating.toFixed(1)} ({guide.reviewsCount} reviews)
           </span>
         </div>
 

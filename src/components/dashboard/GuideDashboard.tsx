@@ -149,12 +149,11 @@ export function GuideDashboard({ data }: GuideDashboardProps) {
                       className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
                       onClick={() => router.push(`/bookings/${booking._id}`)}
                     >
-                      <div className="flex items-center space-x-3">
+                      <div className="flex relative items-center space-x-3">
                         <Image
                           src={booking.tourist?.profilePic || '/profile.jpg'}
                           alt={booking.tourist?.name}
-                          width={40}
-                          height={40}
+                         fill
                           className="w-10 h-10 rounded-full object-cover"
                         />
                         <div>
@@ -220,12 +219,11 @@ export function GuideDashboard({ data }: GuideDashboardProps) {
                       className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
                       onClick={() => router.push(`/bookings/${booking._id}`)}
                     >
-                      <div className="flex items-center space-x-3">
+                      <div className="flex relative items-center space-x-3">
                         <Image
                           src={booking.tourist?.profilePic || '/profile.jpg'}
                           alt={booking.tourist?.name}
-                          width={40}
-                          height={40}
+                          fill
                           className="w-10 h-10 rounded-full object-cover"
                         />
                         <div>
@@ -278,12 +276,11 @@ export function GuideDashboard({ data }: GuideDashboardProps) {
                     {bookings.map((booking) => (
                       <tr key={booking._id} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="py-3 px-4">
-                          <div className="flex items-center space-x-3">
+                          <div className="flex relative items-center space-x-3">
                             <Image
                               src={booking.tourist?.profilePic || '/profile.jpg'}
                               alt={booking.tourist?.name}
-                              width={40}
-                              height={40}
+                              fill
                               className="w-8 h-8 rounded-full object-cover"
                             />
                             <span className="text-sm font-medium text-gray-900">

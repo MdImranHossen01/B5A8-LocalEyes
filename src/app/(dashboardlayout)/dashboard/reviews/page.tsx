@@ -589,14 +589,13 @@ const MyReviewsPage = () => {
 
                   {/* Photos if any */}
                   {review.photos.length > 0 && (
-                    <div className="flex gap-2 mt-4">
+                    <div className="flex relative gap-2 mt-4">
                       {review.photos.map((photo, index) => (
                         <Image
                           key={index}
                           src={photo}
                           alt="Review"
-                          width={80}
-                          height={80}
+                          fill
                           className="w-20 h-20 object-cover rounded-lg"
                         />
                       ))}

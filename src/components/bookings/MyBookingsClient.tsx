@@ -246,12 +246,11 @@ export function MyBookingsClient() {
                 onClick={() => router.push(`/bookings/${booking._id}`)}
               >
                 <div className="flex flex-col md:flex-row md:items-center justify-between">
-                  <div className="flex items-start space-x-4 mb-4 md:mb-0">
+                  <div className="flex relative items-start space-x-4 mb-4 md:mb-0">
                     <Image
                       src={booking.tour.images?.[0] || '/profile.jpg'}
                       alt={booking.tour.title}
-                      width={400}
-                      height={400}
+                      fill
                       className="w-16 h-16 rounded-lg object-cover shrink-0"
                     />
                     <div>

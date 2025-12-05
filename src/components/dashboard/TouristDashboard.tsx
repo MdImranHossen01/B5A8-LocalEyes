@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface DashboardData {
   bookings: any[];
@@ -18,25 +18,25 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
   const router = useRouter();
   const { bookings, stats } = data;
 
-  const upcomingBookings = bookings.filter(b => b.status === 'confirmed');
-  const pendingBookings = bookings.filter(b => b.status === 'pending');
+  const upcomingBookings = bookings.filter((b) => b.status === "confirmed");
+  const pendingBookings = bookings.filter((b) => b.status === "pending");
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    return new Date(dateString).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     });
   };
 
   const getStatusColor = (status: string) => {
     const colors = {
-      pending: 'bg-yellow-100 text-yellow-800',
-      confirmed: 'bg-green-100 text-green-800',
-      completed: 'bg-blue-100 text-blue-800',
-      cancelled: 'bg-red-100 text-red-800',
+      pending: "bg-yellow-100 text-yellow-800",
+      confirmed: "bg-green-100 text-green-800",
+      completed: "bg-blue-100 text-blue-800",
+      cancelled: "bg-red-100 text-red-800",
     };
-    return colors[status as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+    return colors[status as keyof typeof colors] || "bg-gray-100 text-gray-800";
   };
 
   return (
@@ -56,7 +56,9 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
             </div>
             <div>
               <p className="text-sm text-gray-600">Upcoming Trips</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.upcomingTrips || 0}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {stats.upcomingTrips || 0}
+              </p>
             </div>
           </div>
         </div>
@@ -68,7 +70,9 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
             </div>
             <div>
               <p className="text-sm text-gray-600">Past Trips</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.pastTrips || 0}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {stats.pastTrips || 0}
+              </p>
             </div>
           </div>
         </div>
@@ -80,7 +84,9 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
             </div>
             <div>
               <p className="text-sm text-gray-600">Pending Requests</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.pendingRequests || 0}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {stats.pendingRequests || 0}
+              </p>
             </div>
           </div>
         </div>
@@ -90,9 +96,11 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
         {/* Upcoming Trips */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Upcoming Trips</h2>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Upcoming Trips
+            </h2>
             <button
-              onClick={() => router.push('/my-bookings')}
+              onClick={() => router.push("/my-bookings")}
               className="text-blue-600 hover:text-blue-700 text-sm font-medium"
             >
               View All
@@ -104,7 +112,7 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
               <div className="text-gray-400 text-4xl mb-3">🗺️</div>
               <p className="text-gray-600 mb-4">No upcoming trips</p>
               <button
-                onClick={() => router.push('/explore')}
+                onClick={() => router.push("/explore")}
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
               >
                 Explore Tours
@@ -118,12 +126,11 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
                   className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
                   onClick={() => router.push(`/bookings/${booking._id}`)}
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex relative items-center space-x-3">
                     <Image
-                      src={booking.tour?.images?.[0] || '/profile.jpg'}
+                      src={booking.tour?.images?.[0] || "/profile.jpg"}
                       alt={booking.tour?.title}
-                      width={48}
-                      height={48}
+                      fill
                       className="w-12 h-12 rounded-lg object-cover"
                     />
                     <div>
@@ -138,7 +145,11 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
                       </p>
                     </div>
                   </div>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(booking.status)}`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+                      booking.status
+                    )}`}
+                  >
                     {booking.status}
                   </span>
                 </div>
@@ -150,7 +161,9 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
         {/* Pending Requests */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">Pending Requests</h2>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Pending Requests
+            </h2>
             <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs font-medium">
               {pendingBookings.length} pending
             </span>
@@ -169,12 +182,11 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
                   className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
                   onClick={() => router.push(`/bookings/${booking._id}`)}
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex relative items-center space-x-3">
                     <Image
-                      src={booking.tour?.images?.[0] || '/profile.jpg'}
+                      src={booking.tour?.images?.[0] || "/profile.jpg"}
                       alt={booking.tour?.title}
-                      width={48}
-                      height={48}
+                      fill
                       className="w-12 h-12 rounded-lg object-cover"
                     />
                     <div>
@@ -196,10 +208,12 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
 
       {/* Quick Actions */}
       <div className="mt-8 bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Quick Actions
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <button
-            onClick={() => router.push('/explore')}
+            onClick={() => router.push("/explore")}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <span className="text-2xl mr-3">🔍</span>
@@ -210,7 +224,7 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
           </button>
 
           <button
-            onClick={() => router.push('/my-bookings')}
+            onClick={() => router.push("/my-bookings")}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <span className="text-2xl mr-3">📋</span>
@@ -221,7 +235,7 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
           </button>
 
           <button
-            onClick={() => router.push('/profile')}
+            onClick={() => router.push("/profile")}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <span className="text-2xl mr-3">👤</span>

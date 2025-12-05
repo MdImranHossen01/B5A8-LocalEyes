@@ -138,7 +138,7 @@ export function MapView({ tours, isLoading }: MapViewProps) {
       {/* Selected Tour Details */}
       {selectedTour && (
         <div className="lg:w-80 bg-white rounded-2xl shadow-lg p-6">
-          <div className="mb-4">
+          <div className="relative mb-4">
             <Image
               src={selectedTour.images?.[0] || '/profile.jpg'}
               alt={selectedTour.title}
@@ -183,7 +183,7 @@ export function MapView({ tours, isLoading }: MapViewProps) {
             </div>
 
             {/* Guide Info */}
-            <div className="flex items-center mb-4 p-3 bg-gray-50 rounded-lg">
+            <div className="flex relative items-center mb-4 p-3 bg-gray-50 rounded-lg">
               <Image
                 src={selectedTour.guide.profilePic || '/profile.jpg'}
                 alt={selectedTour.guide.name}

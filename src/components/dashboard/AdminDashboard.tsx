@@ -320,12 +320,11 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                   {allTours.map((tour) => (
                     <tr key={tour._id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-3 px-4">
-                        <div className="flex items-center space-x-3">
+                        <div className="flex relative items-center space-x-3">
                           <Image
                             src={tour.images?.[0] || '/profile.jpg'}
                             alt={tour.title}
-                            width={400}
-                            height={400}
+                            fill
                             className="w-10 h-10 rounded-lg object-cover"
                           />
                           <span className="text-sm font-medium text-gray-900">

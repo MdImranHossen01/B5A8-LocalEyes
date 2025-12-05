@@ -295,12 +295,11 @@ export function AdminUsersClient() {
                 {filteredUsers.map((user) => (
                   <tr key={user._id} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="py-3 px-4">
-                      <div className="flex items-center space-x-3">
+                      <div className="flex relative items-center space-x-3">
                         <Image
                           src={user.profilePic || '/profile.jpg'}
                           alt={user.name}
-                          width={40}
-                          height={40}
+                          fill
                           className="w-8 h-8 rounded-full object-cover"
                         />
                         <div>
@@ -395,12 +394,11 @@ export function AdminUsersClient() {
               </div>
 
               <div className="p-6">
-                <div className="flex items-center space-x-4 mb-6">
+                <div className="flex relative items-center space-x-4 mb-6">
                   <Image
                     src={selectedUser.profilePic || '/profile.jpg'}
                     alt={selectedUser.name}
-                    width={64}
-                    height={64}
+                    fill
                     className="w-16 h-16 rounded-full object-cover"
                   />
                   <div>
