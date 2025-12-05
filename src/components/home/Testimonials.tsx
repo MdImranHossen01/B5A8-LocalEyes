@@ -85,7 +85,7 @@ export function Testimonials() {
             Traveler Stories
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-            Don't just take our word for it - hear from travelers who've
+            Don&apos;t just take our word for it - hear from travelers who&apos;ve
             explored with our guides
           </p>
         </div>
