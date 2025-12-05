@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { Testimonial } from "./types";
+import Image from "next/image";
 
 export function Testimonials() {
   const [currentIndex, setCurrentIndex] = useState(1); // Start with the middle one for visual balance if we had more, but 0-indexed logic applies
@@ -75,7 +76,7 @@ export function Testimonials() {
 
   return (
     <section
-      className="py-20 bg-gradient-to-br from-[#d9f4e6] to-[#c8e6ff] overflow-hidden min-h-[800px] flex flex-col justify-center"
+      className="py-20 bg-linear-to-br from-[#d9f4e6] to-[#c8e6ff] overflow-hidden min-h-[800px] flex flex-col justify-center"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -162,16 +163,18 @@ function TestimonialCard({
 }) {
   return (
     <div
-      className={`bg-white rounded-[2rem] p-8 pt-0 shadow-xl relative mt-12 flex flex-col items-center text-center h-full transition-shadow duration-300 ${
+      className={`bg-white rounded-4xl p-8 pt-0 shadow-xl relative mt-12 flex flex-col items-center text-center h-full transition-shadow duration-300 ${
         isActive ? "shadow-2xl" : "shadow-lg"
       }`}
     >
       {/* Avatar - Floating on top */}
       <div className="-mt-12 mb-6 relative">
-        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md">
-          <img
+        <div className="w-24 h-24 relative rounded-full overflow-hidden border-4 border-white shadow-md">
+          <Image
             src={data.avatar}
             alt={data.name}
+            width={500}
+            height={500}
             className="w-full h-full object-cover"
           />
         </div>
