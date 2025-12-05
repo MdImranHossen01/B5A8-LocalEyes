@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import Logo from "../Logo";
 
 export function Navigation() {
   const { user, logout } = useAuth();
@@ -15,9 +16,9 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0">
-            <h1 className="text-2xl font-bold text-blue-600">LocalGuide</h1>
-          </Link>
+          
+            <Logo />
+         
 
           {/* Navigation Links */}
           <div className="flex items-center space-x-4">

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Logo from '../Logo';
 
 export function Footer() {
   return (
@@ -7,8 +8,8 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="lg:col-span-1">
-            <h3 className="text-2xl font-bold mb-4">LocalGuide</h3>
-            <p className="text-gray-400 mb-4">
+            <Logo />
+            <p className="text-gray-400 my-4">
               Connecting travelers with passionate local guides for authentic experiences around the world.
             </p>
             <div className="flex space-x-4">
