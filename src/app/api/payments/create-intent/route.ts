@@ -1,70 +1,85 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// src/app/api/payments/create-intent/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
-import { formatAmountForStripe } from '@/lib/stripe';
+import Stripe from 'stripe';
 import dbConnect from '@/lib/db';
 import Booking from '@/models/Booking';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2025-11-17.clover', // Use latest stable version
+});
 
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();
-    
+
     const { bookingId, userId, userEmail, userName } = await request.json();
 
-    // Validate booking exists and belongs to user
-    const booking = await Booking.findOne({
-      _id: bookingId,
-      tourist: userId,
-      status: 'confirmed',
-      paymentStatus: 'pending',
-    }).populate('tour', 'title');
+    if (!bookingId || !userId || !userEmail) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Get booking details
+    const booking = await Booking.findById(bookingId)
+      .populate('tour', 'title')
+      .populate('tourist', 'email name');
 
     if (!booking) {
       return NextResponse.json(
-        { error: 'Booking not found or already paid' },
+        { error: 'Booking not found' },
         { status: 404 }
       );
     }
 
-    // Create payment intent
+    // Create or retrieve Stripe customer
+    let customerId = booking.stripeCustomerId;
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: userEmail,
+        name: userName,
+        metadata: {
+          userId: userId,
+          bookingId: bookingId,
+        },
+      });
+      customerId = customer.id;
+      
+      // Save customer ID to booking
+      booking.stripeCustomerId = customerId;
+      await booking.save();
+    }
+
+    // Create Payment Intent
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: formatAmountForStripe(booking.totalAmount),
+      amount: Math.round(booking.totalAmount * 100), // Convert to cents
       currency: 'usd',
+      customer: customerId,
       metadata: {
-        bookingId: booking._id.toString(),
+        bookingId: bookingId,
         userId: userId,
-        tourId: booking.tour._id.toString(),
-        guideId: booking.guide.toString(),
+        tourId: booking.tour?._id?.toString(),
+        guideId: booking.guide?.toString(),
       },
-      description: `Booking for ${booking.tour.title}`,
-      receipt_email: userEmail,
+      description: `Booking for ${booking.tour?.title || 'Tour'}`,
       automatic_payment_methods: {
         enabled: true,
       },
     });
 
-    // Update booking with payment intent ID
-    await Booking.findByIdAndUpdate(bookingId, {
-      paymentIntentId: paymentIntent.id,
-    });
+    // Save payment intent ID to booking
+    booking.stripePaymentIntentId = paymentIntent.id;
+    await booking.save();
 
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
-      amount: booking.totalAmount,
     });
-  } catch (error: any) {
-    console.error('Payment intent creation error:', error);
-    
-    if (error.type === 'StripeInvalidRequestError') {
-      return NextResponse.json(
-        { error: 'Invalid payment request' },
-        { status: 400 }
-      );
-    }
-    
+  } catch (error) {
+    console.error('Error creating payment intent:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to create payment intent' },
       { status: 500 }
     );
   }
