@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '@/context/AuthContext';
+import { signIn } from 'next-auth/react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
@@ -23,7 +23,6 @@ interface RegisterFormData {
 }
 
 export function RegisterForm() {
-  const { register } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -109,8 +108,33 @@ export function RegisterForm() {
         travelPreferences: formData.travelPreferences ? [formData.travelPreferences] : undefined,
       };
 
-      await register(registerData);
-      router.push('/dashboard');
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(registerData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Registration failed');
+      }
+
+      // Auto login after registration
+      const result = await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+
+      if (result?.ok) {
+        router.push('/dashboard');
+        router.refresh();
+      }
     } catch (error: any) {
       setErrors({ submit: error.message || 'Registration failed' });
     } finally {

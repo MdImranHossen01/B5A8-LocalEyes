@@ -149,22 +149,25 @@ export function GuideDashboard({ data }: GuideDashboardProps) {
                       className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
                       onClick={() => router.push(`/bookings/${booking._id}`)}
                     >
-                      <div className="flex relative items-center space-x-3">
-                        <Image
-                          src={booking.tourist?.profilePic || '/profile.jpg'}
-                          alt={booking.tourist?.name}
-                         fill
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
+                      <div className="flex items-center space-x-3">
+                        <div className="relative w-10 h-10">
+                          <Image
+                            src={booking.tourist?.profilePic || '/profile.jpg'}
+                            alt={booking.tourist?.name || 'Traveler'}
+                            fill
+                            className="rounded-full object-cover"
+                            sizes="40px"
+                          />
+                        </div>
                         <div>
                           <h3 className="font-medium text-gray-900 text-sm">
-                            {booking.tourist?.name}
+                            {booking.tourist?.name || 'Traveler'}
                           </h3>
                           <p className="text-gray-600 text-xs">
-                            {booking.tour?.title}
+                            {booking.tour?.title || 'Tour'}
                           </p>
                           <p className="text-gray-500 text-xs">
-                            {formatDate(booking.date)}
+                            {booking.date ? formatDate(booking.date) : 'Date not set'}
                           </p>
                         </div>
                       </div>
@@ -219,22 +222,25 @@ export function GuideDashboard({ data }: GuideDashboardProps) {
                       className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
                       onClick={() => router.push(`/bookings/${booking._id}`)}
                     >
-                      <div className="flex relative items-center space-x-3">
-                        <Image
-                          src={booking.tourist?.profilePic || '/profile.jpg'}
-                          alt={booking.tourist?.name}
-                          fill
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
+                      <div className="flex items-center space-x-3">
+                        <div className="relative w-10 h-10">
+                          <Image
+                            src={booking.tourist?.profilePic || '/profile.jpg'}
+                            alt={booking.tourist?.name || 'Traveler'}
+                            fill
+                            className="rounded-full object-cover"
+                            sizes="40px"
+                          />
+                        </div>
                         <div>
                           <h3 className="font-medium text-gray-900 text-sm">
-                            {booking.tourist?.name}
+                            {booking.tourist?.name || 'Traveler'}
                           </h3>
                           <p className="text-gray-600 text-xs">
-                            {booking.tour?.title}
+                            {booking.tour?.title || 'Tour'}
                           </p>
                           <p className="text-gray-500 text-xs">
-                            {formatDate(booking.date)}
+                            {booking.date ? formatDate(booking.date) : 'Date not set'}
                           </p>
                         </div>
                       </div>
@@ -276,23 +282,26 @@ export function GuideDashboard({ data }: GuideDashboardProps) {
                     {bookings.map((booking) => (
                       <tr key={booking._id} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="py-3 px-4">
-                          <div className="flex relative items-center space-x-3">
-                            <Image
-                              src={booking.tourist?.profilePic || '/profile.jpg'}
-                              alt={booking.tourist?.name}
-                              fill
-                              className="w-8 h-8 rounded-full object-cover"
-                            />
+                          <div className="flex items-center space-x-3">
+                            <div className="relative w-8 h-8">
+                              <Image
+                                src={booking.tourist?.profilePic || '/profile.jpg'}
+                                alt={booking.tourist?.name || 'Traveler'}
+                                fill
+                                className="rounded-full object-cover"
+                                sizes="32px"
+                              />
+                            </div>
                             <span className="text-sm font-medium text-gray-900">
-                              {booking.tourist?.name}
+                              {booking.tourist?.name || 'Traveler'}
                             </span>
                           </div>
                         </td>
                         <td className="py-3 px-4 text-sm text-gray-900">
-                          {booking.tour?.title}
+                          {booking.tour?.title || 'Tour'}
                         </td>
                         <td className="py-3 px-4 text-sm text-gray-600">
-                          {formatDate(booking.date)}
+                          {booking.date ? formatDate(booking.date) : 'Date not set'}
                         </td>
                         <td className="py-3 px-4">
                           <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
@@ -301,11 +310,11 @@ export function GuideDashboard({ data }: GuideDashboardProps) {
                             booking.status === 'completed' ? 'bg-blue-100 text-blue-800' :
                             'bg-red-100 text-red-800'
                           }`}>
-                            {booking.status}
+                            {booking.status || 'pending'}
                           </span>
                         </td>
                         <td className="py-3 px-4 text-sm font-medium text-gray-900">
-                          {formatCurrency(booking.totalAmount)}
+                          {formatCurrency(booking.totalAmount || 0)}
                         </td>
                         <td className="py-3 px-4">
                           <button
@@ -359,28 +368,28 @@ export function GuideDashboard({ data }: GuideDashboardProps) {
                     <div className="relative h-40">
                       <Image
                         src={tour.images?.[0] || '/profile.jpg'}
-                        alt={tour.title}
-                        width={400}
-                        height={160}
+                        alt={tour.title || 'Tour'}
+                        fill
                         className="w-full h-full object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       />
                       <div className="absolute top-3 left-3">
                         <span className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-sm font-semibold text-gray-900">
-                          ${tour.tourFee}
+                          ${tour.tourFee || 0}
                         </span>
                       </div>
                     </div>
 
                     <div className="p-4">
                       <h3 className="font-bold text-gray-900 mb-2 line-clamp-2">
-                        {tour.title}
+                        {tour.title || 'Untitled Tour'}
                       </h3>
                       <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                        {tour.description}
+                        {tour.description || 'No description'}
                       </p>
                       
                       <div className="flex items-center justify-between text-sm text-gray-600">
-                        <span>{tour.city}</span>
+                        <span>{tour.city || 'Unknown city'}</span>
                         <div className="flex items-center">
                           <span className="text-yellow-400 mr-1">★</span>
                           <span>{tour.rating || 'New'}</span>

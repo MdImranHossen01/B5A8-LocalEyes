@@ -61,7 +61,7 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
             </div>
             <div>
               <p className="text-sm text-gray-600">Total Users</p>
-              <p className="text-2xl font-bold text-gray-900">124</p>
+              <p className="text-2xl font-bold text-gray-900">{data.stats?.totalUsers || 124}</p>
             </div>
           </div>
         </div>
@@ -73,7 +73,7 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
             </div>
             <div>
               <p className="text-sm text-gray-600">Active Listings</p>
-              <p className="text-2xl font-bold text-gray-900">56</p>
+              <p className="text-2xl font-bold text-gray-900">{data.stats?.totalTours || 56}</p>
             </div>
           </div>
         </div>
@@ -85,7 +85,7 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
             </div>
             <div>
               <p className="text-sm text-gray-600">Today&apos;s Bookings</p>
-              <p className="text-2xl font-bold text-gray-900">12</p>
+              <p className="text-2xl font-bold text-gray-900">{data.stats?.totalBookings || 12}</p>
             </div>
           </div>
         </div>
@@ -97,7 +97,9 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
             </div>
             <div>
               <p className="text-sm text-gray-600">Total Revenue</p>
-              <p className="text-2xl font-bold text-gray-900">{formatCurrency(12500)}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {formatCurrency(data.stats?.totalRevenue || 12500)}
+              </p>
             </div>
           </div>
         </div>
@@ -201,25 +203,25 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                     <div key={booking._id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                       <div>
                         <h3 className="font-medium text-gray-900 text-sm">
-                          {booking.tour?.title}
+                          {booking.tour?.title || 'Tour'}
                         </h3>
                         <p className="text-gray-600 text-xs">
-                          {booking.tourist?.name} → {booking.guide?.name}
+                          {booking.tourist?.name || 'Traveler'} → {booking.guide?.name || 'Guide'}
                         </p>
                         <p className="text-gray-500 text-xs">
-                          {formatDate(booking.date)}
+                          {booking.date ? formatDate(booking.date) : 'Date not set'}
                         </p>
                       </div>
                       <div className="flex flex-col items-end">
                         <span className="text-sm font-medium text-gray-900">
-                          {formatCurrency(booking.totalAmount)}
+                          {formatCurrency(booking.totalAmount || 0)}
                         </span>
                         <span className={`mt-1 px-2 py-1 rounded-full text-xs font-medium ${
                           booking.status === 'confirmed' ? 'bg-green-100 text-green-800' :
                           booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                           'bg-gray-100 text-gray-800'
                         }`}>
-                          {booking.status}
+                          {booking.status || 'pending'}
                         </span>
                       </div>
                     </div>
@@ -320,26 +322,29 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                   {allTours.map((tour) => (
                     <tr key={tour._id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-3 px-4">
-                        <div className="flex relative items-center space-x-3">
-                          <Image
-                            src={tour.images?.[0] || '/profile.jpg'}
-                            alt={tour.title}
-                            fill
-                            className="w-10 h-10 rounded-lg object-cover"
-                          />
+                        <div className="flex items-center space-x-3">
+                          <div className="relative w-10 h-10">
+                            <Image
+                              src={tour.images?.[0] || '/profile.jpg'}
+                              alt={tour.title || 'Tour'}
+                              fill
+                              className="rounded-lg object-cover"
+                              sizes="40px"
+                            />
+                          </div>
                           <span className="text-sm font-medium text-gray-900">
-                            {tour.title}
+                            {tour.title || 'Untitled Tour'}
                           </span>
                         </div>
                       </td>
                       <td className="py-3 px-4 text-sm text-gray-900">
-                        {tour.guide?.name}
+                        {tour.guide?.name || 'Unknown Guide'}
                       </td>
                       <td className="py-3 px-4 text-sm text-gray-900">
-                        {tour.city}
+                        {tour.city || 'Unknown'}
                       </td>
                       <td className="py-3 px-4 text-sm font-medium text-gray-900">
-                        ${tour.tourFee}
+                        ${tour.tourFee || 0}
                       </td>
                       <td className="py-3 px-4">
                         <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
@@ -349,7 +354,7 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                         </span>
                       </td>
                       <td className="py-3 px-4 text-sm text-gray-600">
-                        {formatDate(tour.createdAt)}
+                        {tour.createdAt ? formatDate(tour.createdAt) : 'Unknown'}
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex space-x-2">
@@ -401,22 +406,22 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                     {allBookings.map((booking) => (
                       <tr key={booking._id} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="py-3 px-4 text-sm text-gray-600">
-                          {booking._id.substring(0, 8)}...
+                          {booking._id ? booking._id.substring(0, 8) + '...' : 'N/A'}
                         </td>
                         <td className="py-3 px-4 text-sm text-gray-900">
-                          {booking.tourist?.name}
+                          {booking.tourist?.name || 'Traveler'}
                         </td>
                         <td className="py-3 px-4 text-sm text-gray-900">
-                          {booking.guide?.name}
+                          {booking.guide?.name || 'Guide'}
                         </td>
                         <td className="py-3 px-4 text-sm text-gray-900">
-                          {booking.tour?.title}
+                          {booking.tour?.title || 'Tour'}
                         </td>
                         <td className="py-3 px-4 text-sm text-gray-600">
-                          {formatDate(booking.date)}
+                          {booking.date ? formatDate(booking.date) : 'Date not set'}
                         </td>
                         <td className="py-3 px-4 text-sm font-medium text-gray-900">
-                          {formatCurrency(booking.totalAmount)}
+                          {formatCurrency(booking.totalAmount || 0)}
                         </td>
                         <td className="py-3 px-4">
                           <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
@@ -425,7 +430,7 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                             booking.status === 'completed' ? 'bg-blue-100 text-blue-800' :
                             'bg-red-100 text-red-800'
                           }`}>
-                            {booking.status}
+                            {booking.status || 'pending'}
                           </span>
                         </td>
                         <td className="py-3 px-4">

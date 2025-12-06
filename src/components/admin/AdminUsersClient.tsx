@@ -3,8 +3,8 @@
 
 import { useState, useEffect } from 'react';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
-import { useAuth } from '@/context/AuthContext'; // ADD THIS IMPORT
 import Image from 'next/image';
+
 
 interface User {
   _id: string;
@@ -22,7 +22,6 @@ interface User {
 
 export function AdminUsersClient() {
   const { isLoading } = useProtectedRoute('admin');
-  const { token } = useAuth(); // GET TOKEN FROM CONTEXT
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
@@ -32,24 +31,25 @@ export function AdminUsersClient() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   useEffect(() => {
-    if (token) {
-      fetchUsers();
-    }
-  }, [token]);
+    fetchUsers();
+  }, []);
 
   useEffect(() => {
     let results = users;
     
+    // Apply role filter
     if (filterRole !== 'all') {
       results = results.filter(user => user.role === filterRole);
     }
     
+    // Apply status filter
     if (filterStatus !== 'all') {
       results = results.filter(user => 
         filterStatus === 'active' ? user.isActive : !user.isActive
       );
     }
     
+    // Apply search
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       results = results.filter(user => 
@@ -62,43 +62,22 @@ export function AdminUsersClient() {
   }, [users, filterRole, filterStatus, searchQuery]);
 
   const fetchUsers = async () => {
-    if (!token) {
-      console.error('No token available');
-      setIsLoadingData(false);
-      return;
-    }
-
     setIsLoadingData(true);
     try {
-      const response = await fetch('/api/admin/users', {
-        headers: {
-          'Authorization': `Bearer ${token}`, // ADD AUTHORIZATION HEADER
-          'Content-Type': 'application/json',
-        },
-      });
-      
+      const response = await fetch('/api/admin/users');
       const data = await response.json();
       
       if (response.ok) {
         setUsers(data.users || []);
-      } else {
-        console.error('Error fetching users:', data.error);
-        alert(data.error || 'Failed to fetch users');
       }
     } catch (error) {
       console.error('Error fetching users:', error);
-      alert('Failed to fetch users. Please check console for details.');
     } finally {
       setIsLoadingData(false);
     }
   };
 
   const handleToggleStatus = async (userId: string, currentStatus: boolean) => {
-    if (!token) {
-      console.error('No token available');
-      return;
-    }
-
     if (!confirm(`Are you sure you want to ${currentStatus ? 'deactivate' : 'activate'} this user?`)) {
       return;
     }
@@ -107,70 +86,48 @@ export function AdminUsersClient() {
       const response = await fetch(`/api/admin/users/${userId}/status`, {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${token}`, // ADD AUTHORIZATION HEADER
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ isActive: !currentStatus }),
       });
 
-      const data = await response.json();
-      
       if (response.ok) {
+        // Update local state
         setUsers(users.map(user => 
           user._id === userId 
             ? { ...user, isActive: !currentStatus }
             : user
         ));
-      } else {
-        console.error('Error updating user status:', data.error);
-        alert(data.error || 'Failed to update user status');
       }
     } catch (error) {
       console.error('Error updating user status:', error);
-      alert('Failed to update user status');
     }
   };
 
   const handleVerifyUser = async (userId: string, isVerified: boolean) => {
-    if (!token) {
-      console.error('No token available');
-      return;
-    }
-
     try {
       const response = await fetch(`/api/admin/users/${userId}/verify`, {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${token}`, // ADD AUTHORIZATION HEADER
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ isVerified: !isVerified }),
       });
 
-      const data = await response.json();
-      
       if (response.ok) {
+        // Update local state
         setUsers(users.map(user => 
           user._id === userId 
             ? { ...user, isVerified: !isVerified }
             : user
         ));
-      } else {
-        console.error('Error verifying user:', data.error);
-        alert(data.error || 'Failed to verify user');
       }
     } catch (error) {
       console.error('Error verifying user:', error);
-      alert('Failed to verify user');
     }
   };
 
   const handleUpdateRole = async (userId: string, newRole: string) => {
-    if (!token) {
-      console.error('No token available');
-      return;
-    }
-
     if (!confirm(`Change user role to ${newRole}?`)) {
       return;
     }
@@ -179,27 +136,21 @@ export function AdminUsersClient() {
       const response = await fetch(`/api/admin/users/${userId}/role`, {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${token}`, // ADD AUTHORIZATION HEADER
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ role: newRole }),
       });
 
-      const data = await response.json();
-      
       if (response.ok) {
+        // Update local state
         setUsers(users.map(user => 
           user._id === userId 
             ? { ...user, role: newRole as any }
             : user
         ));
-      } else {
-        console.error('Error updating user role:', data.error);
-        alert(data.error || 'Failed to update user role');
       }
     } catch (error) {
       console.error('Error updating user role:', error);
-      alert('Failed to update user role');
     }
   };
 
@@ -214,6 +165,7 @@ export function AdminUsersClient() {
   if (isLoading || isLoadingData) {
     return (
       <div className="min-h-screen bg-gray-50">
+        
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-300 rounded w-1/4 mb-8"></div>
@@ -224,6 +176,7 @@ export function AdminUsersClient() {
             </div>
           </div>
         </div>
+        
       </div>
     );
   }
@@ -239,6 +192,8 @@ export function AdminUsersClient() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+    
+      
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -340,16 +295,13 @@ export function AdminUsersClient() {
                 {filteredUsers.map((user) => (
                   <tr key={user._id} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="py-3 px-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="relative w-8 h-8">
-                          <Image
-                            src={user.profilePic || '/profile.jpg'}
-                            alt={user.name}
-                            width={32}
-                            height={32}
-                            className="rounded-full object-cover"
-                          />
-                        </div>
+                      <div className="flex relative items-center space-x-3">
+                        <Image
+                          src={user.profilePic || '/profile.jpg'}
+                          alt={user.name}
+                          fill
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
                         <div>
                           <p className="font-medium text-gray-900 text-sm">{user.name}</p>
                           <p className="text-xs text-gray-600">{user.email}</p>
@@ -442,16 +394,13 @@ export function AdminUsersClient() {
               </div>
 
               <div className="p-6">
-                <div className="flex items-center space-x-4 mb-6">
-                  <div className="relative w-16 h-16">
-                    <Image
-                      src={selectedUser.profilePic || '/profile.jpg'}
-                      alt={selectedUser.name}
-                      width={64}
-                      height={64}
-                      className="rounded-full object-cover"
-                    />
-                  </div>
+                <div className="flex relative items-center space-x-4 mb-6">
+                  <Image
+                    src={selectedUser.profilePic || '/profile.jpg'}
+                    alt={selectedUser.name}
+                    fill
+                    className="w-16 h-16 rounded-full object-cover"
+                  />
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900">{selectedUser.name}</h3>
                     <p className="text-gray-600">{selectedUser.email}</p>
@@ -494,6 +443,7 @@ export function AdminUsersClient() {
                   </button>
                   <button
                     onClick={() => {
+                      // In a real app, this would send a message
                       alert(`Messaging ${selectedUser.name} at ${selectedUser.email}`);
                     }}
                     className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium"
@@ -506,6 +456,8 @@ export function AdminUsersClient() {
           </div>
         )}
       </main>
+
+    
     </div>
   );
 }

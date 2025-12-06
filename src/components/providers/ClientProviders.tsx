@@ -2,10 +2,8 @@
 
 import { SessionProvider } from 'next-auth/react';
 import { AuthProvider } from '@/context/AuthContext';
-import {Navigation} from '@/components/layout/Navigation';
-import {Footer} from '@/components/layout/Footer';
 
-export default function MainLayout({
+export default function ClientProviders({
   children,
 }: {
   children: React.ReactNode;
@@ -13,9 +11,7 @@ export default function MainLayout({
   return (
     <SessionProvider>
       <AuthProvider>
-        <Navigation />
-        <main>{children}</main>
-        <Footer />
+        {children}
       </AuthProvider>
     </SessionProvider>
   );

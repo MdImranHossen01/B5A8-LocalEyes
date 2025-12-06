@@ -1,35 +1,22 @@
 'use client';
 
 import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext';
 
-export function useProtectedRoute(requiredRole?: 'tourist' | 'guide' | 'admin') {
-  const { user, isLoading } = useAuth();
+export function useProtectedRoute(redirectTo: string = '/login') {
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading) {
-      if (!user) {
-        // Redirect to login if not authenticated
-        router.push('/login');
-        return;
-      }
-
-      if (requiredRole) {
-        // Allow admin to access any route
-        if (user.role === 'admin') {
-          return;
-        }
-        
-        // Check if non-admin user has the required role
-        if (user.role !== requiredRole) {
-          router.push('/');
-          return;
-        }
-      }
+    if (status === 'unauthenticated') {
+      router.push(redirectTo);
     }
-  }, [user, isLoading, requiredRole, router]);
+  }, [status, router, redirectTo]);
 
-  return { user, isLoading };
+  return {
+    isLoading: status === 'loading',
+    isAuthenticated: status === 'authenticated',
+    session,
+  };
 }

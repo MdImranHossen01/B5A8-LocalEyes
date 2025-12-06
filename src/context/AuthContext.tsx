@@ -1,139 +1,56 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
+import { signOut, useSession } from 'next-auth/react';
 
 interface User {
   id: string;
   name: string;
   email: string;
   role: 'tourist' | 'guide' | 'admin';
-  profilePic?: string;
-  bio?: string;
-  languages?: string[];
-  expertise?: string[];
-  dailyRate?: number;
-  travelPreferences?: string[];
-  rating?: number;
-  reviewsCount?: number;
 }
 
 interface AuthContextType {
   user: User | null;
-  token: string | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (userData: RegisterData) => Promise<void>;
-  logout: () => void;
-  isLoading: boolean;
-}
-
-interface RegisterData {
-  name: string;
-  email: string;
-  password: string;
-  role: 'tourist' | 'guide';
-  bio?: string;
-  languages?: string[];
-  expertise?: string[];
-  dailyRate?: number;
-  travelPreferences?: string[];
+  loading: boolean;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { data: session, status } = useSession();
 
-  useEffect(() => {
-    // Check for stored auth data on mount
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
+  // Memoize user object - Always return a consistent structure
+  const user = useMemo(() => {
+    if (!session?.user) return null;
+    
+    return {
+      id: (session.user as any).id || '',
+      name: session.user.name || '',
+      email: session.user.email || '',
+      role: ((session.user as any).role as 'tourist' | 'guide' | 'admin') || 'tourist',
+    };
+  }, [session]);
 
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
-  }, []);
+  const loading = status === 'loading';
 
-  const login = async (email: string, password: string) => {
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Login failed');
-      }
-
-      const { user: userData, token: authToken } = data;
-
-      setUser(userData);
-      setToken(authToken);
-
-      // Store in localStorage
-      localStorage.setItem('token', authToken);
-      localStorage.setItem('user', JSON.stringify(userData));
-    } catch (error) {
-      console.error('Login error:', error);
-      throw error;
-    }
+  const logout = async () => {
+    await signOut({ redirect: true, callbackUrl: '/' });
   };
 
-  const register = async (userData: RegisterData) => {
-    try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Registration failed');
-      }
-
-      const { user: newUser, token: authToken } = data;
-
-      setUser(newUser);
-      setToken(authToken);
-
-      // Store in localStorage
-      localStorage.setItem('token', authToken);
-      localStorage.setItem('user', JSON.stringify(newUser));
-    } catch (error) {
-      console.error('Registration error:', error);
-      throw error;
-    }
-  };
-
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-  };
-
-  const value = {
+  const contextValue = useMemo(() => ({
     user,
-    token,
-    login,
-    register,
+    loading,
     logout,
-    isLoading,
-  };
+  }), [user, loading]);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={contextValue}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

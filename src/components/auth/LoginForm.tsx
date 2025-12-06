@@ -4,13 +4,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '@/context/AuthContext';
+import { signIn } from 'next-auth/react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import Logo from '../Logo';
 
 export function LoginForm() {
-  const { login } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -62,8 +61,21 @@ export function LoginForm() {
     setErrors({});
 
     try {
-      await login(formData.email, formData.password);
-      router.push('/dashboard');
+      const result = await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+
+      if (result?.ok) {
+        // Redirect to dashboard after successful login
+        router.push('/dashboard');
+        router.refresh(); // Refresh to update session
+      }
     } catch (error: any) {
       setErrors({ submit: error.message || 'Login failed' });
     } finally {
@@ -73,7 +85,7 @@ export function LoginForm() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div>
+      <div className="flex justify-center">
         <Logo/>
       </div>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">

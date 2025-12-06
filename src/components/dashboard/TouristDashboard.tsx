@@ -100,7 +100,7 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
               Upcoming Trips
             </h2>
             <button
-              onClick={() => router.push("/my-bookings")}
+              onClick={() => router.push("/dashboard/my-bookings")}
               className="text-blue-600 hover:text-blue-700 text-sm font-medium"
             >
               View All
@@ -126,31 +126,34 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
                   className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
                   onClick={() => router.push(`/bookings/${booking._id}`)}
                 >
-                  <div className="flex relative items-center space-x-3">
-                    <Image
-                      src={booking.tour?.images?.[0] || "/profile.jpg"}
-                      alt={booking.tour?.title}
-                      fill
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
+                  <div className="flex items-center space-x-3">
+                    <div className="relative w-12 h-12">
+                      <Image
+                        src={booking.tour?.images?.[0] || "/profile.jpg"}
+                        alt={booking.tour?.title || "Tour image"}
+                        fill
+                        className="rounded-lg object-cover"
+                        sizes="48px"
+                      />
+                    </div>
                     <div>
                       <h3 className="font-medium text-gray-900 text-sm">
-                        {booking.tour?.title}
+                        {booking.tour?.title || "Untitled Tour"}
                       </h3>
                       <p className="text-gray-600 text-xs">
-                        with {booking.guide?.name}
+                        with {booking.guide?.name || "Guide"}
                       </p>
                       <p className="text-gray-500 text-xs">
-                        {formatDate(booking.date)}
+                        {booking.date ? formatDate(booking.date) : "Date not set"}
                       </p>
                     </div>
                   </div>
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
-                      booking.status
+                      booking.status || "pending"
                     )}`}
                   >
-                    {booking.status}
+                    {booking.status || "pending"}
                   </span>
                 </div>
               ))}
@@ -182,19 +185,22 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
                   className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 cursor-pointer"
                   onClick={() => router.push(`/bookings/${booking._id}`)}
                 >
-                  <div className="flex relative items-center space-x-3">
-                    <Image
-                      src={booking.tour?.images?.[0] || "/profile.jpg"}
-                      alt={booking.tour?.title}
-                      fill
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
+                  <div className="flex items-center space-x-3">
+                    <div className="relative w-12 h-12">
+                      <Image
+                        src={booking.tour?.images?.[0] || "/profile.jpg"}
+                        alt={booking.tour?.title || "Tour image"}
+                        fill
+                        className="rounded-lg object-cover"
+                        sizes="48px"
+                      />
+                    </div>
                     <div>
                       <h3 className="font-medium text-gray-900 text-sm">
-                        {booking.tour?.title}
+                        {booking.tour?.title || "Untitled Tour"}
                       </h3>
                       <p className="text-gray-600 text-xs">
-                        Awaiting confirmation from {booking.guide?.name}
+                        Awaiting confirmation from {booking.guide?.name || "Guide"}
                       </p>
                     </div>
                   </div>
@@ -224,7 +230,7 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
           </button>
 
           <button
-            onClick={() => router.push("/my-bookings")}
+            onClick={() => router.push("/dashboard/my-bookings")}
             className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
           >
             <span className="text-2xl mr-3">📋</span>

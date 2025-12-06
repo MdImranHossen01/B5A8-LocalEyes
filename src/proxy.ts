@@ -1,95 +1,134 @@
-// G:\Level 2\Milestone 8\localeyes\src\proxy.ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { verifyToken } from '@/lib/auth';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
-// Admin-specific routes that require authentication
-const adminRoutes = [
-  '/admin',
-  '/admin/users',
-  '/api/admin',
+type UserRole = "admin" | "tourist" | "guide";
+
+type RouteConfig = {
+  exact: string[];
+  patterns: RegExp[];
+};
+
+const authRoutes = [
+  "/login",
+  "/register"
 ];
 
-// MUST export a function named "proxy" (not middleware)
-export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+const commonProtectedRoutes: RouteConfig = {
+  exact: ["/dashboard"],
+  patterns: [/^\/dashboard($|\/)/],
+};
 
-  // Check if it's an admin route
-  const isAdminRoute = adminRoutes.some(route => 
-    pathname.startsWith(route)
-  );
+const adminProtectedRoutes: RouteConfig = {
+  exact: ["/admin"],
+  patterns: [/^\/admin($|\/)/, /^\/dashboard\/admin($|\/)/],
+};
 
-  if (!isAdminRoute) {
-    return NextResponse.next();
+const guideProtectedRoutes: RouteConfig = {
+  patterns: [/^\/dashboard\/listings($|\/)/, /^\/dashboard\/earnings($|\/)/],
+  exact: [],
+};
+
+const touristProtectedRoutes: RouteConfig = {
+  patterns: [/^\/dashboard\/my-bookings($|\/)/],
+  exact: [],
+};
+
+const isAuthRoute = (pathname: string) => {
+  return authRoutes.some((route: string) => route === pathname);
+};
+
+const isRouteMatches = (pathname: string, routes: RouteConfig): boolean => {
+  if (routes.exact.includes(pathname)) {
+    return true;
+  }
+  return routes.patterns.some((pattern: RegExp) => pattern.test(pathname));
+};
+
+const getRouteOwner = (
+  pathname: string
+): "admin" | "guide" | "tourist" | "common" | "null" => {
+  if (isRouteMatches(pathname, adminProtectedRoutes)) {
+    return "admin";
+  }
+  if (isRouteMatches(pathname, guideProtectedRoutes)) {
+    return "guide";
+  }
+  if (isRouteMatches(pathname, touristProtectedRoutes)) {
+    return "tourist";
+  }
+  if (isRouteMatches(pathname, commonProtectedRoutes)) {
+    return "common";
+  }
+  return "null";
+};
+
+const getDefaultDashboardRoute = (role: UserRole): string => {
+  if (role === "admin") {
+    return "/admin";
+  }
+  return "/dashboard";
+};
+
+export async function proxy(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  
+  // Get the session token using NextAuth
+  const token = await getToken({ 
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+    cookieName: process.env.NODE_ENV === 'production' 
+      ? '__Secure-next-auth.session-token' 
+      : 'next-auth.session-token'
+  });
+
+  const isAuthenticated = !!token;
+  const userRole = token?.role as UserRole || null;
+
+  // Debug logging (remove in production)
+  console.log('Middleware:', {
+    pathname,
+    isAuthenticated,
+    userRole,
+    hasToken: !!token
+  });
+
+  // If user is on auth route but already logged in, redirect to dashboard
+  if (isAuthRoute(pathname) && isAuthenticated && userRole) {
+    return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole), request.url));
   }
 
-  // Check for authorization header (for API routes)
-  const authHeader = request.headers.get('authorization');
-  let token: string | null = null;
+  // Check if route requires authentication
+  const routeOwner = getRouteOwner(pathname);
+  
+  // If route is protected and user is not authenticated, redirect to login
+  if (routeOwner !== "null" && !isAuthenticated) {
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(loginUrl);
+  }
 
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    token = authHeader.substring(7);
-  } else {
-    // Check cookies for web routes
-    const cookieToken = request.cookies.get('token')?.value;
-    if (cookieToken) {
-      token = cookieToken;
+  // Check role-based access
+  if (isAuthenticated && userRole) {
+    if (routeOwner === "admin" && userRole !== "admin") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
-  }
-
-  if (!token) {
-    return new NextResponse(
-      JSON.stringify({ error: 'Authentication required' }),
-      { 
-        status: 401,
-        headers: { 'content-type': 'application/json' }
-      }
-    );
-  }
-
-  try {
-    // Verify token
-    const decoded = verifyToken(token);
     
-    // Check if user is admin
-    if (decoded.role !== 'admin') {
-      return new NextResponse(
-        JSON.stringify({ error: 'Admin access required' }),
-        { 
-          status: 403,
-          headers: { 'content-type': 'application/json' }
-        }
-      );
+    if (routeOwner === "guide" && userRole !== "guide") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
     }
-
-    // Add user info to request headers for API routes
-    const requestHeaders = new Headers(request.headers);
-    requestHeaders.set('x-user-id', decoded.userId);
-    requestHeaders.set('x-user-role', decoded.role);
-
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    });
-  } catch (error) {
-    console.error('Auth proxy error:', error);
-    return new NextResponse(
-      JSON.stringify({ error: 'Invalid token' }),
-      { 
-        status: 401,
-        headers: { 'content-type': 'application/json' }
-      }
-    );
+    
+    if (routeOwner === "tourist" && userRole !== "tourist") {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
   }
+
+  // Allow the request to proceed
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all admin request paths
-     */
-    '/admin/:path*',
-    '/api/admin/:path*',
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|.well-known).*)",
   ],
 };
