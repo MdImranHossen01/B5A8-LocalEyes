@@ -60,8 +60,8 @@ export function Footer() {
             <ul className="space-y-2">
               <li><Link href="/help" className="text-gray-400 hover:text-white">Help Center</Link></li>
               <li><Link href="/contact" className="text-gray-400 hover:text-white">Contact Us</Link></li>
-              <li><Link href="/privacy" className="text-gray-400 hover:text-white">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="text-gray-400 hover:text-white">Terms of Service</Link></li>
+              <li><Link href="/Privacy-Policy" className="text-gray-400 hover:text-white">Privacy Policy</Link></li>
+              <li><Link href="/terms-of-service" className="text-gray-400 hover:text-white">Terms of Service</Link></li>
             </ul>
           </div>
         </div>
@@ -70,11 +70,7 @@ export function Footer() {
           <p className="text-gray-400">
             © 2024 LocalGuide Platform. All rights reserved.
           </p>
-          <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link href="/sitemap" className="text-gray-400 hover:text-white text-sm">Sitemap</Link>
-            <Link href="/accessibility" className="text-gray-400 hover:text-white text-sm">Accessibility</Link>
-            <Link href="/cookies" className="text-gray-400 hover:text-white text-sm">Cookies</Link>
-          </div>
+         
         </div>
       </div>
     </footer>
