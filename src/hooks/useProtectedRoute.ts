@@ -16,10 +16,17 @@ export function useProtectedRoute(requiredRole?: 'tourist' | 'guide' | 'admin') 
         return;
       }
 
-      if (requiredRole && user.role !== requiredRole && user.role !== 'admin') {
-        // Redirect to home if user doesn't have required role
-        router.push('/');
-        return;
+      if (requiredRole) {
+        // Allow admin to access any route
+        if (user.role === 'admin') {
+          return;
+        }
+        
+        // Check if non-admin user has the required role
+        if (user.role !== requiredRole) {
+          router.push('/');
+          return;
+        }
       }
     }
   }, [user, isLoading, requiredRole, router]);

@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
-import { useAuth } from '@/context/AuthContext'; // Add this import
+import { useAuth } from '@/context/AuthContext'; // ADD THIS IMPORT
 import Image from 'next/image';
 
 interface User {
@@ -22,7 +22,7 @@ interface User {
 
 export function AdminUsersClient() {
   const { isLoading } = useProtectedRoute('admin');
-  const { token } = useAuth(); // Get token from auth context
+  const { token } = useAuth(); // GET TOKEN FROM CONTEXT
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
@@ -40,19 +40,16 @@ export function AdminUsersClient() {
   useEffect(() => {
     let results = users;
     
-    // Apply role filter
     if (filterRole !== 'all') {
       results = results.filter(user => user.role === filterRole);
     }
     
-    // Apply status filter
     if (filterStatus !== 'all') {
       results = results.filter(user => 
         filterStatus === 'active' ? user.isActive : !user.isActive
       );
     }
     
-    // Apply search
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       results = results.filter(user => 
@@ -67,6 +64,7 @@ export function AdminUsersClient() {
   const fetchUsers = async () => {
     if (!token) {
       console.error('No token available');
+      setIsLoadingData(false);
       return;
     }
 
@@ -74,15 +72,10 @@ export function AdminUsersClient() {
     try {
       const response = await fetch('/api/admin/users', {
         headers: {
-          'Authorization': `Bearer ${token}`, // Add Authorization header
+          'Authorization': `Bearer ${token}`, // ADD AUTHORIZATION HEADER
           'Content-Type': 'application/json',
         },
       });
-      
-      if (response.status === 401) {
-        console.error('Authentication failed');
-        return;
-      }
       
       const data = await response.json();
       
@@ -90,9 +83,11 @@ export function AdminUsersClient() {
         setUsers(data.users || []);
       } else {
         console.error('Error fetching users:', data.error);
+        alert(data.error || 'Failed to fetch users');
       }
     } catch (error) {
       console.error('Error fetching users:', error);
+      alert('Failed to fetch users. Please check console for details.');
     } finally {
       setIsLoadingData(false);
     }
@@ -112,25 +107,27 @@ export function AdminUsersClient() {
       const response = await fetch(`/api/admin/users/${userId}/status`, {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${token}`, // Add Authorization header
+          'Authorization': `Bearer ${token}`, // ADD AUTHORIZATION HEADER
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ isActive: !currentStatus }),
       });
 
+      const data = await response.json();
+      
       if (response.ok) {
-        // Update local state
         setUsers(users.map(user => 
           user._id === userId 
             ? { ...user, isActive: !currentStatus }
             : user
         ));
       } else {
-        const errorData = await response.json();
-        console.error('Error updating user status:', errorData.error);
+        console.error('Error updating user status:', data.error);
+        alert(data.error || 'Failed to update user status');
       }
     } catch (error) {
       console.error('Error updating user status:', error);
+      alert('Failed to update user status');
     }
   };
 
@@ -144,25 +141,27 @@ export function AdminUsersClient() {
       const response = await fetch(`/api/admin/users/${userId}/verify`, {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${token}`, // Add Authorization header
+          'Authorization': `Bearer ${token}`, // ADD AUTHORIZATION HEADER
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ isVerified: !isVerified }),
       });
 
+      const data = await response.json();
+      
       if (response.ok) {
-        // Update local state
         setUsers(users.map(user => 
           user._id === userId 
             ? { ...user, isVerified: !isVerified }
             : user
         ));
       } else {
-        const errorData = await response.json();
-        console.error('Error verifying user:', errorData.error);
+        console.error('Error verifying user:', data.error);
+        alert(data.error || 'Failed to verify user');
       }
     } catch (error) {
       console.error('Error verifying user:', error);
+      alert('Failed to verify user');
     }
   };
 
@@ -180,25 +179,27 @@ export function AdminUsersClient() {
       const response = await fetch(`/api/admin/users/${userId}/role`, {
         method: 'PATCH',
         headers: {
-          'Authorization': `Bearer ${token}`, // Add Authorization header
+          'Authorization': `Bearer ${token}`, // ADD AUTHORIZATION HEADER
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ role: newRole }),
       });
 
+      const data = await response.json();
+      
       if (response.ok) {
-        // Update local state
         setUsers(users.map(user => 
           user._id === userId 
             ? { ...user, role: newRole as any }
             : user
         ));
       } else {
-        const errorData = await response.json();
-        console.error('Error updating user role:', errorData.error);
+        console.error('Error updating user role:', data.error);
+        alert(data.error || 'Failed to update user role');
       }
     } catch (error) {
       console.error('Error updating user role:', error);
+      alert('Failed to update user role');
     }
   };
 
@@ -209,9 +210,6 @@ export function AdminUsersClient() {
       year: 'numeric',
     });
   };
-
-  // Also update the Image component issues in your JSX
-  // Fix the Image components with fill prop:
 
   if (isLoading || isLoadingData) {
     return (
@@ -347,9 +345,9 @@ export function AdminUsersClient() {
                           <Image
                             src={user.profilePic || '/profile.jpg'}
                             alt={user.name}
-                            fill
+                            width={32}
+                            height={32}
                             className="rounded-full object-cover"
-                            sizes="32px"
                           />
                         </div>
                         <div>
@@ -449,9 +447,9 @@ export function AdminUsersClient() {
                     <Image
                       src={selectedUser.profilePic || '/profile.jpg'}
                       alt={selectedUser.name}
-                      fill
+                      width={64}
+                      height={64}
                       className="rounded-full object-cover"
-                      sizes="64px"
                     />
                   </div>
                   <div>

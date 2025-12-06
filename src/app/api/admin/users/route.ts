@@ -4,9 +4,41 @@ import dbConnect from '@/lib/db';
 import User from '@/models/User';
 import Tour from '@/models/Tour';
 import Booking from '@/models/Booking';
+import { verifyToken } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
+    // Check authentication FIRST
+    const authHeader = request.headers.get('Authorization');
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.substring(7);
+    let decoded;
+    
+    try {
+      decoded = verifyToken(token);
+    } catch (error) {
+      return NextResponse.json(
+        { error: 'Invalid or expired token' },
+        { status: 401 }
+      );
+    }
+
+    // Check if user is admin
+    if (decoded.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      );
+    }
+
+    // Now connect to database
     await dbConnect();
 
     const { searchParams } = new URL(request.url);
@@ -105,6 +137,26 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check authentication
+    const authHeader = request.headers.get('Authorization');
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = verifyToken(token);
+
+    if (decoded.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      );
+    }
+
     await dbConnect();
     
     const userData = await request.json();
@@ -126,7 +178,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create user (in a real app, you'd generate a temporary password)
+    // Create user
     const user: any = await User.create({
       ...userData,
       isActive: true,
@@ -152,9 +204,28 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Optional: DELETE endpoint for user removal
 export async function DELETE(request: NextRequest) {
   try {
+    // Check authentication
+    const authHeader = request.headers.get('Authorization');
+    
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = verifyToken(token);
+
+    if (decoded.role !== 'admin') {
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      );
+    }
+
     await dbConnect();
     
     const { userIds } = await request.json();
@@ -179,7 +250,7 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    // Soft delete by marking as inactive instead of hard delete
+    // Soft delete by marking as inactive
     const result = await User.updateMany(
       { _id: { $in: userIds } },
       { isActive: false }
