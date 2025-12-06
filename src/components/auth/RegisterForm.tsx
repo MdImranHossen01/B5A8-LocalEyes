@@ -8,6 +8,7 @@ import { signIn } from 'next-auth/react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Select } from '@/components/ui/Select';
+import Logo from '../Logo';
 
 interface RegisterFormData {
   name: string;
@@ -177,6 +178,9 @@ export function RegisterForm() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+       <div className="flex justify-center">
+              <Logo/>
+            </div>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Create your account
@@ -209,6 +213,7 @@ export function RegisterForm() {
               onChange={handleChange}
               error={errors.name}
               required
+              className='text-gray-800'
             />
 
             <Input
@@ -219,6 +224,7 @@ export function RegisterForm() {
               onChange={handleChange}
               error={errors.email}
               required
+              className='text-gray-800'
             />
 
             <Input
@@ -229,6 +235,7 @@ export function RegisterForm() {
               onChange={handleChange}
               error={errors.password}
               required
+              className='text-gray-800'
             />
 
             <Input
@@ -239,6 +246,7 @@ export function RegisterForm() {
               onChange={handleChange}
               error={errors.confirmPassword}
               required
+              className='text-gray-800'
             />
 
             <Select
@@ -250,6 +258,7 @@ export function RegisterForm() {
                 { value: 'tourist', label: 'Traveler' },
                 { value: 'guide', label: 'Local Guide' },
               ]}
+              className='text-gray-800'
             />
 
             <Input
@@ -259,6 +268,7 @@ export function RegisterForm() {
               value={formData.bio}
               onChange={handleChange}
               placeholder="Tell us a bit about yourself..."
+              className='text-gray-800'
             />
 
             <Select
@@ -267,6 +277,7 @@ export function RegisterForm() {
               value={formData.languages}
               onChange={handleChange}
               options={languageOptions}
+              className='text-gray-800'
             />
 
             {formData.role === 'guide' && (
@@ -277,6 +288,7 @@ export function RegisterForm() {
                   value={formData.expertise}
                   onChange={handleChange}
                   options={expertiseOptions}
+                  className='text-gray-800'
                 />
 
                 <Input
@@ -287,6 +299,7 @@ export function RegisterForm() {
                   onChange={handleChange}
                   error={errors.dailyRate}
                   placeholder="50"
+                  className='text-gray-800'
                 />
               </>
             )}
@@ -298,6 +311,7 @@ export function RegisterForm() {
                 value={formData.travelPreferences}
                 onChange={handleChange}
                 options={preferenceOptions}
+                className='text-gray-800'
               />
             )}
 

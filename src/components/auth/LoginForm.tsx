@@ -120,6 +120,7 @@ export function LoginForm() {
               onChange={handleChange}
               error={errors.email}
               required
+              className='text-gray-800'
             />
 
             <Input
@@ -130,6 +131,7 @@ export function LoginForm() {
               onChange={handleChange}
               error={errors.password}
               required
+              className='text-gray-800'
             />
 
             <div className="flex items-center justify-between">
