@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/context/AuthContext';
+import { useSession } from 'next-auth/react';
 
 interface Tour {
   _id: string;
@@ -23,7 +23,7 @@ interface BookingWidgetProps {
 
 export function BookingWidget({ tour, user }: BookingWidgetProps) {
   const router = useRouter();
-  const { login } = useAuth();
+  const { data: session } = useSession();
   const [bookingData, setBookingData] = useState({
     date: '',
     time: '10:00',
@@ -31,6 +31,8 @@ export function BookingWidget({ tour, user }: BookingWidgetProps) {
     specialRequests: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const currentUser = user || (session?.user as any);
 
   const handleInputChange = (field: string, value: string | number) => {
     setBookingData(prev => ({
@@ -40,7 +42,7 @@ export function BookingWidget({ tour, user }: BookingWidgetProps) {
   };
 
   const handleBookNow = async () => {
-    if (!user) {
+    if (!currentUser) {
       // Redirect to login
       router.push('/login?returnUrl=' + encodeURIComponent(window.location.pathname));
       return;
@@ -55,7 +57,7 @@ export function BookingWidget({ tour, user }: BookingWidgetProps) {
 
     try {
       const bookingPayload = {
-        tourist: user.id,
+        tourist: currentUser.id,
         guide: tour.guide._id,
         tour: tour._id,
         date: new Date(`${bookingData.date}T${bookingData.time}`),
@@ -195,7 +197,7 @@ export function BookingWidget({ tour, user }: BookingWidgetProps) {
           disabled={isSubmitting || !bookingData.date}
           className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-semibold text-lg"
         >
-          {isSubmitting ? 'Booking...' : user ? 'Request to Book' : 'Login to Book'}
+          {isSubmitting ? 'Booking...' : currentUser ? 'Request to Book' : 'Login to Book'}
         </button>
 
         {/* Safety Info */}
