@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
 import Image from 'next/image';
 
-
 interface User {
   _id: string;
   name: string;
@@ -64,7 +63,7 @@ export function AdminUsersClient() {
   const fetchUsers = async () => {
     setIsLoadingData(true);
     try {
-      const response = await fetch('/api/admin/users');
+      const response = await fetch('/api/users');
       const data = await response.json();
       
       if (response.ok) {
@@ -83,7 +82,7 @@ export function AdminUsersClient() {
     }
 
     try {
-      const response = await fetch(`/api/admin/users/${userId}/status`, {
+      const response = await fetch(`/api/users/${userId}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -106,7 +105,7 @@ export function AdminUsersClient() {
 
   const handleVerifyUser = async (userId: string, isVerified: boolean) => {
     try {
-      const response = await fetch(`/api/admin/users/${userId}/verify`, {
+      const response = await fetch(`/api/users/${userId}/verify`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -133,7 +132,7 @@ export function AdminUsersClient() {
     }
 
     try {
-      const response = await fetch(`/api/admin/users/${userId}/role`, {
+      const response = await fetch(`/api/users/${userId}/role`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -295,13 +294,17 @@ export function AdminUsersClient() {
                 {filteredUsers.map((user) => (
                   <tr key={user._id} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="py-3 px-4">
-                      <div className="flex relative items-center space-x-3">
-                        <Image
-                          src={user.profilePic || '/profile.jpg'}
-                          alt={user.name}
-                          fill
-                          className="w-8 h-8 rounded-full object-cover"
-                        />
+                      <div className="flex items-center space-x-3">
+                        {/* Fixed Image component for table row */}
+                        <div className="relative w-8 h-8">
+                          <Image
+                            src={user.profilePic || '/profile.jpg'}
+                            alt={user.name}
+                            fill
+                            className="rounded-full object-cover"
+                            sizes="32px"
+                          />
+                        </div>
                         <div>
                           <p className="font-medium text-gray-900 text-sm">{user.name}</p>
                           <p className="text-xs text-gray-600">{user.email}</p>
@@ -394,13 +397,17 @@ export function AdminUsersClient() {
               </div>
 
               <div className="p-6">
-                <div className="flex relative items-center space-x-4 mb-6">
-                  <Image
-                    src={selectedUser.profilePic || '/profile.jpg'}
-                    alt={selectedUser.name}
-                    fill
-                    className="w-16 h-16 rounded-full object-cover"
-                  />
+                <div className="flex items-center space-x-4 mb-6">
+                  {/* Fixed Image component for modal */}
+                  <div className="relative w-16 h-16">
+                    <Image
+                      src={selectedUser.profilePic || '/profile.jpg'}
+                      alt={selectedUser.name}
+                      fill
+                      className="rounded-full object-cover"
+                      sizes="64px"
+                    />
+                  </div>
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900">{selectedUser.name}</h3>
                     <p className="text-gray-600">{selectedUser.email}</p>

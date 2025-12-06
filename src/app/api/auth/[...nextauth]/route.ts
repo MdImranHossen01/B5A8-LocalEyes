@@ -55,6 +55,7 @@ const authOptions: NextAuthOptions = {
         token.role = user.role;
         token.email = user.email;
         token.name = user.name;
+        token.profilePic = user.profilePic; 
       }
       return token;
     },
@@ -64,6 +65,7 @@ const authOptions: NextAuthOptions = {
         session.user.role = token.role as string;
         session.user.email = token.email as string;
         session.user.name = token.name as string;
+        session.user.profilePic = token.profilePic as string; 
       }
       return session;
     }

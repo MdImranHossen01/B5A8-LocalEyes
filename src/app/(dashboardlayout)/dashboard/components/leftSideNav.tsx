@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { signOut } from 'next-auth/react';
+import { useSession, signOut } from 'next-auth/react';
 import { 
   Home, 
   Compass, 
@@ -25,18 +26,23 @@ interface LeftSideNavProps {
 export default function LeftSideNav({ userRole }: LeftSideNavProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { data: session } = useSession();
+
+  // Get user from session
+  const user = session?.user as any;
+  const userId = user?.id;
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
-    router.push('/');
-    router.refresh();
+    router.push('/login');
+    window.location.reload(); // Force full reload to clear all states
   };
 
   const getNavItems = () => {
     const commonItems = [
       { href: '/dashboard', label: 'Overview', icon: <Home size={20} /> },
       { href: '/explore', label: 'Explore Tours', icon: <Compass size={20} /> },
-      { href: '/profile', label: 'Profile', icon: <User size={20} /> },
+      { href: `/profile/${userId}`, label: 'Profile', icon: <User size={20} /> }, // FIXED: Added user ID
     ];
 
     if (userRole === 'tourist') {
@@ -98,7 +104,7 @@ export default function LeftSideNav({ userRole }: LeftSideNavProps) {
         
         <button
           onClick={handleLogout}
-          className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-50 w-full"
+          className="flex items-center space-x-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 w-full mt-8"
         >
           <LogOut size={20} />
           <span className="font-medium">Logout</span>
