@@ -1,3 +1,4 @@
+// G:\Level 2\Milestone 8\localeyes\src\proxy.ts
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { verifyToken } from '@/lib/auth';
@@ -9,7 +10,8 @@ const adminRoutes = [
   '/api/admin',
 ];
 
-export async function proxy(request: NextRequest) {
+// MUST export a function named "proxy" (not middleware)
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Check if it's an admin route
@@ -71,7 +73,7 @@ export async function proxy(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Auth middleware error:', error);
+    console.error('Auth proxy error:', error);
     return new NextResponse(
       JSON.stringify({ error: 'Invalid token' }),
       { 
