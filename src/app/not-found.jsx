@@ -62,67 +62,10 @@ const NotFoundPage = () => {
           Don't worry, even the best explorers get lost sometimes!
         </p>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-2xl mx-auto">
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">500+</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Guides</div>
-          </div>
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">1,200+</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Tours</div>
-          </div>
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl font-bold text-green-600 dark:text-green-400">98%</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Satisfied</div>
-          </div>
-          <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">50+</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Countries</div>
-          </div>
-        </div>
+       
+       
 
-        {/* Quick Navigation */}
-        <div className="mb-12">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Quick Navigation
-          </h3>
-          <div className="flex flex-wrap justify-center gap-3">
-            {popularDestinations.map((dest, index) => (
-              <Link
-                key={index}
-                href={dest.path}
-                className="flex items-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700 px-6 py-3 rounded-lg transition-all hover:scale-105 hover:shadow-lg group"
-              >
-                <span className="text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform">
-                  {dest.icon}
-                </span>
-                <span className="font-medium text-gray-900 dark:text-white">{dest.name}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        {/* Search Suggestions */}
-        <div className="mb-12">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Search className="w-5 h-5 text-gray-500" />
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              What are you looking for?
-            </h3>
-          </div>
-          <div className="flex flex-wrap justify-center gap-3 max-w-2xl mx-auto">
-            {suggestedSearches.map((search, index) => (
-              <button
-                key={index}
-                onClick={() => window.location.href = `/explore?search=${encodeURIComponent(search)}`}
-                className="px-4 py-2 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm border border-gray-300 dark:border-gray-600 rounded-full text-gray-700 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-700 hover:border-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all hover:scale-105"
-              >
-                {search}
-              </button>
-            ))}
-          </div>
-        </div>
+       
 
         {/* Main CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -142,28 +85,9 @@ const NotFoundPage = () => {
           </Link>
         </div>
 
-        {/* Fun Message */}
-        <div className="mt-12 p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl border border-blue-100 dark:border-blue-800/30">
-          <p className="text-gray-700 dark:text-gray-300 italic">
-            "Not all those who wander are lost." But if you are, we're here to help you find your way back!
-          </p>
-        </div>
+       
 
-        {/* Helpful Tips */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600 dark:text-gray-400">
-          <div className="flex items-center justify-center gap-2">
-            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-            <span>Check the URL for typos</span>
-          </div>
-          <div className="flex items-center justify-center gap-2">
-            <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-            <span>Use the search bar above</span>
-          </div>
-          <div className="flex items-center justify-center gap-2">
-            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-            <span>Browse our popular pages</span>
-          </div>
-        </div>
+       
       </div>
 
       {/* Floating Elements */}
