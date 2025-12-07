@@ -139,10 +139,10 @@ const BecomeGuidePage = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-linear-to-b from-gray-50 to-white">
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10"></div>
+        <div className="absolute inset-0 bg-linear-to-r from-blue-600/10 to-purple-600/10"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
@@ -213,7 +213,7 @@ const BecomeGuidePage = () => {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 bg-gradient-to-r from-blue-50 to-purple-50">
+      <section className="py-20 bg-linear-to-r from-blue-50 to-purple-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -266,13 +266,13 @@ const BecomeGuidePage = () => {
               <ul className="space-y-4">
                 {requirements.map((req, index) => (
                   <li key={index} className="flex items-start gap-3">
-                    <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                    <CheckCircle className="w-6 h-6 text-green-500 shrink-0 mt-1" />
                     <span className="text-gray-700">{req}</span>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl p-8 text-white">
+            <div className="bg-linear-to-br from-blue-500 to-purple-600 rounded-2xl p-8 text-white">
               <div className="mb-6">
                 <Shield className="w-12 h-12 mb-4" />
                 <h3 className="text-2xl font-bold mb-2">we have Got You Covered</h3>
@@ -330,7 +330,7 @@ const BecomeGuidePage = () => {
                   </div>
                 </div>
                 <blockquote className="text-gray-700 italic mb-6">
-                  "{story.quote}"
+                  &quot;{story.quote}&quot;
                 </blockquote>
                 <div className="border-t pt-4">
                   <div className="flex justify-between">
@@ -372,7 +372,7 @@ const BecomeGuidePage = () => {
           </div>
 
           <div className="text-center mt-12">
-            <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
+            <div className="bg-linear-to-r from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
               <h3 className="text-2xl font-bold mb-4">Ready to Start Your Journey?</h3>
               <p className="mb-6 opacity-90">Join our community of passionate local guides today.</p>
               <Link

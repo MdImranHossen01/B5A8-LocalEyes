@@ -1,27 +1,14 @@
 "use client";
-import React from 'react';
 import Link from 'next/link';
-import { Home, Compass, Search, ArrowLeft, MapPin, Navigation } from 'lucide-react';
+import { Compass, ArrowLeft } from 'lucide-react';
 
 const NotFoundPage = () => {
-  const popularDestinations = [
-    { name: 'Home', path: '/', icon: <Home className="w-5 h-5" /> },
-    { name: 'Explore Tours', path: '/explore', icon: <Compass className="w-5 h-5" /> },
-    { name: 'Become a Guide', path: '/become-guide', icon: <Navigation className="w-5 h-5" /> },
-    { name: 'Contact Us', path: '/contact', icon: <MapPin className="w-5 h-5" /> },
-  ];
+ 
 
-  const suggestedSearches = [
-    'Adventure Tours',
-    'Food Experiences',
-    'Historical Sites',
-    'Local Guides',
-    'City Walking Tours',
-    'Cultural Activities',
-  ];
+ 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex flex-col items-center justify-center px-4 relative overflow-hidden">
+    <div className="min-h-screen pt-20 bg-linear-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex flex-col items-center justify-center px-4 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-blue-200 dark:bg-blue-900/30 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-pulse"></div>
@@ -43,7 +30,7 @@ const NotFoundPage = () => {
                 <div className="w-40 h-40 rounded-full border-4 border-dotted border-purple-500/40 animate-spin-reverse"></div>
               </div>
               <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-xl animate-float">
+                <div className="w-20 h-20 bg-linear-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-xl animate-float">
                   <Compass className="w-10 h-10 text-white" />
                 </div>
               </div>
@@ -58,8 +45,8 @@ const NotFoundPage = () => {
         
         {/* Description */}
         <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-          It looks like the page you're searching for has wandered off the beaten path. 
-          Don't worry, even the best explorers get lost sometimes!
+          It looks like the page you&apos;re searching for has wandered off the beaten path. 
+          Don&apos;t worry, even the best explorers get lost sometimes!
         </p>
 
        
@@ -71,7 +58,7 @@ const NotFoundPage = () => {
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/"
-            className="group inline-flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg"
+            className="group inline-flex items-center justify-center gap-2 bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-lg text-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl shadow-lg"
           >
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             Return Home
@@ -91,9 +78,9 @@ const NotFoundPage = () => {
       </div>
 
       {/* Floating Elements */}
-      <div className="absolute bottom-10 right-10 w-20 h-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full animate-bounce"></div>
-      <div className="absolute top-10 left-10 w-16 h-16 bg-gradient-to-r from-pink-500/20 to-orange-500/20 rounded-full animate-bounce animation-delay-1000"></div>
-      <div className="absolute bottom-20 left-20 w-24 h-24 bg-gradient-to-r from-green-500/20 to-teal-500/20 rounded-full animate-bounce animation-delay-2000"></div>
+      <div className="absolute bottom-10 right-10 w-20 h-20 bg-linear-to-r from-blue-500/20 to-purple-500/20 rounded-full animate-bounce"></div>
+      <div className="absolute top-10 left-10 w-16 h-16 bg-linear-to-r from-pink-500/20 to-orange-500/20 rounded-full animate-bounce animation-delay-1000"></div>
+      <div className="absolute bottom-20 left-20 w-24 h-24 bg-linear-to-r from-green-500/20 to-teal-500/20 rounded-full animate-bounce animation-delay-2000"></div>
 
       {/* Map Background Element */}
       <div className="absolute bottom-0 right-0 opacity-5 dark:opacity-10">
