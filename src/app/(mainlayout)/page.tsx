@@ -7,6 +7,8 @@ import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { TourCategories } from "@/components/home/TourCategories";
 import ThemeToggle from "@/components/ThemeToggle/ThemeToggle";
 import { ThemeProvider } from "@/components/theme-provider";
+import Newsletter from "../../components/home/Newsletter";
+import Faq from "@/components/home/Faq";
 
 export default function Home() {
   return (
@@ -52,6 +54,8 @@ export default function Home() {
           <Testimonials />
           <HowItWorks />
           <WhyChooseUs />
+          <Faq/>
+          <Newsletter/>
         </main>
       </ThemeProvider>
     </div>
