@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (!id || id === 'undefined') {
       console.warn('Undefined booking ID in generateMetadata');
       return {
-        title: 'Booking Not Found - Local Guide Platform',
+        title: 'Booking Not Found - Local Eyes',
       };
     }
     
@@ -47,17 +47,17 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     if (!booking) {
       return {
-        title: 'Booking Not Found - Local Guide Platform',
+        title: 'Booking Not Found - Local Eyes',
       };
     }
 
     return {
-      title: `Booking Details - ${booking.tour?.title || 'Booking'} - Local Guide Platform`,
+      title: `Booking Details - ${booking.tour?.title || 'Booking'} - Local Eyes`,
     };
   } catch (error) {
     console.error('Error in generateMetadata:', error);
     return {
-      title: 'Booking Details - Local Guide Platform',
+      title: 'Booking Details - Local Eyes',
     };
   }
 }

@@ -31,12 +31,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!tour) {
     return {
-      title: 'Tour Not Found - Local Guide Platform',
+      title: 'Tour Not Found - Local Eyes',
     };
   }
 
   return {
-    title: `Edit ${tour.title} - Local Guide Platform`,
+    title: `Edit ${tour.title} - Local Eyes`,
   };
 }
 

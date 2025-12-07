@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { Shield, Lock, Eye, UserCheck, Database, Mail, Cookie } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy - Local Guide Platform',
+  title: 'Privacy Policy - Local Eyes',
   description: 'Learn how we protect your privacy and handle your personal information on LocalEyes.',
 };
 

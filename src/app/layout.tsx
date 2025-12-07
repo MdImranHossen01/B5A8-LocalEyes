@@ -51,7 +51,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <title>Local Guide Platform</title>
+        <title>Local Eyes | Local Guide Platform</title>
         <meta
           name="description"
           content="Connect with local guides for authentic experiences"

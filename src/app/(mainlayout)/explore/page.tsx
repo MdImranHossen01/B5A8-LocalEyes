@@ -5,7 +5,7 @@ import ExplorePageContent from '@/components/explore/ExplorePageContent';
 import ExploreLoading from './loading';
 
 export const metadata: Metadata = {
-  title: 'Explore Tours - Local Guide Platform',
+  title: 'Explore Tours - Local Eyes',
   description: 'Discover amazing local experiences and find your perfect guide',
 };
 

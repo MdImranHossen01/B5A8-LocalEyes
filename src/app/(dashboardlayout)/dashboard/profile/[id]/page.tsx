@@ -32,13 +32,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!user) {
     return {
-      title: 'Profile Not Found - Local Guide Platform',
+      title: 'Profile Not Found - Local Eyes',
     };
   }
 
   return {
-    title: `${user.name} - ${user.role === 'guide' ? 'Local Guide' : 'Traveler'} - Local Guide Platform`,
-    description: user.bio || `View ${user.name}'s profile on Local Guide Platform`,
+    title: `${user.name} - ${user.role === 'guide' ? 'Local Guide' : 'Traveler'} - Local Eyes`,
+    description: user.bio || `View ${user.name}'s profile on Local Eyes`,
   };
 }
 

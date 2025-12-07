@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { FileText, Scale, Shield, AlertTriangle, CheckCircle, Ban, DollarSign, UserCheck, Globe, MessageSquare } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service - Local Guide Platform',
+  title: 'Terms of Service - Local Eyes',
   description: 'Terms and conditions governing the use of LocalEyes platform for travelers and guides.',
 };
 

@@ -38,12 +38,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   if (!tour) {
     return {
-      title: 'Tour Not Found - Local Guide Platform',
+      title: 'Tour Not Found - Local Eyes',
     };
   }
 
   return {
-    title: `${tour.title} - Local Guide Platform`,
+    title: `${tour.title} - Local Eyes`,
     description: tour.description.substring(0, 160),
     openGraph: {
       title: tour.title,

@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { RegisterForm } from '@/components/auth/RegisterForm';
 
 export const metadata: Metadata = {
-  title: 'Register - Local Guide Platform',
+  title: 'Register - Local Eyes',
   description: 'Create your account to start exploring or sharing local experiences',
 };
 

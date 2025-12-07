@@ -4,7 +4,7 @@ import { Mail, Phone, MapPin, Clock, MessageSquare, Send } from 'lucide-react';
 import ContactForm from '@/components/contact/ContactForm';
 
 export const metadata: Metadata = {
-  title: 'Contact Us - Local Guide Platform',
+  title: 'Contact Us - Local Eyes',
   description: 'Get in touch with our team for support, inquiries, or partnership opportunities.',
 };
 
