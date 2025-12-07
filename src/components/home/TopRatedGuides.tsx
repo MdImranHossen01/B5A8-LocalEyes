@@ -72,13 +72,13 @@ export function TopRatedGuides() {
   // Loading state
   if (loading) {
     return (
-      <section className="py-16 bg-white">
+      <section className="py-16 ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
               Top-Rated Guides
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Loading our most beloved local experts...
             </p>
           </div>
@@ -108,13 +108,13 @@ export function TopRatedGuides() {
   // Error state
   if (error) {
     return (
-      <section className="py-16 bg-white">
+      <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
               Top-Rated Guides
             </h2>
-            <p className="text-xl text-gray-600 mb-4">
+            <p className="text-xl text-muted-foreground mb-4">
               {error}
             </p>
             <button
@@ -132,13 +132,13 @@ export function TopRatedGuides() {
   // No guides state
   if (guides.length === 0) {
     return (
-      <section className="py-16 bg-white">
+      <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
               Top-Rated Guides
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               No guides available yet. Be the first to register as a guide!
             </p>
           </div>
@@ -156,13 +156,13 @@ export function TopRatedGuides() {
   }
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
             Top-Rated Guides
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Meet our most beloved local experts with outstanding reviews
           </p>
         </div>
@@ -194,7 +194,7 @@ export function TopRatedGuides() {
                   </div>
                 )}
                 <div>
-                  <h3 className="font-semibold text-gray-900">{guide.name}</h3>
+                  <h3 className="font-semibold text-primary">{guide.name}</h3>
                   {guide.isVerified && (
                     <div className="flex items-center mt-1">
                       <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
@@ -211,14 +211,14 @@ export function TopRatedGuides() {
                   {'★'.repeat(Math.floor(guide.rating))}
                   {'☆'.repeat(5 - Math.floor(guide.rating))}
                 </div>
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-muted-foreground">
                   {guide.rating.toFixed(1)} ({guide.reviewsCount} reviews)
                 </span>
               </div>
 
               {/* Expertise */}
               <div className="mb-4">
-                <h4 className="text-sm font-semibold text-gray-900 mb-2">Expertise</h4>
+                <h4 className="text-sm font-semibold text-primary mb-2">Expertise</h4>
                 <div className="flex flex-wrap gap-1">
                   {guide.expertise.slice(0, 2).map((skill, index) => (
                     <span
@@ -238,7 +238,7 @@ export function TopRatedGuides() {
 
               {/* Languages */}
               <div className="mb-4">
-                <h4 className="text-sm font-semibold text-gray-900 mb-2">Languages</h4>
+                <h4 className="text-sm font-semibold text-primary mb-2">Languages</h4>
                 <div className="flex flex-wrap gap-1">
                   {guide.languages.slice(0, 3).map((lang, index) => (
                     <span
@@ -259,10 +259,10 @@ export function TopRatedGuides() {
               {/* Price */}
               <div className="flex justify-between items-center">
                 <div>
-                  <span className="text-2xl font-bold text-gray-900">
+                  <span className="text-2xl font-bold text-primary">
                     ${guide.dailyRate}
                   </span>
-                  <span className="text-sm font-normal text-gray-600 ml-1">/day</span>
+                  <span className="text-sm font-normal text-muted-foreground ml-1">/day</span>
                 </div>
                 <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-semibold">
                   View Profile

@@ -71,13 +71,13 @@ export function PopularDestinations() {
   };
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
             Popular Destinations
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Discover the world&apos;s most exciting cities with our local experts
           </p>
         </div>
@@ -98,7 +98,7 @@ export function PopularDestinations() {
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                  <span className="text-sm font-semibold text-gray-900">
+                  <span className="text-sm font-semibold text-primary">
                     {destination.guideCount} guides
                   </span>
                 </div>
@@ -106,7 +106,7 @@ export function PopularDestinations() {
               
               <div className="p-6">
                 <div className="flex justify-between items-start mb-3">
-                  <h3 className="text-xl font-bold text-gray-900">
+                  <h3 className="text-xl font-bold text-primary">
                     {destination.name}
                   </h3>
                   <span className="text-gray-500 text-sm">
@@ -114,7 +114,7 @@ export function PopularDestinations() {
                   </span>
                 </div>
                 
-                <p className="text-gray-600 mb-4 line-clamp-2">
+                <p className="text-muted-foreground mb-4 line-clamp-2">
                   {destination.description}
                 </p>
                 

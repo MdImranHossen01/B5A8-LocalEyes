@@ -76,16 +76,16 @@ export function Testimonials() {
 
   return (
     <section
-      className="py-20 bg-linear-to-br from-[#d9f4e6] to-[#c8e6ff] overflow-hidden min-h-[800px] flex flex-col justify-center"
+      className="py-20  overflow-hidden min-h-[800px] flex flex-col justify-center"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="text-center mb-20">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6">
+          <h2 className="text-4xl font-bold text-primary mb-6">
             Traveler Stories
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
             Don&apos;t just take our word for it - hear from travelers who&apos;ve
             explored with our guides
           </p>
@@ -180,7 +180,7 @@ function TestimonialCard({
         </div>
       </div>
       {/* Content */}
-      <h3 className="text-xl font-bold text-gray-900 mb-2">{data.name}</h3>
+      <h3 className="text-xl font-bold text-primary mb-2">{data.name}</h3>
 
       {/* Stars */}
       <div className="flex gap-1 mb-6 text-[#0e4b6c]">
@@ -195,7 +195,7 @@ function TestimonialCard({
       </div>
 
       {/* Quote */}
-      <blockquote className="text-gray-600 italic leading-relaxed text-sm mb-6">
+      <blockquote className="text-muted-foreground italic leading-relaxed text-sm mb-6">
         &quot;{data.comment}&quot;
       </blockquote>
 

@@ -70,13 +70,13 @@ export function TourCategories() {
   };
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
             Tour Categories
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Find experiences that match your interests and passions
           </p>
         </div>
@@ -97,11 +97,11 @@ export function TourCategories() {
                 </span>
               </div>
               
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+              <h3 className="text-xl font-semibold text-primary mb-2">
                 {category.name}
               </h3>
               
-              <p className="text-gray-600 mb-4">
+              <p className="text-muted-foreground mb-4">
                 {category.description}
               </p>
               

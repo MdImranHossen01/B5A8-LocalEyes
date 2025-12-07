@@ -27,22 +27,22 @@ export function HowItWorks() {
   ];
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
             How It Works
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Getting started with LocalGuide is simple and straightforward
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-4 gap-8">
           {steps.map((step, index) => (
             <div
               key={step.number}
-              className="text-center group"
+              className="text-center group border border-border p-4 rounded-lg hover:shadow-lg transition-shadow duration-300"
             >
               <div className="relative mb-6">
                 <div className="w-20 h-20 mx-auto bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-blue-200 transition-colors">
@@ -53,10 +53,10 @@ export function HowItWorks() {
                 </div>
               </div>
               
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-xl font-semibold text-foreground mb-3">
                 {step.title}
               </h3>
-              <p className="text-gray-600 leading-relaxed">
+              <p className="text-muted-foreground leading-relaxed">
                 {step.description}
               </p>
             </div>

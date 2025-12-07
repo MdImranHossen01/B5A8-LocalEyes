@@ -1,5 +1,7 @@
+// G:\Level 2\Milestone 8\localeyes\src\components\layout\Footer.tsx
 import Link from 'next/link';
 import Logo from '../Logo';
+import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 
 export function Footer() {
   return (
@@ -15,19 +17,19 @@ export function Footer() {
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white">
                 <span className="sr-only">Facebook</span>
-                📘
+                <FaFacebookF className="w-5 h-5" />
               </a>
               <a href="#" className="text-gray-400 hover:text-white">
                 <span className="sr-only">Twitter</span>
-                🐦
+                <FaTwitter className="w-5 h-5" />
               </a>
               <a href="#" className="text-gray-400 hover:text-white">
                 <span className="sr-only">Instagram</span>
-                📷
+                <FaInstagram className="w-5 h-5" />
               </a>
               <a href="#" className="text-gray-400 hover:text-white">
                 <span className="sr-only">LinkedIn</span>
-                💼
+                <FaLinkedinIn className="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -70,7 +72,6 @@ export function Footer() {
           <p className="text-gray-400">
             © 2024 LocalGuide Platform. All rights reserved.
           </p>
-         
         </div>
       </div>
     </footer>
