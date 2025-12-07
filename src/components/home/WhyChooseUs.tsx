@@ -36,8 +36,8 @@ export function WhyChooseUs() {
     <section className="py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
-            Why Choose LocalGuide?
+          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+            Why Choose <span className="text-primary">Local Eyes?</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             We are changing the way people travel by connecting you directly with passionate locals
