@@ -74,8 +74,21 @@ export function LoginForm() {
       }
 
       if (result?.ok) {
+        // Determine user type based on email
+        let userType = 'User';
+        let redirectPath = '/dashboard';
+        
+        if (formData.email.includes('admin')) {
+          userType = 'Administrator';
+          redirectPath = '/admin';
+        } else if (formData.email.includes('guide')) {
+          userType = 'Guide';
+        } else if (formData.email.includes('tourist')) {
+          userType = 'Tourist';
+        }
+
         // Show success toast
-        toast.success('Login successful! Redirecting to dashboard...', {
+        toast.success(`${userType} login successful! Redirecting...`, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -86,10 +99,10 @@ export function LoginForm() {
           theme: "colored",
         });
 
-        // Redirect to dashboard after short delay to show toast
+        // Redirect to appropriate dashboard after short delay
         setTimeout(() => {
-          router.push('/dashboard');
-          router.refresh(); // Refresh to update session
+          router.push(redirectPath);
+          router.refresh();
         }, 1500);
       }
     } catch (error: any) {
@@ -127,8 +140,21 @@ export function LoginForm() {
       }
 
       if (result?.ok) {
-        // Show success toast
-        toast.success(`Logged in as ${email.includes('tourist') ? 'Tourist' : 'Guide'}! Redirecting...`, {
+        // Determine user type and redirect path
+        let userType = 'User';
+        let redirectPath = '/dashboard';
+        
+        if (email.includes('admin')) {
+          userType = 'Administrator';
+          redirectPath = '/admin';
+        } else if (email.includes('guide')) {
+          userType = 'Guide';
+        } else if (email.includes('tourist')) {
+          userType = 'Tourist';
+        }
+
+        // Show success toast with appropriate message
+        toast.success(`${userType} login successful! Redirecting to ${userType.toLowerCase()} dashboard...`, {
           position: "top-right",
           autoClose: 3000,
           hideProgressBar: false,
@@ -139,10 +165,10 @@ export function LoginForm() {
           theme: "colored",
         });
 
-        // Redirect to dashboard after short delay to show toast
+        // Redirect to appropriate dashboard
         setTimeout(() => {
-          router.push('/dashboard');
-          router.refresh(); // Refresh to update session
+          router.push(redirectPath);
+          router.refresh();
         }, 1500);
       }
     } catch (error: any) {
