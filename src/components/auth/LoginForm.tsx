@@ -259,8 +259,8 @@ export function LoginForm() {
                 </div>
               </div>
 
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                <div className="text-center">
+              <div className="mt-4 grid w-full grid-cols-3 gap-1">
+                <div className="text-center bg-amber-200">
                   <p className="text-xs text-gray-600 mb-1">Tourist</p>
                   <p className="text-xs text-gray-500">tourist@demo.com</p>
                   <p className="text-xs text-gray-500">password: 123456</p>
@@ -272,7 +272,7 @@ export function LoginForm() {
                     Quick Login
                   </button>
                 </div>
-                <div className="text-center">
+                <div className="text-center bg-amber-200">
                   <p className="text-xs text-gray-600 mb-1">Guide</p>
                   <p className="text-xs text-gray-500">guide@demo.com</p>
                   <p className="text-xs text-gray-500">password: 123456</p>
@@ -280,6 +280,18 @@ export function LoginForm() {
                     onClick={() => handleDemoLogin('guide@demo.com', '123456')}
                     disabled={loading}
                     className="mt-2 text-xs bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded transition-colors disabled:opacity-50"
+                  >
+                    Quick Login
+                  </button>
+                </div>
+                <div className="text-center bg-amber-200">
+                  <p className="text-xs text-gray-600 mb-1">Admin</p>
+                  <p className="text-xs text-gray-500">admin@demo.com</p>
+                  <p className="text-xs text-gray-500">password: 123456</p>
+                  <button
+                    onClick={() => handleDemoLogin('admin@demo.com', '123456')}
+                    disabled={loading}
+                    className="mt-2 text-xs bg-orange-600 hover:bg-orange-700 text-white px-3 py-1 rounded transition-colors disabled:opacity-50"
                   >
                     Quick Login
                   </button>
