@@ -13,7 +13,7 @@ async function getTour(id: string) {
     // Use relative URL instead of hardcoded localhost
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || '';
     const res = await fetch(`${baseUrl}/api/listings/${id}`, {
-      cache: 'no-store',
+      next: { revalidate: 60 }, // Revalidate every 60 seconds
       // Add headers if needed
       headers: {
         'Content-Type': 'application/json',
