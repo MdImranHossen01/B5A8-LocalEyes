@@ -28,10 +28,10 @@ export function Navigation() {
 
   // Type assertion for session user
   const user = session?.user as CustomUser | undefined;
-  const userRole = user?.role || 'tourist';
-  const userName = user?.name || 'User';
-  const userProfilePic = user?.profilePic || user?.image || '/profile.jpg';
-  
+  const userRole = user?.role || "tourist";
+  const userName = user?.name || "User";
+  const userProfilePic = user?.profilePic || user?.image || "/profile.jpg";
+
   // Get user ID - IMPORTANT FIX!
   const userId = user?.id; // NextAuth returns 'id' not '_id'
 
@@ -39,15 +39,22 @@ export function Navigation() {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       // Close dropdown if clicked outside
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setDropdownOpen(false);
       }
-      
+
       // Close mobile menu if clicked outside
-      if (mobileMenuOpen && 
-          mobileMenuRef.current && 
-          !mobileMenuRef.current.contains(event.target as Node) &&
-          !(event.target as Element).closest('button[aria-label="Toggle mobile menu"]')) {
+      if (
+        mobileMenuOpen &&
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target as Node) &&
+        !(event.target as Element).closest(
+          'button[aria-label="Toggle mobile menu"]'
+        )
+      ) {
         setMobileMenuOpen(false);
       }
     };
@@ -62,7 +69,7 @@ export function Navigation() {
       setMobileMenuOpen(false);
       setDropdownOpen(false);
     };
-    
+
     handleRouteChange();
   }, [pathname]); // Use pathname instead of router object
 
@@ -71,32 +78,32 @@ export function Navigation() {
     setMobileMenuOpen(false);
     setDropdownOpen(false);
     router.push("/");
-    router.refresh();
+    window.location.reload();
   };
 
   const getDashboardLink = () => {
     switch (userRole) {
-      case 'admin':
-        return '/dashboard';
-      case 'guide':
-        return '/dashboard';
-      case 'tourist':
-        return '/dashboard/my-bookings';
+      case "admin":
+        return "/dashboard";
+      case "guide":
+        return "/dashboard";
+      case "tourist":
+        return "/dashboard/my-bookings";
       default:
-        return '/';
+        return "/";
     }
   };
 
   const getDashboardLabel = () => {
     switch (userRole) {
-      case 'admin':
-        return 'Admin Dashboard';
-      case 'guide':
-        return 'Guide Dashboard';
-      case 'tourist':
-        return 'My Dashboard';
+      case "admin":
+        return "Admin Dashboard";
+      case "guide":
+        return "Guide Dashboard";
+      case "tourist":
+        return "My Dashboard";
       default:
-        return 'Dashboard';
+        return "Dashboard";
     }
   };
 
@@ -168,7 +175,7 @@ export function Navigation() {
                         sizes="32px"
                       />
                     </div>
-                    
+
                     <svg
                       className={`w-4 h-4 text-gray-500 transition-transform ${
                         dropdownOpen ? "rotate-180" : ""
@@ -202,14 +209,23 @@ export function Navigation() {
                             />
                           </div>
                           <div>
-                            <p className="font-semibold text-gray-900">{userName}</p>
-                            <p className="text-sm text-gray-600">{user?.email}</p>
-                            <span className={`inline-block mt-1 px-2 py-1 text-xs rounded-full ${
-                              userRole === 'admin' ? 'bg-purple-100 text-purple-800' :
-                              userRole === 'guide' ? 'bg-green-100 text-green-800' :
-                              'bg-blue-100 text-blue-800'
-                            }`}>
-                              {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
+                            <p className="font-semibold text-gray-900">
+                              {userName}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              {user?.email}
+                            </p>
+                            <span
+                              className={`inline-block mt-1 px-2 py-1 text-xs rounded-full ${
+                                userRole === "admin"
+                                  ? "bg-purple-100 text-purple-800"
+                                  : userRole === "guide"
+                                  ? "bg-green-100 text-green-800"
+                                  : "bg-blue-100 text-blue-800"
+                              }`}
+                            >
+                              {userRole.charAt(0).toUpperCase() +
+                                userRole.slice(1)}
                             </span>
                           </div>
                         </div>
@@ -222,45 +238,85 @@ export function Navigation() {
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           onClick={() => setDropdownOpen(false)}
                         >
-                          <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                          <svg
+                            className="w-5 h-5 mr-3 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                            />
                           </svg>
                           {getDashboardLabel()}
                         </Link>
-                        
+
                         {/* FIXED PROFILE LINK - Now includes user ID */}
                         <Link
                           href={`/profile/${userId}`}
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           onClick={() => setDropdownOpen(false)}
                         >
-                          <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          <svg
+                            className="w-5 h-5 mr-3 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                            />
                           </svg>
                           My Profile
                         </Link>
 
-                        {userRole === 'tourist' && (
+                        {userRole === "tourist" && (
                           <Link
                             href="/dashboard/my-bookings"
                             className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             onClick={() => setDropdownOpen(false)}
                           >
-                            <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            <svg
+                              className="w-5 h-5 mr-3 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                              />
                             </svg>
                             My Bookings
                           </Link>
                         )}
 
-                        {userRole === 'guide' && (
+                        {userRole === "guide" && (
                           <Link
                             href="/dashboard/listings"
                             className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                             onClick={() => setDropdownOpen(false)}
                           >
-                            <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                            <svg
+                              className="w-5 h-5 mr-3 text-gray-400"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                              />
                             </svg>
                             My Listings
                           </Link>
@@ -273,8 +329,18 @@ export function Navigation() {
                           onClick={handleLogout}
                           className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                         >
-                          <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                          <svg
+                            className="w-5 h-5 mr-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                            />
                           </svg>
                           Logout
                         </button>
@@ -354,14 +420,21 @@ export function Navigation() {
                           />
                         </div>
                         <div>
-                          <p className="font-semibold text-gray-900">{userName}</p>
+                          <p className="font-semibold text-gray-900">
+                            {userName}
+                          </p>
                           <p className="text-sm text-gray-600">{user?.email}</p>
-                          <span className={`inline-block mt-1 px-2 py-1 text-xs rounded-full ${
-                            userRole === 'admin' ? 'bg-purple-100 text-purple-800' :
-                            userRole === 'guide' ? 'bg-green-100 text-green-800' :
-                            'bg-blue-100 text-blue-800'
-                          }`}>
-                            {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
+                          <span
+                            className={`inline-block mt-1 px-2 py-1 text-xs rounded-full ${
+                              userRole === "admin"
+                                ? "bg-purple-100 text-purple-800"
+                                : userRole === "guide"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-blue-100 text-blue-800"
+                            }`}
+                          >
+                            {userRole.charAt(0).toUpperCase() +
+                              userRole.slice(1)}
                           </span>
                         </div>
                       </div>
@@ -374,19 +447,39 @@ export function Navigation() {
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => setDropdownOpen(false)}
                       >
-                        <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        <svg
+                          className="w-5 h-5 mr-3 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                          />
                         </svg>
                         {getDashboardLabel()}
                       </Link>
-                      
+
                       <Link
                         href={`/profile/${userId}`}
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => setDropdownOpen(false)}
                       >
-                        <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        <svg
+                          className="w-5 h-5 mr-3 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                          />
                         </svg>
                         My Profile
                       </Link>
@@ -396,8 +489,18 @@ export function Navigation() {
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => setDropdownOpen(false)}
                       >
-                        <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        <svg
+                          className="w-5 h-5 mr-3 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                          />
                         </svg>
                         Explore Tours
                       </Link>
@@ -407,33 +510,63 @@ export function Navigation() {
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                         onClick={() => setDropdownOpen(false)}
                       >
-                        <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        <svg
+                          className="w-5 h-5 mr-3 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                          />
                         </svg>
                         Become a Guide
                       </Link>
 
-                      {userRole === 'tourist' && (
+                      {userRole === "tourist" && (
                         <Link
                           href="/dashboard/my-bookings"
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           onClick={() => setDropdownOpen(false)}
                         >
-                          <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          <svg
+                            className="w-5 h-5 mr-3 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
                           </svg>
                           My Bookings
                         </Link>
                       )}
 
-                      {userRole === 'guide' && (
+                      {userRole === "guide" && (
                         <Link
                           href="/dashboard/listings"
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           onClick={() => setDropdownOpen(false)}
                         >
-                          <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                          <svg
+                            className="w-5 h-5 mr-3 text-gray-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                            />
                           </svg>
                           My Listings
                         </Link>
@@ -446,8 +579,18 @@ export function Navigation() {
                         onClick={handleLogout}
                         className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                       >
-                        <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        <svg
+                          className="w-5 h-5 mr-3"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                          />
                         </svg>
                         Logout
                       </button>
@@ -461,7 +604,10 @@ export function Navigation() {
 
         {/* Mobile Menu - Only for non-logged in users */}
         {mobileMenuOpen && !user && (
-          <div ref={mobileMenuRef} className="md:hidden border-t border-gray-100 py-4">
+          <div
+            ref={mobileMenuRef}
+            className="md:hidden border-t border-gray-100 py-4"
+          >
             <div className="flex flex-col space-y-3">
               <Link
                 href="/explore"
