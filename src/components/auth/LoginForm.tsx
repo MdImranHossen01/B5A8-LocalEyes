@@ -80,7 +80,7 @@ export function LoginForm() {
         
         if (formData.email.includes('admin')) {
           userType = 'Administrator';
-          redirectPath = '/admin';
+          redirectPath = '/dashboard';
         } else if (formData.email.includes('guide')) {
           userType = 'Guide';
         } else if (formData.email.includes('tourist')) {
@@ -146,7 +146,7 @@ export function LoginForm() {
         
         if (email.includes('admin')) {
           userType = 'Administrator';
-          redirectPath = '/admin';
+          redirectPath = '/dashboard';
         } else if (email.includes('guide')) {
           userType = 'Guide';
         } else if (email.includes('tourist')) {
