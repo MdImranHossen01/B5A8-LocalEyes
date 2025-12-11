@@ -18,6 +18,7 @@ import {
   FileText,
   Users
 } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 interface LeftSideNavProps {
   userRole: string;
@@ -79,7 +80,7 @@ export default function LeftSideNav({ userRole }: LeftSideNavProps) {
   return (
     <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
       <div className="p-6">
-        <h2 className="text-2xl font-bold text-gray-800">LocalEyes</h2>
+        <Logo/>
         <p className="text-sm text-gray-600 mt-1">Dashboard</p>
       </div>
       
