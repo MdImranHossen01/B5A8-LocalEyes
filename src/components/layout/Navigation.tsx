@@ -25,6 +25,7 @@ export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const logoutRef = useRef<HTMLButtonElement>(null); // New ref for logout button
 
   // Type assertion for session user
   const user = session?.user as CustomUser | undefined;
@@ -35,19 +36,26 @@ export function Navigation() {
   // Get user ID - IMPORTANT FIX!
   const userId = user?.id; // NextAuth returns 'id' not '_id'
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside - FIXED VERSION
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      
+      // Don't close if clicking on logout button
+      if (logoutRef.current && logoutRef.current.contains(target)) {
+        return;
+      }
+      
       // Close dropdown if clicked outside
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
         setDropdownOpen(false);
       }
       
       // Close mobile menu if clicked outside
       if (mobileMenuOpen && 
           mobileMenuRef.current && 
-          !mobileMenuRef.current.contains(event.target as Node) &&
-          !(event.target as Element).closest('button[aria-label="Toggle mobile menu"]')) {
+          !mobileMenuRef.current.contains(target) &&
+          !target.closest('button[aria-label="Toggle mobile menu"]')) {
         setMobileMenuOpen(false);
       }
     };
@@ -56,7 +64,7 @@ export function Navigation() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [mobileMenuOpen]);
 
-  // Close mobile menu and dropdown on route change - use pathname instead of router
+  // Close mobile menu and dropdown on route change
   useEffect(() => {
     const handleRouteChange = () => {
       setMobileMenuOpen(false);
@@ -64,23 +72,21 @@ export function Navigation() {
     };
     
     handleRouteChange();
-  }, [pathname]); // Use pathname instead of router object
+  }, [pathname]);
 
   const handleLogout = async () => {
     try {
-      console.log('Logout initiated...');
+      console.log('Logout initiated from desktop...');
       
-      // First close all dropdowns/menus
+      // Close dropdown immediately
       setDropdownOpen(false);
       setMobileMenuOpen(false);
       
       // Sign out from NextAuth
-      const result = await signOut({ 
+      await signOut({ 
         redirect: false,
         callbackUrl: "/"
       });
-      
-      console.log('Sign out result:', result);
       
       // Navigate to home page
       router.push("/");
@@ -291,9 +297,10 @@ export function Navigation() {
                         )}
                       </div>
 
-                      {/* Logout Button */}
+                      {/* Logout Button - FIXED with ref */}
                       <div className="border-t border-gray-100 pt-2">
                         <button
+                          ref={logoutRef}
                           onClick={handleLogout}
                           className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
                         >
@@ -464,9 +471,10 @@ export function Navigation() {
                       )}
                     </div>
 
-                    {/* Logout Button */}
+                    {/* Logout Button - Also fixed for mobile */}
                     <div className="border-t border-gray-100 pt-2">
                       <button
+                        ref={logoutRef}
                         onClick={handleLogout}
                         className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors"
                       >
