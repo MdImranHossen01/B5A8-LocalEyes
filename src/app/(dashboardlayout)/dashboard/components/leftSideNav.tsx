@@ -67,7 +67,7 @@ export default function LeftSideNav({ userRole }: LeftSideNavProps) {
         { href: '/dashboard', label: 'Dashboard', icon: <Home size={20} /> },
         { href: '/dashboard/admin/users', label: 'Users', icon: <Users size={20} /> },
         { href: '/dashboard/admin/manage-listings', label: 'Listings', icon: <FileText size={20} /> },
-        { href: '/admin/settings', label: 'Settings', icon: <Settings size={20} /> },
+        { href: '/dashboard/admin/settings', label: 'Settings', icon: <Settings size={20} /> },
       ];
     }
 
