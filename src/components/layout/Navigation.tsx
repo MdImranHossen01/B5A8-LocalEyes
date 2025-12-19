@@ -50,14 +50,15 @@ export function Navigation() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close mobile menu when the URL path changes
-  useEffect(() => {
-    // Use a cleanup function to close menus when pathname changes
-    return () => {
-      setMobileMenuOpen(false);
-      setDropdownOpen(false);
-    };
-  }, [pathname]);
+  // Don't use useEffect to close menus on pathname change
+  // Instead, let the component unmount/remount naturally between layouts
+  // or handle it in the Link onClick handlers
+
+  // Function to close all menus
+  const closeAllMenus = () => {
+    setMobileMenuOpen(false);
+    setDropdownOpen(false);
+  };
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
@@ -107,24 +108,28 @@ export function Navigation() {
                 <Link
                   href="/explore"
                   className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+                  onClick={closeAllMenus}
                 >
                   Explore Tours
                 </Link>
                 <Link
                   href="/become-guide"
                   className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+                  onClick={closeAllMenus}
                 >
                   Become a Guide
                 </Link>
                 <Link
                   href="/login"
                   className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+                  onClick={closeAllMenus}
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
                   className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium"
+                  onClick={closeAllMenus}
                 >
                   Register
                 </Link>
@@ -134,6 +139,7 @@ export function Navigation() {
                 <Link
                   href="/explore"
                   className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+                  onClick={closeAllMenus}
                 >
                   Explore Tours
                 </Link>
@@ -205,6 +211,7 @@ export function Navigation() {
                         <Link
                           href={getDashboardLink()}
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={closeAllMenus}
                         >
                           <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
@@ -215,6 +222,7 @@ export function Navigation() {
                         <Link
                           href={`/profile/${userId}`}
                           className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                          onClick={closeAllMenus}
                         >
                           <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -226,6 +234,7 @@ export function Navigation() {
                           <Link
                             href="/dashboard/my-bookings"
                             className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={closeAllMenus}
                           >
                             <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -238,6 +247,7 @@ export function Navigation() {
                           <Link
                             href="/dashboard/listings"
                             className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                            onClick={closeAllMenus}
                           >
                             <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -250,7 +260,10 @@ export function Navigation() {
                       {/* Logout Button */}
                       <div className="border-t border-gray-100 pt-2">
                         <button
-                          onClick={handleLogout}
+                          onClick={() => {
+                            closeAllMenus();
+                            handleLogout();
+                          }}
                           className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                         >
                           <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -297,24 +310,28 @@ export function Navigation() {
                 <Link
                   href="/explore"
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                  onClick={closeAllMenus}
                 >
                   Explore Tours
                 </Link>
                 <Link
                   href="/become-guide"
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                  onClick={closeAllMenus}
                 >
                   Become a Guide
                 </Link>
                 <Link
                   href="/login"
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                  onClick={closeAllMenus}
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
                   className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700 mt-2"
+                  onClick={closeAllMenus}
                 >
                   Register
                 </Link>
@@ -342,6 +359,7 @@ export function Navigation() {
                 <Link
                   href="/explore"
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                  onClick={closeAllMenus}
                 >
                   Explore Tours
                 </Link>
@@ -349,6 +367,7 @@ export function Navigation() {
                 <Link
                   href={getDashboardLink()}
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                  onClick={closeAllMenus}
                 >
                   {getDashboardLabel()}
                 </Link>
@@ -356,6 +375,7 @@ export function Navigation() {
                 <Link
                   href={`/profile/${userId}`}
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                  onClick={closeAllMenus}
                 >
                   My Profile
                 </Link>
@@ -364,6 +384,7 @@ export function Navigation() {
                   <Link
                     href="/dashboard/my-bookings"
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                    onClick={closeAllMenus}
                   >
                     My Bookings
                   </Link>
@@ -373,13 +394,17 @@ export function Navigation() {
                   <Link
                     href="/dashboard/listings"
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                    onClick={closeAllMenus}
                   >
                     My Listings
                   </Link>
                 )}
 
                 <button
-                  onClick={handleLogout}
+                  onClick={() => {
+                    closeAllMenus();
+                    handleLogout();
+                  }}
                   className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50 mt-2"
                 >
                   Logout
