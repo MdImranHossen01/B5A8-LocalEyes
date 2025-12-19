@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { flushSync } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation"; // Added usePathname
+import { useRouter, usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import Logo from "../Logo";
 
@@ -20,7 +19,7 @@ interface CustomUser {
 
 export function Navigation() {
   const router = useRouter();
-  const pathname = usePathname(); // Get current path
+  const pathname = usePathname();
   const { data: session } = useSession();
   
   // State for Desktop Profile Dropdown
@@ -51,12 +50,13 @@ export function Navigation() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Close mobile menu ONLY when the URL path actually changes
+  // Close mobile menu when the URL path changes
   useEffect(() => {
-    flushSync(() => {
+    // Use a cleanup function to close menus when pathname changes
+    return () => {
       setMobileMenuOpen(false);
       setDropdownOpen(false);
-    });
+    };
   }, [pathname]);
 
   const handleLogout = async () => {
