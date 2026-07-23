@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-type UserRole = "admin" | "tourist" | "guide";
+type UserRole = "admin" | "user" | "tourist";
 
 type RouteConfig = {
   exact: string[];
@@ -24,16 +24,6 @@ const adminProtectedRoutes: RouteConfig = {
   patterns: [/^\/admin($|\/)/, /^\/dashboard\/admin($|\/)/],
 };
 
-const guideProtectedRoutes: RouteConfig = {
-  patterns: [/^\/dashboard\/listings($|\/)/, /^\/dashboard\/earnings($|\/)/],
-  exact: [],
-};
-
-const touristProtectedRoutes: RouteConfig = {
-  patterns: [/^\/dashboard\/my-bookings($|\/)/],
-  exact: [],
-};
-
 const isAuthRoute = (pathname: string) => {
   return authRoutes.some((route: string) => route === pathname);
 };
@@ -47,15 +37,9 @@ const isRouteMatches = (pathname: string, routes: RouteConfig): boolean => {
 
 const getRouteOwner = (
   pathname: string
-): "admin" | "guide" | "tourist" | "common" | "null" => {
+): "admin" | "common" | "null" => {
   if (isRouteMatches(pathname, adminProtectedRoutes)) {
     return "admin";
-  }
-  if (isRouteMatches(pathname, guideProtectedRoutes)) {
-    return "guide";
-  }
-  if (isRouteMatches(pathname, touristProtectedRoutes)) {
-    return "tourist";
   }
   if (isRouteMatches(pathname, commonProtectedRoutes)) {
     return "common";
@@ -65,7 +49,7 @@ const getRouteOwner = (
 
 const getDefaultDashboardRoute = (role: UserRole): string => {
   if (role === "admin") {
-    return "/admin";
+    return "/dashboard/admin";
   }
   return "/dashboard";
 };
@@ -85,14 +69,6 @@ export async function proxy(request: NextRequest) {
   const isAuthenticated = !!token;
   const userRole = token?.role as UserRole || null;
 
-  // Debug logging (remove in production)
-  console.log('Middleware:', {
-    pathname,
-    isAuthenticated,
-    userRole,
-    hasToken: !!token
-  });
-
   // If user is on auth route but already logged in, redirect to dashboard
   if (isAuthRoute(pathname) && isAuthenticated && userRole) {
     return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole), request.url));
@@ -111,14 +87,6 @@ export async function proxy(request: NextRequest) {
   // Check role-based access
   if (isAuthenticated && userRole) {
     if (routeOwner === "admin" && userRole !== "admin") {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-    
-    if (routeOwner === "guide" && userRole !== "guide") {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-    
-    if (routeOwner === "tourist" && userRole !== "tourist") {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }

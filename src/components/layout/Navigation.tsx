@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import Logo from "../Logo";
+import ThemeToggle from "../ThemeToggle/ThemeToggle";
 
 // Custom type for session user with extended properties
 interface CustomUser {
@@ -94,49 +95,93 @@ export function Navigation() {
   return (
     <nav className="bg-white shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex-shrink-0">
-            <Logo />
+        <div className="relative flex justify-between items-center h-16">
+          {/* --- MOBILE HAMBURGER (LEFT) --- */}
+          <div className="md:hidden flex items-center mr-2">
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="text-gray-600 hover:text-blue-600 focus:outline-none p-2"
+            >
+              <span className="sr-only">Open main menu</span>
+              {mobileMenuOpen ? (
+                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              ) : (
+                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+              )}
+            </button>
           </div>
 
-          {/* --- DESKTOP NAVIGATION --- */}
-          <div className="hidden md:flex items-center space-x-4">
+          {/* Logo — absolutely centered on mobile, normal flow on desktop */}
+          <div className="absolute inset-x-0 flex justify-center md:static md:inset-auto md:flex-shrink-0 md:justify-start z-10 pointer-events-none">
+            <div className="pointer-events-auto">
+              <Logo />
+            </div>
+          </div>
+
+          {/* --- DESKTOP CENTER NAVIGATION --- */}
+          <div className="absolute inset-x-0 hidden md:flex items-center justify-center pointer-events-none">
+            <div className="flex items-center space-x-4 pointer-events-auto">
+              <Link
+                href="/"
+                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
+                  pathname === '/' 
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' 
+                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
+                }`}
+              >
+                Home
+              </Link>
+              <Link
+                href="/explore"
+                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
+                  pathname === '/explore' 
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' 
+                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
+                }`}
+              >
+                Tours
+              </Link>
+              <Link
+                href="/stories"
+                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
+                  pathname === '/stories' 
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' 
+                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
+                }`}
+              >
+                Stories
+              </Link>
+              <Link
+                href="/about"
+                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
+                  pathname === '/about' 
+                    ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' 
+                    : 'text-gray-700 hover:text-blue-600 hover:bg-gray-100'
+                }`}
+              >
+                About
+              </Link>
+            </div>
+          </div>
+
+          {/* --- DESKTOP RIGHT ACTIONS --- */}
+          <div className="hidden md:flex items-center space-x-3 z-20 pointer-events-auto">
+            <div className="relative z-30 cursor-pointer pointer-events-auto">
+              <ThemeToggle />
+            </div>
             {!user ? (
-              <>
-                <Link
-                  href="/explore"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Explore Tours
-                </Link>
-                <Link
-                  href="/become-guide"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Become a Guide
-                </Link>
-                <Link
-                  href="/login"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Login
-                </Link>
-                <Link
-                  href="/register"
-                  className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium"
-                >
-                  Register
-                </Link>
-              </>
+              <Link
+                href="/login"
+                className="bg-blue-600 text-white hover:bg-blue-700 px-5 py-2 rounded-full text-sm font-bold shadow-md shadow-blue-500/25 transition-all duration-300"
+              >
+                Login
+              </Link>
             ) : (
               <>
-                <Link
-                  href="/explore"
-                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Explore Tours
-                </Link>
 
                 {/* Desktop User Profile Dropdown */}
                 <div className="relative" ref={dropdownRef}>
@@ -266,24 +311,7 @@ export function Navigation() {
             )}
           </div>
 
-          {/* --- MOBILE MENU BUTTON --- */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-gray-600 hover:text-blue-600 focus:outline-none p-2"
-            >
-              <span className="sr-only">Open main menu</span>
-              {mobileMenuOpen ? (
-                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
-            </button>
-          </div>
+
         </div>
       </div>
 
@@ -294,30 +322,13 @@ export function Navigation() {
             {!user ? (
               // Mobile View: Logged OUT
               <>
-                <Link
-                  href="/explore"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                >
-                  Explore Tours
-                </Link>
-                <Link
-                  href="/become-guide"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                >
-                  Become a Guide
-                </Link>
-                <Link
-                  href="/login"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                >
-                  Login
-                </Link>
-                <Link
-                  href="/register"
-                  className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700 mt-2"
-                >
-                  Register
-                </Link>
+                <Link href="/" className={`block px-3 py-2 rounded-md text-base font-medium ${ pathname === '/' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'}`}>Home</Link>
+                <Link href="/explore" className={`block px-3 py-2 rounded-md text-base font-medium ${ pathname === '/explore' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'}`}>Tours</Link>
+                <Link href="/stories" className={`block px-3 py-2 rounded-md text-base font-medium ${ pathname === '/stories' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'}`}>Stories</Link>
+                <Link href="/about" className={`block px-3 py-2 rounded-md text-base font-medium ${ pathname === '/about' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'}`}>About</Link>
+                <div className="border-t border-gray-100 mt-2 pt-2">
+                  <Link href="/login" className="block px-3 py-2 rounded-md text-base font-medium bg-blue-600 text-white hover:bg-blue-700">Login</Link>
+                </div>
               </>
             ) : (
               // Mobile View: Logged IN
@@ -339,19 +350,10 @@ export function Navigation() {
                   </div>
                 </div>
 
-                <Link
-                  href="/explore"
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                >
-                  Explore Tours
-                </Link>
-
-                <Link
-                  href={getDashboardLink()}
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                >
-                  {getDashboardLabel()}
-                </Link>
+                <Link href="/" className={`block px-3 py-2 rounded-md text-base font-medium ${ pathname === '/' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'}`}>Home</Link>
+                <Link href="/explore" className={`block px-3 py-2 rounded-md text-base font-medium ${ pathname === '/explore' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'}`}>Tours</Link>
+                <Link href="/stories" className={`block px-3 py-2 rounded-md text-base font-medium ${ pathname === '/stories' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'}`}>Stories</Link>
+                <Link href="/about" className={`block px-3 py-2 rounded-md text-base font-medium ${ pathname === '/about' ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'}`}>About</Link>
 
                 <Link
                   href={`/profile/${userId}`}

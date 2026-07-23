@@ -8,7 +8,7 @@ interface User {
   id: string;
   name: string;
   email: string;
-  role: 'tourist' | 'guide' | 'admin';
+  role: 'user' | 'tourist' | 'admin';
 }
 
 interface AuthContextType {
@@ -30,7 +30,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       id: (session.user as any).id || '',
       name: session.user.name || '',
       email: session.user.email || '',
-      role: ((session.user as any).role as 'tourist' | 'guide' | 'admin') || 'tourist',
+      role: ((session.user as any).role as 'user' | 'tourist' | 'admin') || 'user',
     };
   }, [session]);
 

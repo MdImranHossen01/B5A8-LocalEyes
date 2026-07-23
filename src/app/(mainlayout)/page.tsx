@@ -1,14 +1,15 @@
 import { HeroSection } from "@/components/home/HeroSection";
 import { HowItWorks } from "@/components/home/HowItWorks";
 import { PopularDestinations } from "@/components/home/PopularDestinations";
-import { TopRatedGuides } from "@/components/home/TopRatedGuides";
 import { Testimonials } from "@/components/home/Testimonials";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { TourCategories } from "@/components/home/TourCategories";
-import ThemeToggle from "@/components/ThemeToggle/ThemeToggle";
-import { ThemeProvider } from "@/components/theme-provider";
 import Newsletter from "../../components/home/Newsletter";
 import Faq from "@/components/home/Faq";
+import { KhulnaToursSection } from "@/components/home/KhulnaToursSection";
+import { PremiumServices } from "@/components/home/PremiumServices";
+import { FeaturedPackages } from "@/components/home/FeaturedPackages";
+import { TravelStoriesSection } from "@/components/home/TravelStoriesSection";
 
 export default function Home() {
   return (
@@ -39,25 +40,18 @@ export default function Home() {
               `,
         }}
       />
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
-      >
-        <main>
-          <ThemeToggle />
-          <HeroSection />
-          <PopularDestinations />
-          <TourCategories />
-          <TopRatedGuides />
-          <Testimonials />
-          <HowItWorks />
-          <WhyChooseUs />
-          <Faq/>
-          <Newsletter/>
-        </main>
-      </ThemeProvider>
+      <main>
+        <HeroSection />
+        <KhulnaToursSection />
+        <PremiumServices />
+        <FeaturedPackages />
+        <PopularDestinations />
+        <TourCategories />
+        <TravelStoriesSection />
+        <Testimonials />
+        <WhyChooseUs />
+        <Faq />
+      </main>
     </div>
   );
 }

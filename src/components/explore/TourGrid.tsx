@@ -131,38 +131,6 @@ export function TourGrid({ tours, isLoading }: TourGridProps) {
 
           {/* Tour Content */}
           <div className="p-6">
-            {/* Guide Info */}
-            <div className="flex items-center mb-4">
-              {tour.guide.profilePic ? (
-                <div className="relative w-10 h-10 rounded-full mr-3 overflow-hidden">
-                  <Image
-                    src={tour.guide.profilePic}
-                    alt={tour.guide.name}
-                    width={40}
-                    height={40}
-                    className="rounded-full object-cover"
-                  />
-                </div>
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center mr-3">
-                  <span className="text-white text-sm font-bold">
-                    {getInitials(tour.guide.name)}
-                  </span>
-                </div>
-              )}
-              <div className="flex-1">
-                <h4 className="font-semibold text-gray-900 text-sm">
-                  {tour.guide.name}
-                </h4>
-                <div className="flex items-center text-sm text-gray-600">
-                  <span className="text-yellow-400 mr-1">★</span>
-                  <span>{tour.guide.rating || 4.5}</span>
-                  <span className="mx-1">•</span>
-                  <span>{tour.guide.reviewsCount || 0} reviews</span>
-                </div>
-              </div>
-            </div>
-
             {/* Tour Title & Description */}
             <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
               {tour.title}
@@ -181,23 +149,6 @@ export function TourGrid({ tours, isLoading }: TourGridProps) {
                 <span className="mr-2">⏱️</span>
                 {formatDuration(tour.duration)}
               </div>
-            </div>
-
-            {/* Languages */}
-            <div className="flex flex-wrap gap-1 mb-4">
-              {tour.guide.languages?.slice(0, 3).map((language) => (
-                <span
-                  key={language}
-                  className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded"
-                >
-                  {language}
-                </span>
-              ))}
-              {tour.guide.languages && tour.guide.languages.length > 3 && (
-                <span className="text-xs text-gray-500">
-                  +{tour.guide.languages.length - 3} more
-                </span>
-              )}
             </div>
 
             {/* Action Button */}

@@ -9,7 +9,6 @@ import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
 import {
   EffectCoverflow,
-  Pagination,
   Navigation,
   Autoplay,
 } from 'swiper/modules';
@@ -40,88 +39,76 @@ export function TourCategories() {
 
   const categories: Category[] = [
     {
-      id: 'food',
-      name: 'Food & Dining',
-      description: 'Experience authentic local cuisine with expert food guides who know the best spots in town.',
-      highlight: 'Culinary Adventures',
-      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80',
-      icon: '🍜',
-      rating: 4.8,
-      duration: '2-4 hours',
-      tourCount: 324,
-      color: { from: 'from-orange-500', to: 'to-red-500', glow: 'orange' },
+      id: 'flight-bookings',
+      name: 'Flight Bookings',
+      description: 'Book domestic and international tickets with all major airlines at competitive pricing.',
+      highlight: 'Instant Confirmation',
+      image: '/assets/slider/air-tickets.webp',
+      icon: '✈️',
+      rating: 4.9,
+      duration: '24/7 Support',
+      tourCount: 1250,
+      color: { from: 'from-blue-500', to: 'to-indigo-500', glow: 'blue' },
     },
     {
-      id: 'history',
-      name: 'History & Culture',
-      description: 'Explore historical sites and cultural heritage with knowledgeable local historians.',
-      highlight: 'Cultural Heritage',
-      image: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=800&q=80',
-      icon: '🏛️',
-      rating: 4.7,
-      duration: '3-5 hours',
-      tourCount: 287,
+      id: 'hajj-umrah',
+      name: 'Hajj & Umrah',
+      description: 'Fully guided spiritual Hajj and Umrah packages with premium accommodations and guides.',
+      highlight: 'Spiritual Journeys',
+      image: '/assets/slider/hajj-umrah.webp',
+      icon: '🕌',
+      rating: 5.0,
+      duration: 'Premium Hotels',
+      tourCount: 450,
+      color: { from: 'from-emerald-500', to: 'to-teal-500', glow: 'emerald' },
+    },
+    {
+      id: 'visa-services',
+      name: 'Visa Services',
+      description: 'Hassle-free visa application and processing support for all major countries.',
+      highlight: 'High Success Rate',
+      image: '/assets/slider/visa-processing.webp',
+      icon: '📄',
+      rating: 4.8,
+      duration: 'Express Support',
+      tourCount: 950,
       color: { from: 'from-amber-500', to: 'to-yellow-500', glow: 'yellow' },
     },
     {
-      id: 'adventure',
-      name: 'Adventure',
-      description: 'Thrilling outdoor activities and adrenaline-pumping adventures for thrill-seekers.',
-      highlight: 'Outdoor Thrills',
-      image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=800&q=80',
-      icon: '⛰️',
+      id: 'holiday-packages',
+      name: 'Holiday Packages',
+      description: 'Exotic domestic and international tour packages customized to your travel budget.',
+      highlight: 'Customized Deals',
+      image: '/assets/slider/holiday-packages.webp',
+      icon: '🏝️',
       rating: 4.9,
-      duration: '4-8 hours',
-      tourCount: 156,
-      color: { from: 'from-green-500', to: 'to-emerald-500', glow: 'emerald' },
+      duration: 'Family Friendly',
+      tourCount: 870,
+      color: { from: 'from-orange-500', to: 'to-red-500', glow: 'orange' },
     },
     {
-      id: 'art',
-      name: 'Art & Architecture',
-      description: 'Discover local art scenes and architectural wonders with artist guides.',
-      highlight: 'Creative Exploration',
-      image: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=800&q=80',
-      icon: '🎨',
-      rating: 4.6,
-      duration: '2-3 hours',
-      tourCount: 198,
-      color: { from: 'from-purple-500', to: 'to-pink-500', glow: 'purple' },
-    },
-    {
-      id: 'nature',
-      name: 'Nature & Wildlife',
-      description: 'Connect with nature and local wildlife in pristine natural environments.',
-      highlight: 'Wildlife Encounters',
-      image: 'https://images.unsplash.com/photo-1631280634576-c631714f1a72?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-      icon: '🌿',
+      id: 'medical-tourism',
+      name: 'Medical Tourism',
+      description: 'Complete healthcare travel assistance, doctor appointments, and hospital packages abroad.',
+      highlight: 'Complete Care Support',
+      image: '/assets/slider/medical-tourism.webp',
+      icon: '🏥',
       rating: 4.8,
-      duration: '3-6 hours',
-      tourCount: 142,
-      color: { from: 'from-emerald-500', to: 'to-teal-500', glow: 'teal' },
-    },
-    {
-      id: 'shopping',
-      name: 'Shopping & Markets',
-      description: 'Local markets and unique shopping experiences with personal shopping guides.',
-      highlight: 'Market Finds',
-      image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80',
-      icon: '🛍️',
-      rating: 4.5,
-      duration: '2-3 hours',
-      tourCount: 89,
+      duration: 'India/Global Care',
+      tourCount: 310,
       color: { from: 'from-pink-500', to: 'to-rose-500', glow: 'pink' },
     },
     {
-      id: 'photography',
-      name: 'Photography Tours',
-      description: 'Capture stunning photos with professional photographer guides at picturesque locations.',
-      highlight: 'Photo Ops',
-      image: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=800&q=80',
-      icon: '📷',
-      rating: 4.7,
-      duration: '3-4 hours',
-      tourCount: 112,
-      color: { from: 'from-blue-500', to: 'to-cyan-500', glow: 'blue' },
+      id: 'student-visa',
+      name: 'Student Visa Support',
+      description: 'Comprehensive counseling, university admission, and study visa processing services.',
+      highlight: 'Study Abroad Support',
+      image: '/assets/slider/student-visa.webp',
+      icon: '🎓',
+      rating: 4.9,
+      duration: 'Admission Guidance',
+      tourCount: 220,
+      color: { from: 'from-purple-500', to: 'to-pink-500', glow: 'purple' },
     },
   ];
 
@@ -200,10 +187,7 @@ export function TourCategories() {
               modifier: 1.5,
               slideShadows: false,
             }}
-            pagination={{
-              clickable: true,
-              dynamicBullets: true,
-            }}
+            pagination={false}
             navigation={{
               nextEl: ".pagination-next",
               prevEl: ".pagination-pre",
@@ -218,8 +202,8 @@ export function TourCategories() {
               disableOnInteraction: false,
               pauseOnMouseEnter: true,
             }}
-            modules={[EffectCoverflow, Pagination, Navigation, Autoplay]}
-            className="!pb-16"
+            modules={[EffectCoverflow, Navigation, Autoplay]}
+            className="!pb-4"
           >
             {categories.map((category, index) => {
               const colorScheme = colors[index % colors.length];
@@ -234,6 +218,7 @@ export function TourCategories() {
                         src={category.image}
                         alt={category.name}
                         fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
               
@@ -308,15 +293,16 @@ export function TourCategories() {
             })}
           </Swiper>
           
-          <button className="pagination-pre absolute left-0 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-white dark:bg-gray-800 rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center group transition-all duration-300 hover:scale-110 border-2 border-blue-500/20">
+          {/* Desktop Nav Arrows — absolute overlay */}
+          <button className="pagination-pre hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-white dark:bg-gray-800 rounded-full shadow-xl hover:shadow-2xl items-center justify-center group transition-all duration-300 hover:scale-110 border-2 border-blue-500/20">
             <ArrowLeft className="w-5 h-5 text-blue-600 dark:text-blue-400 group-hover:-translate-x-0.5 transition-transform" />
           </button>
-          
-          <button className="pagination-next absolute right-0 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-white dark:bg-gray-800 rounded-full shadow-xl hover:shadow-2xl flex items-center justify-center group transition-all duration-300 hover:scale-110 border-2 border-blue-500/20">
+
+          <button className="pagination-next hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-white dark:bg-gray-800 rounded-full shadow-xl hover:shadow-2xl items-center justify-center group transition-all duration-300 hover:scale-110 border-2 border-blue-500/20">
             <ArrowRight className="w-5 h-5 text-blue-600 dark:text-blue-400 group-hover:translate-x-0.5 transition-transform" />
           </button>
-          
-          <div className="swiper-pagination !bottom-0"></div>
+
+
         </div>
 
         {/* View All Button */}

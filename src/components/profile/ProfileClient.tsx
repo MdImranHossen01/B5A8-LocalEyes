@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { ProfileHeader } from './ProfileHeader';
-import { GuideProfileContent } from './GuideProfileContent';
 import { TouristProfileContent } from './TouristProfileContent';
 import { EditProfileModal } from './EditProfileModal';
 
@@ -12,12 +11,10 @@ type User = {
   _id: string;
   name: string;
   email: string;
-  role: 'tourist' | 'guide' | 'admin';
+  role: 'user' | 'tourist' | 'admin';
   profilePic?: string;
   bio: string;
   languages: string[];
-  expertise: string[];
-  dailyRate?: number;
   travelPreferences: string[];
   rating: number;
   reviewsCount: number;
@@ -45,10 +42,6 @@ interface Review {
     name: string;
     profilePic?: string;
   };
-  guide: {
-    name: string;
-    profilePic?: string;
-  };
   rating: number;
   comment: string;
   createdAt: string;
@@ -63,17 +56,15 @@ interface ProfileClientProps {
   reviews?: Review[];
 }
 
-type GuideTabType = 'about' | 'tours' | 'reviews';
 type TouristTabType = 'about' | 'reviews';
-type TabType = GuideTabType | TouristTabType;
+type TabType = TouristTabType;
 
 export function ProfileClient({ user, tours = [], reviews = [] }: ProfileClientProps) {
   const { user: currentUser } = useAuth();
   
   // Initialize activeTab based on user role
   const getInitialTab = (): TabType => {
-    if (!user) return 'about';
-    return 'about'; // Always start with 'about' tab
+    return 'about';
   };
   
   const [activeTab, setActiveTab] = useState<TabType>(getInitialTab());
@@ -103,19 +94,10 @@ export function ProfileClient({ user, tours = [], reviews = [] }: ProfileClientP
     window.location.reload();
   };
 
-  // Define tabs based on user role
-  const guideTabs: { id: GuideTabType; label: string }[] = [
-    { id: 'about', label: 'About' },
-    { id: 'tours', label: 'Tours' },
-    { id: 'reviews', label: 'Reviews' },
-  ];
-
-  const touristTabs: { id: TouristTabType; label: string }[] = [
+  const tabs: { id: TouristTabType; label: string }[] = [
     { id: 'about', label: 'About' },
     { id: 'reviews', label: 'Reviews' },
   ];
-
-  const tabs = user.role === 'guide' ? guideTabs : touristTabs;
 
   const handleTabClick = (tabId: TabType) => {
     setActiveTab(tabId);
@@ -150,20 +132,11 @@ export function ProfileClient({ user, tours = [], reviews = [] }: ProfileClientP
         </div>
 
         {/* Tab Content */}
-        {user.role === 'guide' ? (
-          <GuideProfileContent
-            user={user}
-            activeTab={activeTab as GuideTabType}
-            tours={tours}
-            reviews={reviews}
-          />
-        ) : (
-          <TouristProfileContent
-            user={user}
-            activeTab={activeTab as TouristTabType}
-            reviews={reviews}
-          />
-        )}
+        <TouristProfileContent
+          user={user}
+          activeTab={activeTab as TouristTabType}
+          reviews={reviews}
+        />
       </div>
 
       {showEditModal && (

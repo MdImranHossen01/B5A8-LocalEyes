@@ -4,6 +4,7 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { useEffect } from "react";
+import { ThemeProvider } from "@/components/theme-provider";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -51,16 +52,24 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <title>Local Eyes | Local Guide Platform</title>
+        <title>Khulna Tours & Travels</title>
         <meta
           name="description"
           content="Connect with local guides for authentic experiences"
         />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Playball&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet" />
       </head>
       <body className={inter.className} suppressHydrationWarning>
-      
-        
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           {children}
+        </ThemeProvider>
       </body>
     </html>
   );

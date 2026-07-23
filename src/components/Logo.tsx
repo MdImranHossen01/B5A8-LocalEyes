@@ -4,20 +4,33 @@ import React from 'react';
 
 const Logo = () => {
   return (
-  <div>
-     <Link href="/">
-      <div className='flex items-center space-x-2'>
-      <Image
-        src='/localeyes-logo.png'        
-        alt='Local Eyes Logo'
-        width={100}
-        height={100}
-        className='w-8 h-8'
-      />
-      <h1 className='text-gray-700 text-2xl font-bold'>Local Eyes</h1>
+    <div>
+      <Link href="/">
+        <div className='flex items-center gap-0'>
+          <Image
+            src='/logo.webp'
+            alt='Khulna Tours Logo'
+            width={240}
+            height={240}
+            className='hidden w-14 h-9 sm:w-16 sm:h-11 object-contain'
+          />
+          <h1 className="flex items-baseline space-x-1.5 select-none">
+            <span
+              className="bg-gradient-to-r from-blue-600 via-blue-500 to-indigo-600 bg-clip-text text-transparent text-lg sm:text-xl font-bold italic"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              Khulna
+            </span>
+            <span
+              className="text-gray-700 dark:text-gray-700 text-lg sm:text-xl font-bold italic"
+              style={{ fontFamily: "'Playfair Display', serif" }}
+            >
+              Tours & Travels
+            </span>
+          </h1>
+        </div>
+      </Link>
     </div>
-     </Link>
-  </div>
   );
 };
 

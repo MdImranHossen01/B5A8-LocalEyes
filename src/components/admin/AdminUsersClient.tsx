@@ -9,7 +9,7 @@ interface User {
   _id: string;
   name: string;
   email: string;
-  role: 'tourist' | 'guide' | 'admin';
+  role: 'user' | 'tourist' | 'admin';
   isVerified: boolean;
   isActive: boolean;
   createdAt: string;
@@ -25,7 +25,7 @@ export function AdminUsersClient() {
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterRole, setFilterRole] = useState<'all' | 'tourist' | 'guide' | 'admin'>('all');
+  const [filterRole, setFilterRole] = useState<'all' | 'user' | 'tourist' | 'admin'>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
@@ -182,8 +182,7 @@ export function AdminUsersClient() {
 
   const userCounts = {
     total: users.length,
-    tourists: users.filter(u => u.role === 'tourist').length,
-    guides: users.filter(u => u.role === 'guide').length,
+    regularUsers: users.filter(u => u.role === 'user' || u.role === 'tourist').length,
     admins: users.filter(u => u.role === 'admin').length,
     active: users.filter(u => u.isActive).length,
     inactive: users.filter(u => !u.isActive).length,
@@ -201,18 +200,14 @@ export function AdminUsersClient() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
             <p className="text-sm text-gray-600">Total Users</p>
             <p className="text-2xl font-bold text-gray-900">{userCounts.total}</p>
           </div>
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
-            <p className="text-sm text-gray-600">Tourists</p>
-            <p className="text-2xl font-bold text-blue-600">{userCounts.tourists}</p>
-          </div>
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
-            <p className="text-sm text-gray-600">Guides</p>
-            <p className="text-2xl font-bold text-green-600">{userCounts.guides}</p>
+            <p className="text-sm text-gray-600">Customers / Users</p>
+            <p className="text-2xl font-bold text-blue-600">{userCounts.regularUsers}</p>
           </div>
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
             <p className="text-sm text-gray-600">Admins</p>
@@ -221,10 +216,6 @@ export function AdminUsersClient() {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
             <p className="text-sm text-gray-600">Active</p>
             <p className="text-2xl font-bold text-green-600">{userCounts.active}</p>
-          </div>
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
-            <p className="text-sm text-gray-600">Inactive</p>
-            <p className="text-2xl font-bold text-red-600">{userCounts.inactive}</p>
           </div>
         </div>
 

@@ -291,17 +291,7 @@ export function RegisterForm() {
                 className='text-gray-800'
               />
 
-              <Select
-                label="I want to join as a"
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                options={[
-                  { value: 'tourist', label: 'Traveler' },
-                  { value: 'guide', label: 'Local Guide' },
-                ]}
-                className='text-gray-800'
-              />
+
 
               <Input
                 label="Bio (Optional)"

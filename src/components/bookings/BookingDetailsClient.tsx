@@ -50,10 +50,9 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
   const [isUpdating, setIsUpdating] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
 
-  const isGuide = user?.role === "guide";
-  const isOwnBooking =
-    user?.id === booking.tourist._id || user?.id === booking.guide._id;
-  const canManage = isGuide && isOwnBooking && booking.status === "pending";
+  const isGuide = false;
+  const isOwnBooking = user?.id === booking.tourist._id;
+  const canManage = user?.role === "admin" && booking.status === "pending";
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {

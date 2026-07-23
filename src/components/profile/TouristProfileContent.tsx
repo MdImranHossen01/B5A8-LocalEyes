@@ -12,15 +12,15 @@ interface User {
 
 interface Review {
   _id: string;
-  guide: {
-    name: string;
+  guide?: {
+    name?: string;
     profilePic?: string;
   };
   rating: number;
   comment: string;
   createdAt: string;
-  tour: {
-    title: string;
+  tour?: {
+    title?: string;
   };
 }
 
@@ -131,14 +131,10 @@ export function TouristProfileContent({ user, activeTab, reviews }: TouristProfi
                 <div key={review._id} className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex relative items-center">
-                      <Image
-                        src={review.guide.profilePic || '/profile.jpg'}
-                        alt={review.guide.name}
-                        fill
-                        className="w-10 h-10 rounded-full object-cover mr-3"
-                      />
                       <div>
-                        <h4 className="font-semibold text-gray-900">Review for {review.guide.name}</h4>
+                        <h4 className="font-semibold text-gray-900">
+                          {review.tour?.title ? `Review for ${review.tour.title}` : 'Tour Review'}
+                        </h4>
                         <div className="flex items-center text-sm text-gray-600">
                           <span className="text-yellow-400 mr-1">★</span>
                           <span>{review.rating}</span>

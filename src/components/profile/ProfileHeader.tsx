@@ -5,12 +5,10 @@ import Image from "next/image";
 interface User {
   _id: string;
   name: string;
-  role: 'tourist' | 'guide' | 'admin';
+  role: 'user' | 'tourist' | 'admin';
   profilePic?: string;
   bio: string;
   languages: string[];
-  expertise: string[];
-  dailyRate?: number;
   travelPreferences: string[];
   rating: number;
   reviewsCount: number;
@@ -31,11 +29,11 @@ export function ProfileHeader({ user, isOwnProfile, onEditProfile }: ProfileHead
 
   const getRoleBadge = (role: string) => {
     const badges = {
-      guide: { color: 'bg-purple-100 text-purple-800', text: 'Local Guide' },
-      tourist: { color: 'bg-blue-100 text-blue-800', text: 'Traveler' },
+      user: { color: 'bg-blue-100 text-blue-800', text: 'User' },
+      tourist: { color: 'bg-blue-100 text-blue-800', text: 'User' },
       admin: { color: 'bg-red-100 text-red-800', text: 'Admin' },
     };
-    return badges[role as keyof typeof badges] || badges.tourist;
+    return badges[role as keyof typeof badges] || badges.user;
   };
 
   const roleBadge = getRoleBadge(user.role);
@@ -56,13 +54,6 @@ export function ProfileHeader({ user, isOwnProfile, onEditProfile }: ProfileHead
                   sizes="(max-width: 128px) 100vw, 128px"
                   priority
                 />
-                {user.isVerified && user.role === 'guide' && (
-                  <div className="absolute bottom-2 right-2 bg-blue-500 text-white p-1 rounded-full">
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -116,24 +107,10 @@ export function ProfileHeader({ user, isOwnProfile, onEditProfile }: ProfileHead
 
               {/* Quick Stats */}
               <div className="flex flex-wrap gap-4 mt-4">
-                {user.role === 'guide' && user.dailyRate && (
-                  <div className="bg-gray-50 rounded-lg px-4 py-2">
-                    <div className="text-sm text-gray-600">Rate</div>
-                    <div className="text-lg font-semibold text-gray-900">${user.dailyRate}/day</div>
-                  </div>
-                )}
-                
                 {user.languages.length > 0 && (
                   <div className="bg-gray-50 rounded-lg px-4 py-2">
                     <div className="text-sm text-gray-600">Languages</div>
                     <div className="text-lg font-semibold text-gray-900">{user.languages.length}</div>
-                  </div>
-                )}
-
-                {user.role === 'guide' && user.expertise.length > 0 && (
-                  <div className="bg-gray-50 rounded-lg px-4 py-2">
-                    <div className="text-sm text-gray-600">Expertise</div>
-                    <div className="text-lg font-semibold text-gray-900">{user.expertise.length}</div>
                   </div>
                 )}
 

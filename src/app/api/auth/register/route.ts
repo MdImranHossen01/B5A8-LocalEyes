@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       name,
       email,
       password: hashedPassword,
-      role: role || 'tourist',
+      role: role && role !== 'guide' ? role : 'user',
       bio,
       languages,
       expertise,

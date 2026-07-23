@@ -6,12 +6,10 @@ interface User {
   _id: string;
   name: string;
   email: string;
-  role: 'tourist' | 'guide' | 'admin';
+  role: 'user' | 'tourist' | 'admin';
   profilePic?: string;
   bio: string;
   languages: string[];
-  expertise: string[];
-  dailyRate?: number;
   travelPreferences: string[];
   rating: number;
   reviewsCount: number;
@@ -30,9 +28,7 @@ export function EditProfileModal({ user, onClose, onUpdate }: EditProfileModalPr
     name: user.name,
     bio: user.bio,
     languages: user.languages.join(', '),
-    expertise: user.expertise.join(', '),
-    dailyRate: user.dailyRate?.toString() || '',
-    travelPreferences: user.travelPreferences.join(', '),
+    travelPreferences: (user.travelPreferences || []).join(', '),
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -45,8 +41,6 @@ export function EditProfileModal({ user, onClose, onUpdate }: EditProfileModalPr
         name: formData.name,
         bio: formData.bio,
         languages: formData.languages.split(',').map(lang => lang.trim()).filter(Boolean),
-        expertise: formData.expertise.split(',').map(exp => exp.trim()).filter(Boolean),
-        dailyRate: user.role === 'guide' && formData.dailyRate ? parseInt(formData.dailyRate) : undefined,
         travelPreferences: formData.travelPreferences.split(',').map(pref => pref.trim()).filter(Boolean),
       };
 
@@ -58,17 +52,16 @@ export function EditProfileModal({ user, onClose, onUpdate }: EditProfileModalPr
         body: JSON.stringify(updates),
       });
 
-      const data = await response.json();
-
       if (response.ok) {
-        onUpdate(data.user);
+        const updatedUser = await response.json();
+        onUpdate(updatedUser);
         onClose();
       } else {
-        alert(data.error || 'Failed to update profile');
+        alert('Failed to update profile');
       }
     } catch (error) {
       console.error('Error updating profile:', error);
-      alert('An error occurred while updating your profile');
+      alert('An error occurred while updating profile');
     } finally {
       setIsSubmitting(false);
     }
@@ -82,16 +75,19 @@ export function EditProfileModal({ user, onClose, onUpdate }: EditProfileModalPr
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        {/* Header */}
-        <div className="border-b border-gray-200 p-6">
-          <h2 className="text-2xl font-bold text-gray-900">Edit Profile</h2>
-          <p className="text-gray-600 mt-1">Update your profile information</p>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto p-6">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-bold text-gray-900">Edit Profile</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+          >
+            ×
+          </button>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -116,7 +112,7 @@ export function EditProfileModal({ user, onClose, onUpdate }: EditProfileModalPr
               onChange={(e) => handleInputChange('bio', e.target.value)}
               rows={4}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Tell others about yourself..."
+              placeholder="Tell us about yourself..."
             />
           </div>
 
@@ -130,58 +126,23 @@ export function EditProfileModal({ user, onClose, onUpdate }: EditProfileModalPr
               value={formData.languages}
               onChange={(e) => handleInputChange('languages', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="English, Spanish, French..."
+              placeholder="English, Spanish, Bengali..."
             />
           </div>
 
-          {/* Guide-specific Fields */}
-          {user.role === 'guide' && (
-            <>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Areas of Expertise (comma separated)
-                </label>
-                <input
-                  type="text"
-                  value={formData.expertise}
-                  onChange={(e) => handleInputChange('expertise', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="History, Food, Photography..."
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Daily Rate ($)
-                </label>
-                <input
-                  type="number"
-                  value={formData.dailyRate}
-                  onChange={(e) => handleInputChange('dailyRate', e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="50"
-                />
-              </div>
-            </>
-          )}
-
-          {/* Tourist-specific Fields */}
-          {user.role === 'tourist' && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Travel Preferences (comma separated)
-              </label>
-              <input
-                type="text"
-                value={formData.travelPreferences}
-                onChange={(e) => handleInputChange('travelPreferences', e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Adventure, Culture, Food..."
-              />
-            </div>
-          )}
-
-          {/* Note: Profile picture upload would be added here */}
+          {/* Travel Preferences */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Travel Preferences (comma separated)
+            </label>
+            <input
+              type="text"
+              value={formData.travelPreferences}
+              onChange={(e) => handleInputChange('travelPreferences', e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Adventure, Culture, Beach..."
+            />
+          </div>
 
           {/* Buttons */}
           <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">

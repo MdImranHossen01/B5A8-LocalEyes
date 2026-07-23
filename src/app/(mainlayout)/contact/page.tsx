@@ -158,20 +158,7 @@ const ContactPage = () => {
 
           {/* Contact Form & FAQ */}
           <div className="lg:col-span-2">
-            {/* Contact Form */}
-            <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
-              <div className="flex items-center mb-8">
-                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mr-4">
-                  <Send className="w-6 h-6 text-blue-600" />
-                </div>
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Send us a Message</h2>
-                  <p className="text-gray-600">We&apos;ll get back to you within 24 hours</p>
-                </div>
-              </div>
 
-              <ContactForm/>
-            </div>
 
             {/* FAQ Section */}
             <div className="bg-white rounded-2xl shadow-lg p-8">
@@ -263,12 +250,6 @@ const ContactPage = () => {
                 className="px-8 py-3 bg-white text-blue-600 font-bold rounded-lg hover:bg-blue-50 transition-colors"
               >
                 Explore Tours
-              </a>
-              <a 
-                href="/become-guide"
-                className="px-8 py-3 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white hover:text-blue-600 transition-colors"
-              >
-                Become a Guide
               </a>
             </div>
           </div>

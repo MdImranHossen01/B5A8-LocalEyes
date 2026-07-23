@@ -11,36 +11,58 @@ export function Testimonials() {
   const testimonials: Testimonial[] = [
     {
       id: "1",
-      name: "Sarah Johnson",
-      location: "From Canada",
-      avatar: "https://i.ibb.co.com/DDnRCVN7/lawyer-10.jpg",
+      name: "তানভীর আহমেদ",
+      location: "ঢাকা, বাংলাদেশ",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
       rating: 5,
       comment:
-        "My guide Maria showed me parts of Barcelona I would never have found on my own. The tapas tour was incredible!",
-      tour: "Barcelona Food & Culture Tour",
-      date: "March 2024",
+        "খুলনা ও সুন্দরবন ট্যুরের অভিজ্ঞতা অসাধারণ ছিল। হাউজবোট সার্ভিস এবং ম্যানগ্রোভ ফরেস্টের ওয়াইল্ডলাইফ সফরটি জীবনের অন্যতম সেরা মুহূর্ত।",
+      tour: "Sundarbans Wild Exploration",
+      date: "মার্চ ২০২৪",
     },
     {
       id: "2",
-      name: "Michael Chen",
-      location: "From Australia",
-      avatar: "https://i.ibb.co.com/PzjtJT3K/lawyer-9.jpg",
+      name: "সাদিয়া রহমান",
+      location: "চট্টগ্রাম, বাংলাদেশ",
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=200",
       rating: 5,
       comment:
-        "Kenji-san made our Tokyo experience unforgettable. His knowledge of hidden temples and local cuisine was outstanding.",
-      tour: "Tokyo Hidden Gems Tour",
-      date: "February 2024",
+        "কক্সবাজার এবং সাজেক ভ্যালির ট্যুর প্যাকেজটি খুব সুন্দরভাবে অর্গানাইজ করা হয়েছিল। হোটেল রিকমেন্ডেশন ও গাইড চমৎকার ছিল!",
+      tour: "Cox's Bazar & Sajek Valley",
+      date: "ফেব্রুয়ারি ২০২৪",
     },
     {
       id: "3",
-      name: "Emma Williams",
-      location: "From UK",
-      avatar: "https://i.ibb.co.com/8Dj17xYJ/lawyer-11.jpg",
+      name: "আরিফুল ইসলাম",
+      location: "সিলেট, বাংলাদেশ",
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200",
       rating: 5,
       comment:
-        "Sophie brought Parisian art to life in a way no museum tour ever could. An absolutely magical experience!",
-      tour: "Paris Art Walk",
-      date: "January 2024",
+        "ষাট গম্বুজ মসজিদ এবং রূপসা রিভার ক্রুজ ট্যুর ছিল দারুণ শিক্ষণীয় ও উপভোগ্য। সার্ভিস কোয়ালিটি সত্যিই চমৎকার!",
+      tour: "Historical Bagerhat & Rupsha Cruise",
+      date: "জানুয়ারি ২০২৪",
+    },
+    {
+      id: "4",
+      name: "মাহমুদুল হাসান",
+      location: "রাজশাহী, বাংলাদেশ",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=200",
+      rating: 5,
+      comment:
+        "দুবাই ডেসার্ট সাফারি ও ইন্টারন্যাশনাল ট্যুর প্যাকেজটি আমার পুরো পরিবারের জন্য খুব নিরাপদ এবং আনন্দদায়ক ছিল।",
+      tour: "Dubai Desert Safari",
+      date: "মে ২০২৪",
+    },
+    {
+      id: "5",
+      name: "নুসরাত জাহান",
+      location: "বরিশাল, বাংলাদেশ",
+      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200",
+      rating: 5,
+      comment:
+        "শ্রীমঙ্গল চা বাগান এবং রাতারগুল জলার বন সফরটি মন ছুয়ে গেছে। সার্ভিস এবং গাইড আতিথেয়তা দারুণ ছিল!",
+      tour: "Sylhet & Sreemangal Nature Tour",
+      date: "এপ্রিল ২০২৪",
     },
   ];
 
@@ -76,39 +98,29 @@ export function Testimonials() {
 
   return (
     <section
-      className="py-20  overflow-hidden min-h-[800px] flex flex-col justify-center"
+      className="py-10 md:py-16 overflow-hidden min-h-[500px] md:min-h-[800px] flex flex-col justify-center"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="text-center mb-20">
-          <h2 className="text-4xl font-bold text-primary mb-6">
-            Traveler Stories
+          <h2 className="text-4xl font-bold text-primary mb-6 uppercase tracking-tight">
+            Traveler Reviews
           </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-            Don&apos;t just take our word for it - hear from travelers who&apos;ve
-            explored with our guides
+          <p className="text-muted-foreground max-w-2xl mx-auto text-lg font-medium">
+            আমাদের ভ্রমণ প্যাকেজে ঘুরে আসা সম্মানিত ট্রাভেলারদের মূল্যবান অনুভূতি ও পর্যালোচনা
           </p>
         </div>
 
         {/* Carousel Container */}
-        <div className="relative flex items-center justify-center gap-4 md:gap-8 lg:gap-12 mt-12">
-          {/* Previous Card (Left) */}
+        <div className="relative flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 lg:gap-12 mt-12">
+          {/* Previous Card (Left) - desktop only */}
           <div
             className="hidden md:block w-1/3 max-w-sm opacity-60 scale-90 transition-all duration-500 ease-in-out blur-[1px] hover:blur-0 hover:opacity-80 cursor-pointer"
             onClick={handlePrev}
           >
             <TestimonialCard data={testimonials[prevIndex]} isActive={false} />
           </div>
-
-          {/* Navigation Button Left */}
-          <button
-            onClick={handlePrev}
-            className="absolute left-[20%] md:static md:left-auto z-30 bg-[#0e4b6c] hover:bg-[#0c3e59] text-white p-4 rounded-full shadow-lg transition-transform hover:scale-110 focus:outline-none"
-            aria-label="Previous testimonial"
-          >
-            <ChevronLeft size={32} strokeWidth={3} />
-          </button>
 
           {/* Active Card (Center) */}
           <div className="w-full md:w-1/3 max-w-md z-20 scale-100 md:scale-110 transition-all duration-500 ease-in-out">
@@ -118,21 +130,47 @@ export function Testimonials() {
             />
           </div>
 
-          {/* Navigation Button Right */}
+          {/* Desktop Navigation Buttons — Absolute Left & Right overlay */}
+          <button
+            onClick={handlePrev}
+            className="hidden md:flex absolute left-4 lg:left-12 z-30 bg-[#0e4b6c] hover:bg-[#0c3e59] text-white p-4 rounded-full shadow-lg transition-transform hover:scale-110 focus:outline-none"
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft size={32} strokeWidth={3} />
+          </button>
+
           <button
             onClick={handleNext}
-            className="absolute right-[20%] md:static md:right-auto z-30 bg-[#0e4b6c] hover:bg-[#0c3e59] text-white p-4 rounded-full shadow-lg transition-transform hover:scale-110 focus:outline-none"
+            className="hidden md:flex absolute right-4 lg:right-12 z-30 bg-[#0e4b6c] hover:bg-[#0c3e59] text-white p-4 rounded-full shadow-lg transition-transform hover:scale-110 focus:outline-none"
             aria-label="Next testimonial"
           >
             <ChevronRight size={32} strokeWidth={3} />
           </button>
 
-          {/* Next Card (Right) */}
+          {/* Next Card (Right) - desktop only */}
           <div
             className="hidden md:block w-1/3 max-w-sm opacity-60 scale-90 transition-all duration-500 ease-in-out blur-[1px] hover:blur-0 hover:opacity-80 cursor-pointer"
             onClick={handleNext}
           >
             <TestimonialCard data={testimonials[nextIndex]} isActive={false} />
+          </div>
+
+          {/* Mobile Navigation Buttons — below card, no overlap */}
+          <div className="flex md:hidden items-center justify-center gap-6 mt-4">
+            <button
+              onClick={handlePrev}
+              className="bg-[#0e4b6c] hover:bg-[#0c3e59] text-white p-3 rounded-full shadow-lg transition-transform hover:scale-110 focus:outline-none"
+              aria-label="Previous testimonial"
+            >
+              <ChevronLeft size={24} strokeWidth={3} />
+            </button>
+            <button
+              onClick={handleNext}
+              className="bg-[#0e4b6c] hover:bg-[#0c3e59] text-white p-3 rounded-full shadow-lg transition-transform hover:scale-110 focus:outline-none"
+              aria-label="Next testimonial"
+            >
+              <ChevronRight size={24} strokeWidth={3} />
+            </button>
           </div>
         </div>
 
@@ -142,9 +180,8 @@ export function Testimonials() {
             <button
               key={index}
               onClick={() => setCurrentIndex(index)}
-              className={`w-3 h-3 rounded-full transition-all ${
-                index === currentIndex ? "bg-[#0e4b6c] w-6" : "bg-gray-300"
-              }`}
+              className={`w-3 h-3 rounded-full transition-all ${index === currentIndex ? "bg-[#0e4b6c] w-6" : "bg-gray-300"
+                }`}
             />
           ))}
         </div>
@@ -163,9 +200,8 @@ function TestimonialCard({
 }) {
   return (
     <div
-      className={`bg-white rounded-4xl p-8 pt-0 shadow-xl relative mt-12 flex flex-col items-center text-center h-full transition-shadow duration-300 ${
-        isActive ? "shadow-2xl" : "shadow-lg"
-      }`}
+      className={`bg-white rounded-4xl p-8 pt-0 shadow-xl relative mt-12 flex flex-col items-center text-center h-full transition-shadow duration-300 ${isActive ? "shadow-2xl" : "shadow-lg"
+        }`}
     >
       {/* Avatar - Floating on top */}
       <div className="-mt-12 mb-6 relative">

@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';
 import { TouristDashboard } from '@/components/dashboard/TouristDashboard';
-import { GuideDashboard } from '@/components/dashboard/GuideDashboard';
 import { AdminDashboard } from '@/components/dashboard/AdminDashboard';
 
 interface DashboardData {
@@ -88,9 +87,8 @@ export default function DashboardPage() {
   const renderDashboard = () => {
     switch (userRole) {
       case 'tourist':
-        return <TouristDashboard data={dashboardData} />;
       case 'guide':
-        return <GuideDashboard data={dashboardData} />;
+        return <TouristDashboard data={dashboardData} />;
       case 'admin':
         return <AdminDashboard data={dashboardData} />;
       default:
@@ -105,11 +103,9 @@ export default function DashboardPage() {
           Welcome back, {session.user?.name || 'User'}!
         </h1>
         <p className="text-gray-600 mt-2">
-          {userRole === 'tourist' 
-            ? 'Manage your trips and bookings' 
-            : userRole === 'guide' 
-            ? 'Manage your tours and earnings'
-            : 'Manage platform users and listings'}
+          {userRole === 'admin' 
+            ? 'Manage platform users and listings' 
+            : 'Manage your trips and bookings'}
         </p>
       </div>
       {renderDashboard()}

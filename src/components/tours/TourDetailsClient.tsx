@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { ImageGallery } from '@/components/tours/ImageGallery';
 import { BookingWidget } from '@/components/tours/BookingWidget';
-import { GuideProfile } from '@/components/tours/GuideProfile';
 import { ReviewsSection } from '@/components/tours/ReviewsSection';
 
 interface Tour {
@@ -198,11 +197,9 @@ export function TourDetailsClient({ tour }: TourDetailsClientProps) {
               </div>
             </div>
 
-            {/* Right Column - Booking & Guide Info */}
             <div className="mt-8 lg:mt-0">
               <div className="sticky top-8 space-y-6">
                 <BookingWidget tour={tour} user={user} />
-                <GuideProfile guide={tour.guide} />
               </div>
             </div>
           </div>
