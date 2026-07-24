@@ -2,6 +2,7 @@
 'use client';
 
 import { SessionProvider, useSession } from 'next-auth/react';
+import { AuthProvider } from '@/context/AuthContext';
 import { redirect } from 'next/navigation';
 import LeftSideNav from './components/leftSideNav';
 
@@ -24,13 +25,14 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
     redirect('/login');
   }
 
-  const userRole = (session.user as any).role || 'tourist';
+  const user = session.user as any;
+  const userRole = user.role || 'user';
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="flex">
+      <div className="flex items-start">
         <LeftSideNav userRole={userRole} />
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-6 min-w-0">
           {children}
         </main>
       </div>
@@ -38,7 +40,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   );
 }
 
-// Main layout component that wraps with SessionProvider
+// Main layout component that wraps with SessionProvider and AuthProvider
 export default function DashboardLayout({
   children,
 }: {
@@ -46,7 +48,9 @@ export default function DashboardLayout({
 }) {
   return (
     <SessionProvider>
-      <DashboardContent>{children}</DashboardContent>
+      <AuthProvider>
+        <DashboardContent>{children}</DashboardContent>
+      </AuthProvider>
     </SessionProvider>
   );
 }

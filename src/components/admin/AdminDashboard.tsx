@@ -53,9 +53,10 @@ export function AdminDashboard() {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-BD', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'BDT',
+      minimumFractionDigits: 0,
     }).format(amount);
   };
 
@@ -261,45 +262,6 @@ export function AdminDashboard() {
               </tbody>
             </table>
           </div>
-        </div>
-
-        {/* Admin Actions */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <button
-            onClick={() => window.location.href = '/admin/users'}
-            className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow text-left"
-          >
-            <div className="text-3xl mb-3">👥</div>
-            <h3 className="font-semibold text-gray-900 mb-2">User Management</h3>
-            <p className="text-sm text-gray-600">Manage platform users and permissions</p>
-          </button>
-
-          <button
-            onClick={() => window.location.href = '/admin/tours'}
-            className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow text-left"
-          >
-            <div className="text-3xl mb-3">🗺️</div>
-            <h3 className="font-semibold text-gray-900 mb-2">Tour Moderation</h3>
-            <p className="text-sm text-gray-600">Review and moderate tour listings</p>
-          </button>
-
-          <button
-            onClick={() => window.location.href = '/admin/verifications'}
-            className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow text-left"
-          >
-            <div className="text-3xl mb-3">✅</div>
-            <h3 className="font-semibold text-gray-900 mb-2">Verifications</h3>
-            <p className="text-sm text-gray-600">Verify guides and tour listings</p>
-          </button>
-
-          <button
-            onClick={() => window.location.href = '/admin/reports'}
-            className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-md transition-shadow text-left"
-          >
-            <div className="text-3xl mb-3">📊</div>
-            <h3 className="font-semibold text-gray-900 mb-2">Reports</h3>
-            <p className="text-sm text-gray-600">View platform analytics and reports</p>
-          </button>
         </div>
       </main>
 

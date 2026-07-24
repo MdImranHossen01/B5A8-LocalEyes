@@ -7,6 +7,6 @@ export interface NavItem {
 
 export interface UserData {
   name: string;
-  role: 'user' | 'tourist' | 'admin';
+  role: 'user' | 'admin';
   email: string;
 }

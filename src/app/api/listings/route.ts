@@ -78,7 +78,7 @@ export async function GET(request: NextRequest) {
       // Find guides who speak the language
       const guides = await User.find({
         ...languageFilter,
-        role: 'guide',
+        role: 'user',
         isActive: true,
       }).select('_id');
 

@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["user", "tourist", "admin"],
+      enum: ["user", "admin"],
       default: "user",
     },
     profilePic: {
@@ -33,16 +33,6 @@ const userSchema = new mongoose.Schema(
         type: String,
       },
     ],
-    // Guide specific fields
-    expertise: [
-      {
-        type: String,
-      },
-    ],
-    dailyRate: {
-      type: Number,
-      default: 0,
-    },
     // Tourist specific fields
     travelPreferences: [
       {

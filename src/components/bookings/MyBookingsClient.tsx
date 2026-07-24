@@ -326,7 +326,7 @@ export function MyBookingsClient() {
                   }}
                   className="text-gray-600 hover:text-gray-700 text-sm font-medium px-3 py-1 rounded hover:bg-gray-100"
                 >
-                  View Guide
+                  View Host
                 </button>
                 {booking.status === 'completed' && (
                   <button

@@ -223,7 +223,6 @@ export function AdminUsersClient() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex flex-wrap gap-2">
-              {/* Role Filter */}
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-gray-600">Role:</span>
                 <select
@@ -232,13 +231,10 @@ export function AdminUsersClient() {
                   className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">All Roles</option>
-                  <option value="tourist">Tourist</option>
-                  <option value="guide">Guide</option>
+                  <option value="user">User</option>
                   <option value="admin">Admin</option>
                 </select>
               </div>
-
-              {/* Status Filter */}
               <div className="flex items-center space-x-2">
                 <span className="text-sm text-gray-600">Status:</span>
                 <select
@@ -253,7 +249,6 @@ export function AdminUsersClient() {
               </div>
             </div>
 
-            {/* Search */}
             <div className="relative">
               <input
                 type="text"
@@ -286,7 +281,6 @@ export function AdminUsersClient() {
                   <tr key={user._id} className="border-b border-gray-100 hover:bg-gray-50">
                     <td className="py-3 px-4">
                       <div className="flex items-center space-x-3">
-                        {/* Fixed Image component for table row */}
                         <div className="relative w-8 h-8">
                           <Image
                             src={user.profilePic || '/profile.jpg'}
@@ -306,10 +300,10 @@ export function AdminUsersClient() {
                       <select
                         value={user.role}
                         onChange={(e) => handleUpdateRole(user._id, e.target.value)}
-                        className="border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className="border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 capitalize"
                       >
+                        <option value="user">User</option>
                         <option value="tourist">Tourist</option>
-                        <option value="guide">Guide</option>
                         <option value="admin">Admin</option>
                       </select>
                     </td>
@@ -329,7 +323,7 @@ export function AdminUsersClient() {
                             : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
                         }`}
                       >
-                        {user.isVerified ? 'Verified' : 'Verify'}
+                        {user.isVerified ? 'Verified' : 'Not Verified'}
                       </button>
                     </td>
                     <td className="py-3 px-4 text-sm text-gray-600">
@@ -339,13 +333,13 @@ export function AdminUsersClient() {
                       <div className="flex space-x-2">
                         <button
                           onClick={() => setSelectedUser(user)}
-                          className="text-blue-600 hover:text-blue-700 text-sm"
+                          className="text-blue-600 hover:text-blue-700 text-sm font-medium"
                         >
                           View
                         </button>
                         <button
                           onClick={() => handleToggleStatus(user._id, user.isActive)}
-                          className={`text-sm ${
+                          className={`text-sm font-medium ${
                             user.isActive 
                               ? 'text-red-600 hover:text-red-700' 
                               : 'text-green-600 hover:text-green-700'
@@ -360,14 +354,6 @@ export function AdminUsersClient() {
               </tbody>
             </table>
           </div>
-
-          {filteredUsers.length === 0 && (
-            <div className="text-center py-12">
-              <div className="text-gray-400 text-6xl mb-4">👥</div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No users found</h3>
-              <p className="text-gray-600">Try adjusting your search or filters</p>
-            </div>
-          )}
         </div>
 
         {/* User Details Modal */}
@@ -389,7 +375,6 @@ export function AdminUsersClient() {
 
               <div className="p-6">
                 <div className="flex items-center space-x-4 mb-6">
-                  {/* Fixed Image component for modal */}
                   <div className="relative w-16 h-16">
                     <Image
                       src={selectedUser.profilePic || '/profile.jpg'}
@@ -408,7 +393,7 @@ export function AdminUsersClient() {
                 <div className="grid grid-cols-2 gap-4 mb-6">
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <p className="text-sm text-gray-600">Role</p>
-                    <p className="font-semibold text-gray-900 capitalize">{selectedUser.role}</p>
+                    <p className="font-semibold text-gray-900 capitalize">{selectedUser.role === 'admin' ? 'Admin' : 'User'}</p>
                   </div>
                   <div className="bg-gray-50 p-4 rounded-lg">
                     <p className="text-sm text-gray-600">Status</p>
@@ -428,7 +413,7 @@ export function AdminUsersClient() {
                   </div>
                 </div>
 
-                <div className="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                <div className="flex justify-end pt-6 border-t border-gray-200">
                   <button
                     onClick={() => handleToggleStatus(selectedUser._id, selectedUser.isActive)}
                     className={`px-4 py-2 rounded-lg font-medium ${
@@ -439,23 +424,12 @@ export function AdminUsersClient() {
                   >
                     {selectedUser.isActive ? 'Deactivate User' : 'Activate User'}
                   </button>
-                  <button
-                    onClick={() => {
-                      // In a real app, this would send a message
-                      alert(`Messaging ${selectedUser.name} at ${selectedUser.email}`);
-                    }}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 font-medium"
-                  >
-                    Send Message
-                  </button>
                 </div>
               </div>
             </div>
           </div>
         )}
       </main>
-
-    
     </div>
   );
 }

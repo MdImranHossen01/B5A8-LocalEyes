@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
@@ -12,13 +12,11 @@ import {
   User, 
   Settings, 
   LogOut,
-  Briefcase,
-  Star,
-  DollarSign,
   FileText,
-  Users
+  Users,
+  LayoutDashboard,
+  PlusCircle
 } from 'lucide-react';
-import Logo from '@/components/Logo';
 
 interface LeftSideNavProps {
   userRole: string;
@@ -28,6 +26,7 @@ export default function LeftSideNav({ userRole }: LeftSideNavProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session } = useSession();
+  const [imgError, setImgError] = useState(false);
 
   // Get user from session
   const user = session?.user as any;
@@ -40,77 +39,115 @@ export default function LeftSideNav({ userRole }: LeftSideNavProps) {
   };
 
   const getNavItems = () => {
-    const commonItems = [
-      { href: '/dashboard', label: 'Overview', icon: <Home size={20} /> },
-      { href: '/explore', label: 'Explore Tours', icon: <Compass size={20} /> },
-      { href: `/profile/${userId}`, label: 'Profile', icon: <User size={20} /> }, // FIXED: Added user ID
-    ];
-
-    if (userRole === 'tourist') {
-      return [
-        ...commonItems,
-        { href: '/dashboard/my-bookings', label: 'My Bookings', icon: <Calendar size={20} /> },
-      ];
-    }
-
-    if (userRole === 'guide') {
-      return [
-        ...commonItems,
-        { href: '/dashboard/listings', label: 'My Listings', icon: <Briefcase size={20} /> },
-        { href: '/dashboard/my-bookings', label: 'Bookings', icon: <Calendar size={20} /> },
-        { href: '/dashboard/earnings', label: 'Earnings', icon: <DollarSign size={20} /> },
-        { href: '/dashboard/reviews', label: 'Reviews', icon: <Star size={20} /> },
-      ];
-    }
-
     if (userRole === 'admin') {
       return [
-        { href: '/dashboard', label: 'Dashboard', icon: <Home size={20} /> },
+        { href: '/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={20} /> },
         { href: '/dashboard/admin/users', label: 'Users', icon: <Users size={20} /> },
         { href: '/dashboard/admin/manage-listings', label: 'Listings', icon: <FileText size={20} /> },
+        { href: '/dashboard/listings/new', label: 'Add Tour', icon: <PlusCircle size={20} /> },
         { href: '/dashboard/admin/settings', label: 'Settings', icon: <Settings size={20} /> },
       ];
     }
 
-    return commonItems;
+    // Default regular user items
+    return [
+      { href: '/dashboard', label: 'Overview', icon: <LayoutDashboard size={20} /> },
+      { href: '/explore', label: 'Explore Tours', icon: <Compass size={20} /> },
+      { href: '/dashboard/listings/new', label: 'Add Tour', icon: <PlusCircle size={20} /> },
+      { href: '/dashboard/my-bookings', label: 'My Bookings', icon: <Calendar size={20} /> },
+      { href: `/profile/${userId}`, label: 'Profile', icon: <User size={20} /> },
+    ];
   };
 
   const navItems = getNavItems();
+  const rawAvatar = user?.image || user?.profilePic;
+  const showAvatar = !imgError && typeof rawAvatar === 'string' && rawAvatar.trim().length > 0;
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 min-h-screen">
-      <div className="p-6">
-        <Logo/>
-        <p className="text-sm text-gray-600 mt-1">Dashboard</p>
-      </div>
+    <aside className="w-64 bg-white border-r border-gray-200 h-screen sticky top-0 self-start flex flex-col justify-between overflow-y-auto shrink-0 z-30 shadow-sm">
+      <div className="flex-1 flex flex-col min-h-0">
+        {/* Top Header with Home Link */}
+        <div className="p-4 border-b border-gray-100">
+          <Link
+            href="/"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-gray-800 hover:text-blue-600 hover:bg-blue-50/70 font-semibold text-base transition-all group"
+          >
+            <div className="p-2 rounded-xl bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors shadow-2xs">
+              <Home size={20} />
+            </div>
+            <span>Home</span>
+          </Link>
+        </div>
       
-      <nav className="px-4 space-y-2">
-        {navItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                isActive
-                  ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600'
-                  : 'text-gray-700 hover:bg-gray-50'
-              }`}
-            >
-              {item.icon}
-              <span className="font-medium">{item.label}</span>
-            </Link>
-          );
-        })}
-        
+        {/* Navigation Items */}
+        <nav className="p-4 space-y-1.5 flex-1 overflow-y-auto">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors ${
+                  isActive
+                    ? 'bg-blue-50 text-blue-600 font-semibold border-l-4 border-blue-600'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                {item.icon}
+                <span className="font-medium">{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* Bottom User Card & Logout Section */}
+      <div className="p-4 border-t border-gray-100 bg-slate-50/70">
+        {user && (
+          <div className="mb-3 p-2.5 bg-white border border-slate-200/80 rounded-xl shadow-2xs flex items-center gap-3">
+            <div className="relative w-9 h-9 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0 overflow-hidden shadow-2xs border border-white">
+              {showAvatar ? (
+                <img 
+                  src={rawAvatar} 
+                  alt={user?.name || 'User Avatar'} 
+                  referrerPolicy="no-referrer"
+                  onError={() => setImgError(true)}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                (user?.name?.charAt(0) || user?.email?.charAt(0) || 'U').toUpperCase()
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between gap-1">
+                <p className="text-xs font-bold text-gray-900 truncate leading-tight">
+                  {user?.name || 'Logged User'}
+                </p>
+                <span className={`px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded ${
+                  userRole === 'admin' 
+                    ? 'bg-purple-100 text-purple-700 border border-purple-200' 
+                    : userRole === 'guide'
+                    ? 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+                    : 'bg-blue-100 text-blue-700 border border-blue-200'
+                }`}>
+                  {userRole}
+                </span>
+              </div>
+              <p className="text-[11px] text-gray-500 truncate mt-0.5" title={user?.email}>
+                {user?.email || ''}
+              </p>
+            </div>
+          </div>
+        )}
+
         <button
           onClick={handleLogout}
-          className="flex items-center space-x-3 px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 w-full mt-8"
+          className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-red-600 hover:bg-red-50 text-xs font-semibold w-full transition-colors"
         >
-          <LogOut size={20} />
-          <span className="font-medium">Logout</span>
+          <LogOut size={16} />
+          <span>Logout</span>
         </button>
-      </nav>
+      </div>
     </aside>
   );
 }

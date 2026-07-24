@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     let query = {};
     if (role === 'tourist') {
       query = { tourist: userId };
-    } else if (role === 'guide') {
+    } else if (role === 'user') {
       query = { guide: userId };
     }
 
@@ -43,15 +43,11 @@ export async function POST(request: NextRequest) {
     
     // Get session using getServerSession
     const session = await getServerSession(authOptions);
-    
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
 
     const data = await request.json();
     
     // Validate required fields
-    const requiredFields = ['tourist', 'guide', 'tour', 'date', 'numberOfPeople', 'totalAmount'];
+    const requiredFields = ['guide', 'tour', 'date', 'numberOfPeople', 'totalAmount', 'name', 'email', 'phone'];
     for (const field of requiredFields) {
       if (!data[field]) {
         return NextResponse.json(

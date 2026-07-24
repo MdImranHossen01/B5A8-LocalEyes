@@ -81,19 +81,14 @@ export default function DashboardPage() {
     redirect('/login');
   }
 
-  const userRole = (session.user as any).role || 'tourist';
+  const userRole = (session.user as any).role || 'user';
 
   // Render based on role - no hooks after this point
   const renderDashboard = () => {
-    switch (userRole) {
-      case 'tourist':
-      case 'guide':
-        return <TouristDashboard data={dashboardData} />;
-      case 'admin':
-        return <AdminDashboard data={dashboardData} />;
-      default:
-        return <TouristDashboard data={dashboardData} />;
+    if (userRole === 'admin') {
+      return <AdminDashboard data={dashboardData} />;
     }
+    return <TouristDashboard data={dashboardData} />;
   };
 
   return (

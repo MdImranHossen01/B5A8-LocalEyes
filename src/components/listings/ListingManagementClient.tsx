@@ -34,7 +34,7 @@ export function ListingManagementClient() {
   const userRole = (session?.user as any)?.role || 'tourist';
 
   useEffect(() => {
-    if (userId && userRole === 'guide') {
+    if (userId && userRole === 'user') {
       fetchMyTours();
     } else if (status === 'unauthenticated') {
       setIsLoadingData(false);
@@ -152,14 +152,14 @@ export function ListingManagementClient() {
     return null;
   }
 
-  // Check if user is guide
-  if (userRole !== 'guide') {
+  // Check if user is host/general user
+  if (userRole !== 'user') {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8 text-center">
         <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-8">
           <h2 className="text-2xl font-bold text-yellow-800 mb-4">Access Denied</h2>
           <p className="text-yellow-700 mb-6">
-            This page is only accessible to guides. Tourists cannot manage tour listings.
+            This page is only accessible to tour hosts. Tourists cannot manage tour listings.
           </p>
           <button
             onClick={() => router.push('/dashboard')}
@@ -307,7 +307,7 @@ export function ListingManagementClient() {
                 />
                 <div className="absolute top-3 left-3">
                   <span className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-sm font-semibold text-gray-900">
-                    ${tour.tourFee || 0}
+                    ৳{tour.tourFee || 0}
                   </span>
                 </div>
                 <div className="absolute top-3 right-3">

@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
         pastTrips: bookings.filter(b => b.status === 'completed').length,
         pendingRequests: bookings.filter(b => b.status === 'pending').length,
       };
-    } else if (role === 'guide') {
+    } else if (role === 'user') {
       [bookings, tours] = await Promise.all([
         Booking.find({ guideId: userId })
           .sort({ createdAt: -1 })
@@ -66,6 +66,19 @@ export async function GET(request: NextRequest) {
         totalEarnings: completedBookings.reduce((sum, b) => sum + b.totalAmount, 0),
       };
     } else if (role === 'admin') {
+      [bookings, tours] = await Promise.all([
+        Booking.find()
+          .sort({ createdAt: -1 })
+          .limit(20)
+          .populate('tourist', 'name profilePic email')
+          .populate('guide', 'name profilePic email')
+          .populate('tour', 'title images tourFee'),
+        Tour.find()
+          .sort({ createdAt: -1 })
+          .limit(20)
+          .populate('guide', 'name profilePic email'),
+      ]);
+
       const [totalUsers, totalTours, totalBookings, completedBookings] = await Promise.all([
         User.countDocuments(),
         Tour.countDocuments(),

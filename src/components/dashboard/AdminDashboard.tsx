@@ -19,15 +19,40 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'overview' | 'users' | 'listings' | 'bookings'>('overview');
 
+  const getFirstDayOfCurrentMonth = () => {
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    const offset = firstDay.getTimezoneOffset();
+    const localFirstDay = new Date(firstDay.getTime() - (offset * 60 * 1000));
+    return localFirstDay.toISOString().split('T')[0];
+  };
+
+  const getLastDayOfCurrentMonth = () => {
+    const now = new Date();
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const offset = lastDay.getTimezoneOffset();
+    const localLastDay = new Date(lastDay.getTime() - (offset * 60 * 1000));
+    return localLastDay.toISOString().split('T')[0];
+  };
+
+  const [startDate, setStartDate] = useState(getFirstDayOfCurrentMonth());
+  const [endDate, setEndDate] = useState(getLastDayOfCurrentMonth());
+
   // Mock data for admin (would come from API)
   const users = [
-    { _id: '1', name: 'John Traveler', email: 'john@example.com', role: 'tourist', status: 'active', joined: '2024-01-15' },
-    { _id: '2', name: 'Maria Guide', email: 'maria@example.com', role: 'guide', status: 'active', joined: '2024-01-10' },
-    { _id: '3', name: 'Alex Tourist', email: 'alex@example.com', role: 'tourist', status: 'inactive', joined: '2024-01-05' },
+    { _id: '1', name: 'John Traveler', email: 'john@example.com', role: 'user', status: 'active', joined: '2024-01-15' },
+    { _id: '2', name: 'Maria Host', email: 'maria@example.com', role: 'user', status: 'active', joined: '2024-01-10' },
+    { _id: '3', name: 'Alex User', email: 'alex@example.com', role: 'user', status: 'inactive', joined: '2024-01-05' },
   ];
 
   const allBookings = data.bookings || [];
   const allTours = data.tours || [];
+
+  const filteredBookings = allBookings.filter(booking => {
+    if (!booking.date) return false;
+    const bookingDateStr = booking.date.split('T')[0];
+    return bookingDateStr >= startDate && bookingDateStr <= endDate;
+  });
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -38,22 +63,59 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
   };
 
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-BD', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'BDT',
+      minimumFractionDigits: 0,
     }).format(amount);
   };
 
   return (
     <div>
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-        <p className="text-gray-600 mt-2">Manage platform users, listings, and bookings</p>
+      <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
+          <p className="text-gray-600 mt-2">Manage platform users, listings, and bookings</p>
+        </div>
+
+        {/* Date Range Filter UI */}
+        <div className="flex flex-wrap items-center gap-3 bg-white p-4 rounded-xl border border-gray-200/80 shadow-2xs">
+          <div className="flex items-center gap-2">
+            <label htmlFor="admin-start-date" className="text-xs font-semibold text-gray-500 uppercase tracking-wider">From:</label>
+            <input
+              id="admin-start-date"
+              type="date"
+              value={startDate}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (!endDate || val <= endDate) {
+                  setStartDate(val);
+                }
+              }}
+              className="text-sm border border-gray-300 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-800"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <label htmlFor="admin-end-date" className="text-xs font-semibold text-gray-500 uppercase tracking-wider">To:</label>
+            <input
+              id="admin-end-date"
+              type="date"
+              value={endDate}
+              onChange={(e) => {
+                const val = e.target.value;
+                if (!startDate || val >= startDate) {
+                  setEndDate(val);
+                }
+              }}
+              className="text-sm border border-gray-300 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-gray-800"
+            />
+          </div>
+        </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center">
             <div className="bg-blue-100 p-3 rounded-lg mr-4">
@@ -84,22 +146,8 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
               <span className="text-2xl">📋</span>
             </div>
             <div>
-              <p className="text-sm text-gray-600">Today&apos;s Bookings</p>
-              <p className="text-2xl font-bold text-gray-900">{data.stats?.totalBookings || 12}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center">
-            <div className="bg-purple-100 p-3 rounded-lg mr-4">
-              <span className="text-2xl">💰</span>
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Total Revenue</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {formatCurrency(data.stats?.totalRevenue || 12500)}
-              </p>
+              <p className="text-sm text-gray-600">Bookings in Range</p>
+              <p className="text-2xl font-bold text-gray-900">{filteredBookings.length}</p>
             </div>
           </div>
         </div>
@@ -107,30 +155,52 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
 
       {/* Tabs */}
       <div className="border-b border-gray-200 mb-8">
-        <nav className="-mb-px flex space-x-8">
-          {[
-            { id: 'overview', label: 'Overview' },
-            { id: 'users', label: 'Users' },
-            { id: 'listings', label: 'Listings' },
-            { id: 'bookings', label: 'Bookings' },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </nav>
+        <div className="flex space-x-8">
+          <button
+            onClick={() => setActiveTab('overview')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors cursor-pointer ${
+              activeTab === 'overview'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Overview
+          </button>
+          <button
+            onClick={() => setActiveTab('users')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors cursor-pointer ${
+              activeTab === 'users'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Users
+          </button>
+          <button
+            onClick={() => setActiveTab('listings')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors cursor-pointer ${
+              activeTab === 'listings'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Listings
+          </button>
+          <button
+            onClick={() => setActiveTab('bookings')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors cursor-pointer ${
+              activeTab === 'bookings'
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            Bookings
+          </button>
+        </div>
       </div>
 
       {/* Tab Content */}
-      <div>
+      <div className="mb-8">
         {activeTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Recent Users */}
@@ -144,37 +214,23 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                   View All
                 </button>
               </div>
-
               <div className="space-y-4">
-                {users.slice(0, 5).map((user) => (
-                  <div key={user._id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
+                {users.map((user) => (
+                  <div key={user._id} className="flex items-center justify-between p-4 border border-gray-100 rounded-lg">
                     <div className="flex items-center space-x-3">
-                      <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
-                        <span className="text-gray-600 font-medium">
-                          {user.name.charAt(0)}
-                        </span>
+                      <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-semibold">
+                        {user.name.charAt(0)}
                       </div>
                       <div>
-                        <h3 className="font-medium text-gray-900 text-sm">
-                          {user.name}
-                        </h3>
-                        <p className="text-gray-600 text-xs">
-                          {user.email}
-                        </p>
+                        <h3 className="font-medium text-gray-900 text-sm">{user.name}</h3>
+                        <p className="text-gray-500 text-xs">{user.email}</p>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        user.role === 'guide' ? 'bg-purple-100 text-purple-800' :
-                        user.role === 'tourist' ? 'bg-blue-100 text-blue-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
-                        {user.role}
-                      </span>
-                      <span className="text-gray-500 text-xs mt-1">
-                        Joined {formatDate(user.joined)}
-                      </span>
-                    </div>
+                    <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider ${
+                      user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {user.role}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -192,21 +248,21 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                 </button>
               </div>
 
-              {allBookings.length === 0 ? (
+              {filteredBookings.length === 0 ? (
                 <div className="text-center py-8">
                   <div className="text-gray-400 text-4xl mb-3">📋</div>
-                  <p className="text-gray-600">No recent bookings</p>
+                  <p className="text-gray-600">No bookings in selected range</p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {allBookings.slice(0, 5).map((booking) => (
+                  {filteredBookings.slice(0, 5).map((booking) => (
                     <div key={booking._id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                       <div>
                         <h3 className="font-medium text-gray-900 text-sm">
                           {booking.tour?.title || 'Tour'}
                         </h3>
                         <p className="text-gray-600 text-xs">
-                          {booking.tourist?.name || 'Traveler'} → {booking.guide?.name || 'Guide'}
+                          {booking.tourist?.name || booking.name || 'Traveler'} → {booking.guide?.name || 'Host'}
                         </p>
                         <p className="text-gray-500 text-xs">
                           {booking.date ? formatDate(booking.date) : 'Date not set'}
@@ -266,9 +322,10 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                       <td className="py-3 px-4 text-sm text-gray-900">{user.email}</td>
                       <td className="py-3 px-4">
                         <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
-                          user.role === 'guide' ? 'bg-purple-100 text-purple-800' :
-                          user.role === 'tourist' ? 'bg-blue-100 text-blue-800' :
-                          'bg-red-100 text-red-800'
+                          user.role === 'admin' ? 'bg-purple-100 text-purple-800' :
+                          user.role === 'guide' ? 'bg-indigo-100 text-indigo-800' :
+                          user.role === 'tourist' || user.role === 'user' ? 'bg-blue-100 text-blue-800' :
+                          'bg-gray-100 text-gray-800'
                         }`}>
                           {user.role}
                         </span>
@@ -381,11 +438,11 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
           <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">Booking Management</h2>
             
-            {allBookings.length === 0 ? (
+            {filteredBookings.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-gray-400 text-6xl mb-4">📋</div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">No bookings yet</h3>
-                <p className="text-gray-600">Platform bookings will appear here.</p>
+                <p className="text-gray-600">Platform bookings in this range will appear here.</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -394,7 +451,7 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                     <tr className="border-b border-gray-200">
                       <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">ID</th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Traveler</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Guide</th>
+                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Host</th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Tour</th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Date</th>
                       <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Amount</th>
@@ -403,16 +460,16 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {allBookings.map((booking) => (
+                    {filteredBookings.map((booking) => (
                       <tr key={booking._id} className="border-b border-gray-100 hover:bg-gray-50">
                         <td className="py-3 px-4 text-sm text-gray-600">
                           {booking._id ? booking._id.substring(0, 8) + '...' : 'N/A'}
                         </td>
                         <td className="py-3 px-4 text-sm text-gray-900">
-                          {booking.tourist?.name || 'Traveler'}
+                          {booking.tourist?.name || booking.name || 'Traveler'}
                         </td>
                         <td className="py-3 px-4 text-sm text-gray-900">
-                          {booking.guide?.name || 'Guide'}
+                          {booking.guide?.name || 'Host'}
                         </td>
                         <td className="py-3 px-4 text-sm text-gray-900">
                           {booking.tour?.title || 'Tour'}
@@ -449,45 +506,6 @@ export function AdminDashboard({ data }: AdminDashboardProps) {
             )}
           </div>
         )}
-      </div>
-
-      {/* Admin Quick Actions */}
-      <div className="mt-8 bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Admin Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <button
-            onClick={() => router.push('/admin/users')}
-            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            <span className="text-2xl mr-3">👥</span>
-            <div className="text-left">
-              <p className="font-medium text-gray-900">Manage Users</p>
-              <p className="text-sm text-gray-600">View all users</p>
-            </div>
-          </button>
-
-          <button
-            onClick={() => router.push('/admin/listings')}
-            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            <span className="text-2xl mr-3">🗺️</span>
-            <div className="text-left">
-              <p className="font-medium text-gray-900">Manage Listings</p>
-              <p className="text-sm text-gray-600">Review tours</p>
-            </div>
-          </button>
-
-          <button
-            onClick={() => router.push('/admin/reports')}
-            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            <span className="text-2xl mr-3">📊</span>
-            <div className="text-left">
-              <p className="font-medium text-gray-900">Reports</p>
-              <p className="text-sm text-gray-600">Platform analytics</p>
-            </div>
-          </button>
-        </div>
       </div>
     </div>
   );

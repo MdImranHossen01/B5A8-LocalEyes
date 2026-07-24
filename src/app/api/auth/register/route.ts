@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     await dbConnect();
     
-    const { name, email, password, role, bio, languages, expertise, dailyRate, travelPreferences } = await request.json();
+    const { name, email, password, role, bio, languages, travelPreferences } = await request.json();
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -26,11 +26,9 @@ export async function POST(request: NextRequest) {
       name,
       email,
       password: hashedPassword,
-      role: role && role !== 'guide' ? role : 'user',
+      role: 'user',
       bio,
       languages,
-      expertise,
-      dailyRate,
       travelPreferences,
     });
 
@@ -49,8 +47,6 @@ export async function POST(request: NextRequest) {
       role: user.role,
       bio: user.bio,
       languages: user.languages,
-      expertise: user.expertise,
-      dailyRate: user.dailyRate,
       travelPreferences: user.travelPreferences,
     };
 

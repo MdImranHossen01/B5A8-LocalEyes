@@ -6,6 +6,18 @@ const bookingSchema = new mongoose.Schema(
     tourist: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: false,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
       required: true,
     },
     guide: {

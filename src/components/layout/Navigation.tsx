@@ -67,29 +67,11 @@ export function Navigation() {
   };
 
   const getDashboardLink = () => {
-    switch (userRole) {
-      case 'admin':
-        return '/dashboard';
-      case 'guide':
-        return '/dashboard';
-      case 'tourist':
-        return '/dashboard/my-bookings';
-      default:
-        return '/';
-    }
+    return '/dashboard';
   };
 
   const getDashboardLabel = () => {
-    switch (userRole) {
-      case 'admin':
-        return 'Admin Dashboard';
-      case 'guide':
-        return 'Guide Dashboard';
-      case 'tourist':
-        return 'My Dashboard';
-      default:
-        return 'Dashboard';
-    }
+    return userRole === 'admin' ? 'Admin Dashboard' : 'My Dashboard';
   };
 
   return (
@@ -234,12 +216,12 @@ export function Navigation() {
                           <div className="overflow-hidden">
                             <p className="font-semibold text-gray-900 truncate">{userName}</p>
                             <p className="text-xs text-gray-600 truncate">{user?.email}</p>
-                            <span className={`inline-block mt-1 px-2 py-0.5 text-xs rounded-full ${
+                             <span className={`inline-block mt-1 px-2 py-0.5 text-xs rounded-full ${
                               userRole === 'admin' ? 'bg-purple-100 text-purple-800' :
-                              userRole === 'guide' ? 'bg-green-100 text-green-800' :
+                              userRole === 'user' ? 'bg-green-100 text-green-800' :
                               'bg-blue-100 text-blue-800'
                             }`}>
-                              {userRole.charAt(0).toUpperCase() + userRole.slice(1)}
+                              {userRole === 'user' ? 'User' : userRole.charAt(0).toUpperCase() + userRole.slice(1)}
                             </span>
                           </div>
                         </div>
@@ -267,7 +249,7 @@ export function Navigation() {
                           My Profile
                         </Link>
 
-                        {userRole === 'tourist' && (
+                        {userRole !== 'admin' && (
                           <Link
                             href="/dashboard/my-bookings"
                             className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -276,18 +258,6 @@ export function Navigation() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
                             My Bookings
-                          </Link>
-                        )}
-
-                        {userRole === 'guide' && (
-                          <Link
-                            href="/dashboard/listings"
-                            className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                          >
-                            <svg className="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                            </svg>
-                            My Listings
                           </Link>
                         )}
                       </div>
@@ -362,21 +332,12 @@ export function Navigation() {
                   My Profile
                 </Link>
 
-                {userRole === 'tourist' && (
+                {userRole !== 'admin' && (
                   <Link
                     href="/dashboard/my-bookings"
                     className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
                   >
                     My Bookings
-                  </Link>
-                )}
-
-                {userRole === 'guide' && (
-                  <Link
-                    href="/dashboard/listings"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                  >
-                    My Listings
                   </Link>
                 )}
 

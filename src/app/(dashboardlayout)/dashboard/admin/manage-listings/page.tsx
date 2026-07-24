@@ -3,6 +3,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import {
@@ -12,6 +13,7 @@ import {
   MagnifyingGlassIcon,
   FunnelIcon,
   ArrowPathIcon,
+  PlusIcon,
 } from '@heroicons/react/24/outline';
 
 // Define TypeScript interface for Tour
@@ -228,13 +230,23 @@ const ManageListingsPage = () => {
 
   return (
     <div className="p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-          Manage Listings
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          View, manage, and delete all tour listings
-        </p>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Manage Listings
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400">
+            View, manage, and delete all tour listings
+          </p>
+        </div>
+
+        <Link
+          href="/dashboard/listings/new"
+          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-xl shadow-xs transition-colors shrink-0"
+        >
+          <PlusIcon className="w-5 h-5" />
+          <span>Add New Tour</span>
+        </Link>
       </div>
 
       {/* Stats Cards */}
@@ -432,9 +444,11 @@ const ManageListingsPage = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="text-sm text-gray-900 dark:text-white">
-                        <div className="font-bold">${tour.tourFee}</div>
+                        <div className="font-bold">৳{tour.tourFee?.toLocaleString('en-BD')}</div>
                         <div className="text-gray-500 dark:text-gray-400">
-                          {tour.duration} hours
+                          {tour.duration >= 24 && tour.duration % 24 === 0 
+                            ? `${tour.duration / 24} ${tour.duration === 24 ? 'Day' : 'Days'}` 
+                            : `${tour.duration} hours`}
                         </div>
                       </div>
                       {tour.reviewsCount > 0 && (
