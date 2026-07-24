@@ -119,7 +119,7 @@ export function ReviewsSection({ tourId, guideId }: ReviewsSectionProps) {
           Traveler Reviews ({reviews.length})
         </h2>
         
-        {user && user.role === 'tourist' && !showReviewForm && (
+        {user && (user.role === 'tourist' || user.role === 'user') && !showReviewForm && (
           <button
             onClick={() => setShowReviewForm(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"

@@ -1,13 +1,9 @@
 // src/app/layout.tsx
 "use client";
 
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { useEffect } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
-
-
-const inter = Inter({ subsets: ["latin"] });
 
 // List of known extension attributes that cause hydration issues
 const EXTENSION_ATTRIBUTES = [
@@ -61,7 +57,7 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Playball&family=Playfair+Display:ital,wght@1,700&display=swap" rel="stylesheet" />
       </head>
-      <body className={inter.className} suppressHydrationWarning>
+      <body className="font-sans" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

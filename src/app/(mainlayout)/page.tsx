@@ -4,7 +4,6 @@ import { PopularDestinations } from "@/components/home/PopularDestinations";
 import { Testimonials } from "@/components/home/Testimonials";
 import { WhyChooseUs } from "@/components/home/WhyChooseUs";
 import { TourCategories } from "@/components/home/TourCategories";
-import Newsletter from "../../components/home/Newsletter";
 import Faq from "@/components/home/Faq";
 import { KhulnaToursSection } from "@/components/home/KhulnaToursSection";
 import { PremiumServices } from "@/components/home/PremiumServices";
