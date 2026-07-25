@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-hot-toast';
 import Swal from 'sweetalert2';
+import { createPortal } from 'react-dom';
+import { MoreVertical } from 'lucide-react';
 import {
   PencilIcon,
   TrashIcon,
@@ -24,6 +26,149 @@ import {
   TableRow,
   TableCell,
 } from '@/components/ui/table';
+
+function ListingActionsDropdown({
+  tour,
+  onToggleStatus,
+  onDeleteListing,
+  onViewListing,
+  onEditListing,
+  deletingId
+}: {
+  tour: any;
+  onToggleStatus: (id: string, currentStatus: boolean) => void;
+  onDeleteListing: (id: string) => void;
+  onViewListing: (id: string) => void;
+  onEditListing: (id: string) => void;
+  deletingId: string | null;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [coords, setCoords] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
+  const [mounted, setMounted] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const updatePosition = () => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const dropdownWidth = 176;  // w-44 = 176px
+      const actualHeight = dropdownRef.current?.offsetHeight || 160;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      
+      const openUpward = spaceBelow < (actualHeight + 10) && rect.top > actualHeight;
+
+      const top = openUpward
+        ? rect.top - window.scrollY - actualHeight - 4
+        : rect.bottom - window.scrollY + 4;
+
+      const left = Math.max(10, rect.right - dropdownWidth);
+
+      setCoords({ top: top + window.scrollY, left });
+    }
+  };
+
+  const handleToggle = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isOpen) {
+      updatePosition();
+    }
+    setIsOpen(!isOpen);
+  };
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    requestAnimationFrame(() => {
+      updatePosition();
+    });
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current && !dropdownRef.current.contains(event.target as Node) &&
+        buttonRef.current && !buttonRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    const handleScrollOrResize = () => {
+      setIsOpen(false);
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    window.addEventListener('scroll', handleScrollOrResize, true);
+    window.addEventListener('resize', handleScrollOrResize);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener('scroll', handleScrollOrResize, true);
+      window.removeEventListener('resize', handleScrollOrResize);
+    };
+  }, [isOpen]);
+
+  return (
+    <>
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={handleToggle}
+        className="p-1.5 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors focus:outline-none cursor-pointer inline-flex items-center"
+        title="Actions"
+      >
+        <MoreVertical size={16} />
+      </button>
+
+      {isOpen && mounted && createPortal(
+        <div
+          ref={dropdownRef}
+          style={{
+            position: 'fixed',
+            top: `${coords.top}px`,
+            left: `${coords.left}px`,
+            zIndex: 99999,
+          }}
+          className="w-44 rounded-xl bg-white dark:bg-slate-900 shadow-2xl border border-slate-200 dark:border-slate-800 py-1.5 text-left space-y-0.5 animate-in fade-in zoom-in-95 duration-100"
+        >
+          <button
+            onClick={() => { setIsOpen(false); onViewListing(tour._id); }}
+            className="w-full px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
+          >
+            <span>👁️</span> View details
+          </button>
+
+          <button
+            onClick={() => { setIsOpen(false); onEditListing(tour._id); }}
+            className="w-full px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
+          >
+            <span>✏️</span> Edit listing
+          </button>
+
+          <button
+            onClick={() => { setIsOpen(false); onToggleStatus(tour._id, tour.isActive); }}
+            className="w-full px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-2 cursor-pointer"
+          >
+            <span>🔄</span> {tour.isActive ? 'Deactivate' : 'Activate'}
+          </button>
+
+          <div className="border-t border-slate-100 dark:border-slate-800 my-1"></div>
+
+          <button
+            onClick={() => { setIsOpen(false); onDeleteListing(tour._id); }}
+            disabled={deletingId === tour._id}
+            className="w-full px-3 py-1.5 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2 cursor-pointer disabled:opacity-50"
+          >
+            <span>🗑️</span> Delete listing
+          </button>
+        </div>,
+        document.body
+      )}
+    </>
+  );
+}
 
 // Define TypeScript interface for Tour
 interface Tour {
@@ -426,17 +571,6 @@ const ManageListingsPage = () => {
                         ? `${tour.duration / 24} ${tour.duration === 24 ? 'Day' : 'Days'}` 
                         : `${tour.duration || 0} hours`}
                     </p>
-                    {tour.reviewsCount > 0 && (
-                      <div className="flex items-center gap-1 pt-0.5">
-                        <StarIcon className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
-                        <span className="text-xs font-semibold text-slate-800 dark:text-slate-200">
-                          {tour.rating ? tour.rating.toFixed(1) : '0.0'}
-                        </span>
-                        <span className="text-[11px] text-slate-400">
-                          ({tour.reviewsCount})
-                        </span>
-                      </div>
-                    )}
                   </div>
                 </TableCell>
 
@@ -457,34 +591,14 @@ const ManageListingsPage = () => {
 
                 {/* Actions */}
                 <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-1">
-                    <button
-                      onClick={() => handleView(tour._id)}
-                      className="p-1.5 rounded-lg text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors"
-                      title="View listing"
-                    >
-                      <EyeIcon className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => handleEdit(tour._id)}
-                      className="p-1.5 rounded-lg text-slate-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-slate-800 transition-colors"
-                      title="Edit listing"
-                    >
-                      <PencilIcon className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(tour._id)}
-                      disabled={deletingId === tour._id}
-                      className="p-1.5 rounded-lg text-slate-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-slate-800 transition-colors disabled:opacity-50"
-                      title="Delete listing"
-                    >
-                      {deletingId === tour._id ? (
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-rose-600"></div>
-                      ) : (
-                        <TrashIcon className="h-4 w-4" />
-                      )}
-                    </button>
-                  </div>
+                  <ListingActionsDropdown
+                    tour={tour}
+                    onToggleStatus={toggleListingStatus}
+                    onDeleteListing={handleDelete}
+                    onViewListing={handleView}
+                    onEditListing={handleEdit}
+                    deletingId={deletingId}
+                  />
                 </TableCell>
               </TableRow>
             ))
