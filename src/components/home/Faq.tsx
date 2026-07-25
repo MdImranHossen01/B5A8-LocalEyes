@@ -75,7 +75,7 @@ const Faq = () => {
                     </div>
                     
                     {/* Lottie Animation Section */}
-                    <div className="lg:pl-8">
+                    <div className="hidden md:block lg:pl-8">
                         <div >
                             <Lottie 
                                 animationData={faqAnimation} 

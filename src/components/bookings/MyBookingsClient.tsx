@@ -42,7 +42,7 @@ export function MyBookingsClient() {
   const userRole = (session?.user as any)?.role || 'tourist';
 
   useEffect(() => {
-    if (userId && userRole === 'tourist') {
+    if (userId && (userRole === 'tourist' || userRole === 'user')) {
       fetchMyBookings();
     } else if (status === 'unauthenticated') {
       setIsLoadingData(false);
@@ -125,8 +125,8 @@ export function MyBookingsClient() {
     return null;
   }
 
-  // Check if user is tourist
-  if (userRole !== 'tourist') {
+  // Check if user is tourist or regular user
+  if (userRole !== 'tourist' && userRole !== 'user') {
     return (
       <div className="max-w-7xl mx-auto px-4 py-8 text-center">
         <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-8">
@@ -318,15 +318,6 @@ export function MyBookingsClient() {
                   className="text-blue-600 hover:text-blue-700 text-sm font-medium px-3 py-1 rounded hover:bg-blue-50"
                 >
                   View Tour
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    router.push(`/profile/${booking.guide._id}`);
-                  }}
-                  className="text-gray-600 hover:text-gray-700 text-sm font-medium px-3 py-1 rounded hover:bg-gray-100"
-                >
-                  View Host
                 </button>
                 {booking.status === 'completed' && (
                   <button

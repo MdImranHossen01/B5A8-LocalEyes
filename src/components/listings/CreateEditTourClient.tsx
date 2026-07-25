@@ -20,6 +20,8 @@ interface Tour {
   images: string[];
   category: string;
   city: string;
+  tourDate?: string;
+  tourTime?: string;
   isActive?: boolean;
 }
 
@@ -32,23 +34,16 @@ const CATEGORIES = [
 ];
 
 const DURATION_OPTIONS = [
-  { value: 1, label: '1 hour' },
-  { value: 2, label: '2 hours' },
-  { value: 3, label: '3 hours' },
-  { value: 4, label: '4 hours' },
-  { value: 5, label: '5 hours' },
-  { value: 6, label: '6 hours' },
-  { value: 8, label: 'Full day (8 hours)' },
-  { value: 12, label: '12 hours' },
-  { value: 24, label: '1 Day (24 hours)' },
-  { value: 48, label: '2 Days (48 hours)' },
-  { value: 72, label: '3 Days (72 hours)' },
-  { value: 96, label: '4 Days (96 hours)' },
-  { value: 120, label: '5 Days (120 hours)' },
-  { value: 144, label: '6 Days (144 hours)' },
+  { value: 24, label: '1 Day' },
+  { value: 48, label: '2 Days' },
+  { value: 72, label: '3 Days' },
+  { value: 96, label: '4 Days' },
+  { value: 120, label: '5 Days' },
+  { value: 144, label: '6 Days' },
   { value: 168, label: '7 Days / 1 Week' },
   { value: 240, label: '10 Days' },
   { value: 336, label: '14 Days / 2 Weeks' },
+  { value: 720, label: '30 Days / 1 Month' },
 ];
 
 const GROUP_SIZE_OPTIONS = Array.from({ length: 20 }, (_, i) => i + 1);
@@ -62,12 +57,14 @@ export function CreateEditTourClient({ tour }: CreateEditTourClientProps) {
     description: '',
     itinerary: '',
     tourFee: 50,
-    duration: 2,
+    duration: 24,
     meetingPoint: '',
     maxGroupSize: 10,
     images: [],
     category: 'culture',
     city: '',
+    tourDate: '',
+    tourTime: '',
     isActive: true,
   });
   const [imageUrls, setImageUrls] = useState<string[]>(['', '', '', '', '']);
@@ -161,6 +158,8 @@ export function CreateEditTourClient({ tour }: CreateEditTourClientProps) {
     if (!formData.meetingPoint.trim()) newErrors.meetingPoint = 'Meeting point is required';
     if (!formData.maxGroupSize || formData.maxGroupSize <= 0) newErrors.maxGroupSize = 'Valid group size is required';
     if (!formData.city.trim()) newErrors.city = 'City is required';
+    if (!formData.tourDate?.trim()) newErrors.tourDate = 'Tour date is required';
+    if (!formData.tourTime?.trim()) newErrors.tourTime = 'Tour starting time is required';
 
     if (formData.images.length === 0) {
       newErrors.images = 'At least one image is required';
@@ -199,7 +198,8 @@ export function CreateEditTourClient({ tour }: CreateEditTourClientProps) {
       const data = await response.json();
 
       if (response.ok) {
-        router.push('/dashboard/listings');
+        const targetPath = user?.role === 'admin' ? '/dashboard/admin/manage-listings' : '/dashboard/listings';
+        router.push(targetPath);
       } else {
         setErrors({ submit: data.error || 'Failed to save tour' });
       }
@@ -397,6 +397,32 @@ export function CreateEditTourClient({ tour }: CreateEditTourClientProps) {
                   <p className="mt-1 text-sm text-red-600">{errors.duration}</p>
                 )}
               </div>
+
+              {/* Tour Date */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Tour Date
+                </label>
+                <input
+                  type="date"
+                  value={formData.tourDate || ''}
+                  onChange={(e) => handleInputChange('tourDate', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              {/* Tour Time */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Tour Time
+                </label>
+                <input
+                  type="time"
+                  value={formData.tourTime || ''}
+                  onChange={(e) => handleInputChange('tourTime', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
             </div>
           </div>
 
@@ -549,36 +575,20 @@ export function CreateEditTourClient({ tour }: CreateEditTourClientProps) {
                       )}
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="url"
-                        value={url}
-                        onChange={(e) => handleImageUrlChange(index, e.target.value)}
-                        placeholder="Or paste direct image URL (https://...)"
-                        className="w-full text-xs px-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white text-gray-700"
-                      />
-                    </div>
+
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h3 className="font-medium text-blue-900 mb-2">Image Tips</h3>
-              <ul className="text-blue-800 text-sm space-y-1">
-                <li>• Use high-quality, landscape-oriented images</li>
-                <li>• Show your city, landmarks, or activities</li>
-                <li>• Include photos of you guiding (helps build trust)</li>
-                <li>• Use image hosting services like ImgBB or Cloudinary</li>
-              </ul>
-            </div>
+
           </div>
 
           {/* Form Actions */}
           <div className="flex justify-end space-x-4 pt-6 border-t border-gray-200">
             <button
               type="button"
-              onClick={() => router.push('/dashboard/listings')}
+              onClick={() => router.push(user?.role === 'admin' ? '/dashboard/admin/manage-listings' : '/dashboard/listings')}
               className="px-6 py-2 text-gray-700 hover:text-gray-900 font-medium"
             >
               Cancel

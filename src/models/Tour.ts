@@ -40,6 +40,12 @@ const tourSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  tourDate: {
+    type: String,
+  },
+  tourTime: {
+    type: String,
+  },
   guide: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

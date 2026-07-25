@@ -2,15 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Search, X } from 'lucide-react';
-import { SearchFilters } from '@/components/explore/SearchFilters';
 import { TourGrid } from '@/components/explore/TourGrid';
-import { MapView } from '@/components/explore/MapView';
 import debounce from 'lodash/debounce';
-
-type ViewMode = 'grid' | 'map';
 
 interface SearchParams {
   search?: string;
@@ -32,12 +28,12 @@ interface ExploreContentProps {
 export function ExploreContent({ initialTours = [] }: ExploreContentProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [filters, setFilters] = useState<SearchParams>({});
   const [isLoading, setIsLoading] = useState(false);
   const [tours, setTours] = useState<any[]>(initialTours);
   const [totalTours, setTotalTours] = useState(initialTours.length);
   const [searchQuery, setSearchQuery] = useState('');
+  const isInitialMount = useRef(true);
 
   // Initialize filters from URL search params
   useEffect(() => {
@@ -57,6 +53,8 @@ export function ExploreContent({ initialTours = [] }: ExploreContentProps) {
     if (search) {
       params.search = search;
       setSearchQuery(search);
+    } else {
+      setSearchQuery('');
     }
     if (city) params.city = city;
     if (category) params.category = category;
@@ -115,42 +113,50 @@ export function ExploreContent({ initialTours = [] }: ExploreContentProps) {
   // Fetch tours when filters change
   useEffect(() => {
     // Don't fetch on initial render if we have initialTours
-    if (Object.keys(filters).length === 0 && initialTours.length > 0) {
-      return;
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      if (Object.keys(filters).length === 0 && initialTours.length > 0) {
+        return;
+      }
     }
     
     searchTours(filters);
   }, [filters, searchTours, initialTours]);
 
-  const handleFilterChange = useCallback((newFilters: SearchParams) => {
-    const updatedFilters = { ...filters, ...newFilters };
-    setFilters(updatedFilters);
+  const updateFilters = useCallback((newFilters: SearchParams) => {
+    setFilters(newFilters);
     
     // Update URL without page reload
     const queryParams = new URLSearchParams();
-    Object.entries(updatedFilters).forEach(([key, value]) => {
+    Object.entries(newFilters).forEach(([key, value]) => {
       if (value && value !== '') {
         queryParams.set(key, value.toString());
       }
     });
     
-    router.replace(`/explore?${queryParams.toString()}`, { scroll: false });
-  }, [filters, router]);
+    const queryString = queryParams.toString();
+    router.replace(queryString ? `/explore?${queryString}` : '/explore', { scroll: false });
+  }, [router]);
 
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      handleFilterChange({ ...filters, search: searchQuery.trim() });
-    } else {
-      const { search, ...restFilters } = filters;
-      handleFilterChange(restFilters);
-    }
-  };
+  const debouncedUpdateSearch = useMemo(
+    () =>
+      debounce((query: string, currentFilters: SearchParams) => {
+        const trimmed = query.trim();
+        if (trimmed) {
+          updateFilters({ ...currentFilters, search: trimmed, page: '1' });
+        } else {
+          const { search, ...restFilters } = currentFilters;
+          updateFilters({ ...restFilters, page: '1' });
+        }
+      }, 300),
+    [updateFilters]
+  );
 
   const clearSearch = () => {
     setSearchQuery('');
+    debouncedUpdateSearch.cancel();
     const { search, ...restFilters } = filters;
-    handleFilterChange(restFilters);
+    updateFilters({ ...restFilters, page: '1' });
   };
 
   const clearFilters = useCallback(() => {
@@ -180,7 +186,7 @@ export function ExploreContent({ initialTours = [] }: ExploreContentProps) {
           {/* Main Search Bar - CENTERED */}
           <div className="flex justify-center">
             <div className="w-full max-w-3xl">
-              <form onSubmit={handleSearchSubmit} className="relative">
+              <form onSubmit={(e) => e.preventDefault()} className="relative">
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <Search className="h-5 w-5 text-gray-400" />
@@ -188,7 +194,11 @@ export function ExploreContent({ initialTours = [] }: ExploreContentProps) {
                   <input
                     type="text"
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setSearchQuery(val);
+                      debouncedUpdateSearch(val, filters);
+                    }}
                     placeholder="Search tours by title, description, city, or guide..."
                     className="w-full text-gray-800 pl-12 pr-12 py-4 border border-gray-300 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
                   />
@@ -202,49 +212,31 @@ export function ExploreContent({ initialTours = [] }: ExploreContentProps) {
                     </button>
                   )}
                 </div>
-                <div className="mt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
-                  <button
-                    type="submit"
-                    className="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-                  >
-                    Search Tours
-                  </button>
-                  {filters.search && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">
-                        Showing results for:
-                      </span>
-                      <span className="text-sm font-medium text-blue-600">
-                        &quot;{filters.search}&quot;
-                      </span>
-                      <button
-                        type="button"
-                        onClick={clearSearch}
-                        className="text-sm text-gray-500 hover:text-gray-700"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  )}
-                </div>
+                {filters.search && (
+                  <div className="mt-3 flex items-center justify-center gap-2">
+                    <span className="text-sm text-gray-600">
+                      Showing results for:
+                    </span>
+                    <span className="text-sm font-medium text-blue-600">
+                      &quot;{filters.search}&quot;
+                    </span>
+                    <button
+                      type="button"
+                      onClick={clearSearch}
+                      className="text-sm text-gray-500 hover:text-gray-700"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                )}
               </form>
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Filters Sidebar */}
-          <div className="lg:w-80 flex-shrink-0">
-            <SearchFilters
-              filters={filters}
-              onFilterChange={handleFilterChange}
-              onClearFilters={clearFilters}
-              activeFilterCount={activeFilterCount}
-            />
-          </div>
-
+        <div>
           {/* Main Content */}
-          <div className="flex-1">
+          <div className="w-full">
             {/* View Controls */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
               <div className="flex items-center space-x-4">
@@ -268,40 +260,10 @@ export function ExploreContent({ initialTours = [] }: ExploreContentProps) {
                   </button>
                 )}
               </div>
-
-              {/* View Toggle */}
-              <div className="flex bg-white rounded-lg border border-gray-300 p-1">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
-                    viewMode === 'grid'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <span className="mr-2">▦</span>
-                  Grid
-                </button>
-                <button
-                  onClick={() => setViewMode('map')}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
-                    viewMode === 'map'
-                      ? 'bg-blue-600 text-white'
-                      : 'text-gray-600 hover:text-gray-900'
-                  }`}
-                >
-                  <span className="mr-2">🗺️</span>
-                  Map
-                </button>
-              </div>
             </div>
 
             {/* Content */}
-            {viewMode === 'grid' ? (
-              <TourGrid tours={tours} isLoading={isLoading} />
-            ) : (
-              <MapView tours={tours} isLoading={isLoading} />
-            )}
+            <TourGrid tours={tours} isLoading={isLoading} />
 
             {/* Pagination */}
             {tours.length > 0 && !isLoading && (
@@ -311,7 +273,7 @@ export function ExploreContent({ initialTours = [] }: ExploreContentProps) {
                     onClick={() => {
                       const page = parseInt(filters.page || '1');
                       if (page > 1) {
-                        handleFilterChange({ ...filters, page: (page - 1).toString() });
+                        updateFilters({ ...filters, page: (page - 1).toString() });
                       }
                     }}
                     disabled={parseInt(filters.page || '1') <= 1}
@@ -330,7 +292,7 @@ export function ExploreContent({ initialTours = [] }: ExploreContentProps) {
                       const page = parseInt(filters.page || '1');
                       const limit = parseInt(filters.limit || '12');
                       if (tours.length === limit) {
-                        handleFilterChange({ ...filters, page: (page + 1).toString() });
+                        updateFilters({ ...filters, page: (page + 1).toString() });
                       }
                     }}
                     disabled={tours.length < parseInt(filters.limit || '12')}

@@ -118,15 +118,7 @@ export function FeaturedPackages() {
               </button>
             </div>
 
-            {/* Navigation Buttons */}
-            <div className="flex items-center gap-2">
-              <button className="swiper-button-prev-pkg w-10 h-10 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button className="swiper-button-next-pkg w-10 h-10 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 flex items-center justify-center text-gray-700 dark:text-gray-300 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
-                <ChevronRight className="w-5 h-5" />
-              </button>
-            </div>
+
           </div>
         </div>
 
@@ -189,7 +181,7 @@ export function FeaturedPackages() {
                       {/* Price Tag */}
                       <div className="absolute top-4 left-4 bg-white/95 dark:bg-gray-950/95 backdrop-blur-md px-3.5 py-1.5 rounded-full shadow-lg border border-gray-200/50 dark:border-gray-800/50">
                         <span className="text-sm font-black text-gray-900 dark:text-white">
-                          ${pkg.tourFee}
+                          ৳{pkg.tourFee}
                         </span>
                       </div>
 

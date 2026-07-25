@@ -130,3 +130,30 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export async function POST(request: NextRequest) {
+  try {
+    await dbConnect();
+    const body = await request.json();
+
+    if (!body.title || !body.description || !body.itinerary || !body.tourFee || !body.city || !body.meetingPoint) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    const newTour = await Tour.create(body);
+
+    return NextResponse.json(
+      { tour: newTour, message: 'Tour created successfully' },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    console.error('Error creating tour:', error);
+    return NextResponse.json(
+      { error: error.message || 'Failed to create tour' },
+      { status: 500 }
+    );
+  }
+}

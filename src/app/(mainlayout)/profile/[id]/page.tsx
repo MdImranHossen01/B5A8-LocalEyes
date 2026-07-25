@@ -56,26 +56,18 @@ async function getUserTours(guideId: string) {
   }
 }
 
-async function getUserReviews(userId: string, role: string) {
+async function getUserBookingsCount(userId: string) {
   try {
     const baseUrl = getBaseUrl();
-    const endpoint = role === 'guide' 
-      ? `/api/reviews?guideId=${userId}`
-      : `/api/reviews?touristId=${userId}`;
-    
-    const res = await fetch(`${baseUrl}${endpoint}`, {
+    const res = await fetch(`${baseUrl}/api/bookings?userId=${userId}&role=tourist`, {
       cache: 'no-store',
     });
-
-    if (!res.ok) {
-      return [];
-    }
-
+    if (!res.ok) return 0;
     const data = await res.json();
-    return data.reviews || [];
+    return (data.bookings || []).length;
   } catch (error) {
-    console.error('Error fetching reviews:', error);
-    return [];
+    console.error('Error fetching bookings count:', error);
+    return 0;
   }
 }
 
@@ -130,18 +122,18 @@ export default async function ProfilePage({ params }: PageProps) {
 
     // Fetch additional data based on user role
     let tours = [];
-    let reviews = [];
+    let bookingsCount = 0;
 
     if (user.role === 'guide') {
       tours = await getUserTours(id);
+    } else {
+      bookingsCount = await getUserBookingsCount(id);
     }
-    
-    reviews = await getUserReviews(id, user.role);
 
     // Dynamically import the client component to avoid server-side rendering issues
     const { ProfileClient } = await import('@/components/profile/ProfileClient');
     
-    return <ProfileClient user={user} tours={tours} reviews={reviews} />;
+    return <ProfileClient user={user} tours={tours} bookingsCount={bookingsCount} />;
   } catch (error) {
     console.error('Error in ProfilePage:', error);
     notFound();

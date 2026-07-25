@@ -36,38 +36,14 @@ interface Tour {
   isActive: boolean;
 }
 
-interface Review {
-  _id: string;
-  tourist: {
-    name: string;
-    profilePic?: string;
-  };
-  rating: number;
-  comment: string;
-  createdAt: string;
-  tour: {
-    title: string;
-  };
-}
-
 interface ProfileClientProps {
   user: User | null;
   tours?: Tour[];
-  reviews?: Review[];
+  bookingsCount?: number;
 }
 
-type TouristTabType = 'about' | 'reviews';
-type TabType = TouristTabType;
-
-export function ProfileClient({ user, tours = [], reviews = [] }: ProfileClientProps) {
+export function ProfileClient({ user, tours = [], bookingsCount = 0 }: ProfileClientProps) {
   const { user: currentUser } = useAuth();
-  
-  // Initialize activeTab based on user role
-  const getInitialTab = (): TabType => {
-    return 'about';
-  };
-  
-  const [activeTab, setActiveTab] = useState<TabType>(getInitialTab());
   const [showEditModal, setShowEditModal] = useState(false);
 
   // Add safety checks
@@ -94,15 +70,6 @@ export function ProfileClient({ user, tours = [], reviews = [] }: ProfileClientP
     window.location.reload();
   };
 
-  const tabs: { id: TouristTabType; label: string }[] = [
-    { id: 'about', label: 'About' },
-    { id: 'reviews', label: 'Reviews' },
-  ];
-
-  const handleTabClick = (tabId: TabType) => {
-    setActiveTab(tabId);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       <ProfileHeader 
@@ -112,30 +79,9 @@ export function ProfileClient({ user, tours = [], reviews = [] }: ProfileClientP
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Tabs */}
-        <div className="border-b border-gray-200 mb-8">
-          <nav className="-mb-px flex space-x-8">
-            {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => handleTabClick(tab.id)}
-                className={`py-3 px-1 font-medium text-sm border-b-2 transition-colors ${
-                  activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </nav>
-        </div>
-
-        {/* Tab Content */}
         <TouristProfileContent
           user={user}
-          activeTab={activeTab as TouristTabType}
-          reviews={reviews}
+          bookingsCount={bookingsCount}
         />
       </div>
 

@@ -12,11 +12,11 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SessionProvider>
+    <SessionProvider refetchOnWindowFocus={false}>
       <AuthProvider>
         <div className="min-h-screen w-full relative">
           <Navigation />
-          <main className="relative z-0">{children}
+          <main>{children}
           <Footer/>
           </main>{" "}
         </div>

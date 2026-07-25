@@ -141,9 +141,6 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
                         {booking.tour?.title || "Untitled Tour"}
                       </h3>
                       <p className="text-gray-600 text-xs">
-                        with {booking.guide?.name || "Host"}
-                      </p>
-                      <p className="text-gray-500 text-xs">
                         {booking.date ? formatDate(booking.date) : "Date not set"}
                       </p>
                     </div>
@@ -200,7 +197,7 @@ export function TouristDashboard({ data }: TouristDashboardProps) {
                         {booking.tour?.title || "Untitled Tour"}
                       </h3>
                       <p className="text-gray-600 text-xs">
-                        Awaiting confirmation from {booking.guide?.name || "Host"}
+                        Awaiting booking confirmation
                       </p>
                     </div>
                   </div>

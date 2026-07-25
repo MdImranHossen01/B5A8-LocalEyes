@@ -61,14 +61,15 @@ const bookingSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: [
-        "pending_payment", // ADD THIS
-        "pending",         // You might have this already
+        "pending_payment",
+        "pending",
+        "paid",
         "confirmed",
         "cancelled",
         "completed",
         "failed",
       ],
-      default: "pending_payment", // Change default
+      default: "pending_payment",
     },
     paymentStatus: {
       type: String,
@@ -102,7 +103,8 @@ const bookingSchema = new mongoose.Schema(
 bookingSchema.index({ tourist: 1, createdAt: -1 });
 bookingSchema.index({ guide: 1, createdAt: -1 });
 bookingSchema.index({ status: 1 });
-bookingSchema.index({ date: 1 });
+if (mongoose.models.Booking) {
+  delete (mongoose.models as any).Booking;
+}
 
-export default mongoose.models.Booking ||
-  mongoose.model("Booking", bookingSchema);
+export default mongoose.model("Booking", bookingSchema);

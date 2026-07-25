@@ -4,6 +4,7 @@
 import "./globals.css";
 import { useEffect } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "react-hot-toast";
 
 // List of known extension attributes that cause hydration issues
 const EXTENSION_ATTRIBUTES = [
@@ -64,6 +65,34 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 3500,
+              style: {
+                background: '#0f172a',
+                color: '#f8fafc',
+                borderRadius: '0.75rem',
+                fontSize: '13px',
+                fontWeight: '500',
+                padding: '12px 16px',
+                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+              },
+              success: {
+                iconTheme: {
+                  primary: '#10b981',
+                  secondary: '#ffffff',
+                },
+              },
+              error: {
+                iconTheme: {
+                  primary: '#ef4444',
+                  secondary: '#ffffff',
+                },
+              },
+            }}
+          />
           {children}
         </ThemeProvider>
       </body>

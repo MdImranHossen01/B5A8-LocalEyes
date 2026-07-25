@@ -4,6 +4,16 @@
 import { useState, useEffect } from 'react';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
 import Image from 'next/image';
+import Swal from 'sweetalert2';
+import { toast } from 'react-hot-toast';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from '@/components/ui/table';
 
 interface User {
   _id: string;
@@ -29,6 +39,10 @@ export function AdminUsersClient() {
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
   useEffect(() => {
     fetchUsers();
   }, []);
@@ -52,13 +66,20 @@ export function AdminUsersClient() {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       results = results.filter(user => 
-        user.name.toLowerCase().includes(query) ||
-        user.email.toLowerCase().includes(query)
+        user.name?.toLowerCase().includes(query) ||
+        user.email?.toLowerCase().includes(query)
       );
     }
     
     setFilteredUsers(results);
+    setCurrentPage(1);
   }, [users, filterRole, filterStatus, searchQuery]);
+
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const fetchUsers = async () => {
     setIsLoadingData(true);
@@ -77,9 +98,24 @@ export function AdminUsersClient() {
   };
 
   const handleToggleStatus = async (userId: string, currentStatus: boolean) => {
-    if (!confirm(`Are you sure you want to ${currentStatus ? 'deactivate' : 'activate'} this user?`)) {
-      return;
-    }
+    const actionText = currentStatus ? 'deactivate' : 'activate';
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you really want to ${actionText} this user?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: currentStatus ? '#ef4444' : '#10b981',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: `Yes, ${actionText}`,
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'rounded-2xl',
+        confirmButton: 'rounded-xl font-semibold px-4 py-2',
+        cancelButton: 'rounded-xl font-semibold px-4 py-2',
+      }
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       const response = await fetch(`/api/users/${userId}/status`, {
@@ -91,15 +127,18 @@ export function AdminUsersClient() {
       });
 
       if (response.ok) {
-        // Update local state
         setUsers(users.map(user => 
           user._id === userId 
             ? { ...user, isActive: !currentStatus }
             : user
         ));
+        toast.success(`User ${actionText}d successfully!`);
+      } else {
+        toast.error(`Failed to ${actionText} user`);
       }
     } catch (error) {
       console.error('Error updating user status:', error);
+      toast.error('An error occurred');
     }
   };
 
@@ -114,22 +153,39 @@ export function AdminUsersClient() {
       });
 
       if (response.ok) {
-        // Update local state
         setUsers(users.map(user => 
           user._id === userId 
             ? { ...user, isVerified: !isVerified }
             : user
         ));
+        toast.success(`User verification updated!`);
+      } else {
+        toast.error('Failed to update verification status');
       }
     } catch (error) {
       console.error('Error verifying user:', error);
+      toast.error('An error occurred');
     }
   };
 
-  const handleUpdateRole = async (userId: string, newRole: string) => {
-    if (!confirm(`Change user role to ${newRole}?`)) {
-      return;
-    }
+  const handleUpdateRole = async (userId: string, newRole: User['role']) => {
+    const result = await Swal.fire({
+      title: 'Change User Role',
+      text: `Are you sure you want to change this user's role to ${newRole}?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#2563eb',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Yes, change role',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'rounded-2xl',
+        confirmButton: 'rounded-xl font-semibold px-4 py-2',
+        cancelButton: 'rounded-xl font-semibold px-4 py-2',
+      }
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       const response = await fetch(`/api/users/${userId}/role`, {
@@ -141,19 +197,60 @@ export function AdminUsersClient() {
       });
 
       if (response.ok) {
-        // Update local state
         setUsers(users.map(user => 
           user._id === userId 
-            ? { ...user, role: newRole as any }
+            ? { ...user, role: newRole as User['role'] }
             : user
         ));
+        toast.success(`Role updated to ${newRole}`);
+      } else {
+        toast.error('Failed to update role');
       }
     } catch (error) {
-      console.error('Error updating user role:', error);
+      console.error('Error updating role:', error);
+      toast.error('An error occurred');
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, userName: string) => {
+    const result = await Swal.fire({
+      title: 'Delete User?',
+      text: `Are you sure you want to delete user "${userName}"? This action cannot be undone.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Yes, delete user',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'rounded-2xl',
+        confirmButton: 'rounded-xl font-semibold px-4 py-2',
+        cancelButton: 'rounded-xl font-semibold px-4 py-2',
+      }
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        setUsers(users.filter(u => u._id !== userId));
+        toast.success(`User "${userName}" deleted successfully!`);
+      } else {
+        const data = await response.json();
+        toast.error(data?.error || 'Failed to delete user');
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      toast.error('An error occurred while deleting user');
     }
   };
 
   const formatDate = (dateString: string) => {
+    if (!dateString) return 'N/A';
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
@@ -163,19 +260,15 @@ export function AdminUsersClient() {
 
   if (isLoading || isLoadingData) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="animate-pulse">
-            <div className="h-8 bg-gray-300 rounded w-1/4 mb-8"></div>
-            <div className="space-y-4">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="h-16 bg-gray-300 rounded"></div>
-              ))}
-            </div>
+      <div className="w-full px-1 sm:px-2 py-4">
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-300 rounded w-1/4 mb-8"></div>
+          <div className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-16 bg-gray-300 rounded"></div>
+            ))}
           </div>
         </div>
-        
       </div>
     );
   }
@@ -189,247 +282,275 @@ export function AdminUsersClient() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-    
-      
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-600 mt-2">Manage platform users, roles, and permissions</p>
-        </div>
+    <div className="w-full space-y-5 px-1 sm:px-2">
+      {/* Header */}
+      <div>
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900 dark:text-white">User Management</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Manage platform users, roles, and permissions</p>
+      </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
-            <p className="text-sm text-gray-600">Total Users</p>
-            <p className="text-2xl font-bold text-gray-900">{userCounts.total}</p>
-          </div>
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
-            <p className="text-sm text-gray-600">Customers / Users</p>
-            <p className="text-2xl font-bold text-blue-600">{userCounts.regularUsers}</p>
-          </div>
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
-            <p className="text-sm text-gray-600">Admins</p>
-            <p className="text-2xl font-bold text-purple-600">{userCounts.admins}</p>
-          </div>
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4">
-            <p className="text-sm text-gray-600">Active</p>
-            <p className="text-2xl font-bold text-green-600">{userCounts.active}</p>
-          </div>
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xs border border-gray-200 dark:border-slate-800 p-4">
+          <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Total Users</p>
+          <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{userCounts.total}</p>
         </div>
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xs border border-gray-200 dark:border-slate-800 p-4">
+          <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Customers / Users</p>
+          <p className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-1">{userCounts.regularUsers}</p>
+        </div>
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xs border border-gray-200 dark:border-slate-800 p-4">
+          <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Admins</p>
+          <p className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-1">{userCounts.admins}</p>
+        </div>
+        <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xs border border-gray-200 dark:border-slate-800 p-4">
+          <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 uppercase tracking-wider">Active</p>
+          <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{userCounts.active}</p>
+        </div>
+      </div>
 
-        {/* Filters */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex flex-wrap gap-2">
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600">Role:</span>
-                <select
-                  value={filterRole}
-                  onChange={(e) => setFilterRole(e.target.value as any)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="all">All Roles</option>
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </select>
-              </div>
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600">Status:</span>
-                <select
-                  value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value as any)}
-                  className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="all">All Status</option>
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              </div>
+      {/* Filters */}
+      <div className="bg-white dark:bg-slate-900 rounded-xl shadow-2xs border border-gray-200 dark:border-slate-800 p-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="flex flex-wrap gap-3">
+            <div className="flex items-center space-x-2">
+              <span className="text-xs font-medium text-gray-600 dark:text-slate-400">Role:</span>
+              <select
+                value={filterRole}
+                onChange={(e) => setFilterRole(e.target.value as any)}
+                className="border border-gray-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="all">All Roles</option>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
             </div>
-
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search users..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64"
-              />
-              <span className="absolute left-3 top-2.5 text-gray-400">🔍</span>
+            <div className="flex items-center space-x-2">
+              <span className="text-xs font-medium text-gray-600 dark:text-slate-400">Status:</span>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value as any)}
+                className="border border-gray-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="all">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
             </div>
           </div>
-        </div>
 
-        {/* Users Table */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">User</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Role</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Status</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Verified</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Joined</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsers.map((user) => (
-                  <tr key={user._id} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-3 px-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="relative w-8 h-8">
-                          <Image
-                            src={user.profilePic || '/profile.jpg'}
-                            alt={user.name}
-                            fill
-                            className="rounded-full object-cover"
-                            sizes="32px"
-                          />
-                        </div>
-                        <div>
-                          <p className="font-medium text-gray-900 text-sm">{user.name}</p>
-                          <p className="text-xs text-gray-600">{user.email}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="py-3 px-4">
-                      <select
-                        value={user.role}
-                        onChange={(e) => handleUpdateRole(user._id, e.target.value)}
-                        className="border border-gray-300 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 capitalize"
-                      >
-                        <option value="user">User</option>
-                        <option value="tourist">Tourist</option>
-                        <option value="admin">Admin</option>
-                      </select>
-                    </td>
-                    <td className="py-3 px-4">
-                      <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
-                        user.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                      }`}>
-                        {user.isActive ? 'Active' : 'Inactive'}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4">
-                      <button
-                        onClick={() => handleVerifyUser(user._id, user.isVerified)}
-                        className={`px-2 py-1 rounded text-xs font-medium ${
-                          user.isVerified 
-                            ? 'bg-blue-100 text-blue-800 hover:bg-blue-200' 
-                            : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-                        }`}
-                      >
-                        {user.isVerified ? 'Verified' : 'Not Verified'}
-                      </button>
-                    </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">
-                      {formatDate(user.createdAt)}
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => setSelectedUser(user)}
-                          className="text-blue-600 hover:text-blue-700 text-sm font-medium"
-                        >
-                          View
-                        </button>
-                        <button
-                          onClick={() => handleToggleStatus(user._id, user.isActive)}
-                          className={`text-sm font-medium ${
-                            user.isActive 
-                              ? 'text-red-600 hover:text-red-700' 
-                              : 'text-green-600 hover:text-green-700'
-                          }`}
-                        >
-                          {user.isActive ? 'Deactivate' : 'Activate'}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="Search users..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 pr-4 py-1.5 text-xs border border-gray-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-60"
+            />
+            <span className="absolute left-3 top-2 text-xs text-gray-400">🔍</span>
           </div>
         </div>
+      </div>
 
-        {/* User Details Modal */}
-        {selectedUser && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="border-b border-gray-200 p-6">
-                <div className="flex justify-between items-center mb-2">
-                  <h2 className="text-2xl font-bold text-gray-900">User Details</h2>
-                  <button
-                    onClick={() => setSelectedUser(null)}
-                    className="text-gray-400 hover:text-gray-600 text-2xl"
+      {/* Users Table using Shadcn UI Table */}
+      <Table className="min-w-[640px]">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="w-[220px] min-w-[180px]">User</TableHead>
+            <TableHead className="w-[110px] min-w-[90px]">Role</TableHead>
+            <TableHead className="w-[100px] min-w-[90px]">Status</TableHead>
+            <TableHead className="w-[110px] min-w-[100px]">Verified</TableHead>
+            <TableHead className="w-[120px] min-w-[100px]">Joined</TableHead>
+            <TableHead className="w-[110px] min-w-[100px] text-right">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {paginatedUsers.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                No users found matching the criteria.
+              </TableCell>
+            </TableRow>
+          ) : (
+            paginatedUsers.map((user) => (
+              <TableRow key={user._id}>
+                <TableCell>
+                  <div className="flex items-center space-x-3">
+                    <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0 border border-gray-200 dark:border-slate-700">
+                      <Image
+                        src={user.profilePic || '/profile.jpg'}
+                        alt={user.name || 'User'}
+                        fill
+                        className="object-cover"
+                        sizes="32px"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-slate-900 dark:text-white text-xs truncate">{user.name}</p>
+                      <p className="text-[11px] text-gray-500 dark:text-slate-400 truncate" title={user.email}>{user.email}</p>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <select
+                    value={user.role}
+                    onChange={(e) => handleUpdateRole(user._id, e.target.value as User['role'])}
+                    className="border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 rounded px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500 capitalize"
                   >
-                    ×
-                  </button>
-                </div>
-                <p className="text-gray-600">Complete user information and activity</p>
-              </div>
-
-              <div className="p-6">
-                <div className="flex items-center space-x-4 mb-6">
-                  <div className="relative w-16 h-16">
-                    <Image
-                      src={selectedUser.profilePic || '/profile.jpg'}
-                      alt={selectedUser.name}
-                      fill
-                      className="rounded-full object-cover"
-                      sizes="64px"
-                    />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900">{selectedUser.name}</h3>
-                    <p className="text-gray-600">{selectedUser.email}</p>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-600">Role</p>
-                    <p className="font-semibold text-gray-900 capitalize">{selectedUser.role === 'admin' ? 'Admin' : 'User'}</p>
-                  </div>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-600">Status</p>
-                    <p className={`font-semibold ${selectedUser.isActive ? 'text-green-600' : 'text-red-600'}`}>
-                      {selectedUser.isActive ? 'Active' : 'Inactive'}
-                    </p>
-                  </div>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-600">Verified</p>
-                    <p className={`font-semibold ${selectedUser.isVerified ? 'text-blue-600' : 'text-gray-600'}`}>
-                      {selectedUser.isVerified ? 'Verified' : 'Not Verified'}
-                    </p>
-                  </div>
-                  <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-600">Member Since</p>
-                    <p className="font-semibold text-gray-900">{formatDate(selectedUser.createdAt)}</p>
-                  </div>
-                </div>
-
-                <div className="flex justify-end pt-6 border-t border-gray-200">
+                    <option value="user">User</option>
+                    <option value="tourist">Tourist</option>
+                    <option value="admin">Admin</option>
+                  </select>
+                </TableCell>
+                <TableCell>
+                  <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${
+                    user.isActive ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300' : 'bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300'
+                  }`}>
+                    {user.isActive ? 'Active' : 'Inactive'}
+                  </span>
+                </TableCell>
+                <TableCell>
                   <button
-                    onClick={() => handleToggleStatus(selectedUser._id, selectedUser.isActive)}
-                    className={`px-4 py-2 rounded-lg font-medium ${
-                      selectedUser.isActive 
-                        ? 'bg-red-600 text-white hover:bg-red-700' 
-                        : 'bg-green-600 text-white hover:bg-green-700'
+                    onClick={() => handleVerifyUser(user._id, user.isVerified)}
+                    className={`px-2 py-0.5 rounded text-xs font-medium transition-colors ${
+                      user.isVerified 
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-900' 
+                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300'
                     }`}
                   >
-                    {selectedUser.isActive ? 'Deactivate User' : 'Activate User'}
+                    {user.isVerified ? 'Verified' : 'Not Verified'}
                   </button>
-                </div>
+                </TableCell>
+                <TableCell className="text-xs text-gray-600 dark:text-slate-400">
+                  {formatDate(user.createdAt)}
+                </TableCell>
+                <TableCell className="text-right">
+                  <div className="flex items-center justify-end space-x-2">
+                    <button
+                      onClick={() => setSelectedUser(user)}
+                      className="text-blue-600 hover:text-blue-700 text-xs font-semibold"
+                    >
+                      View
+                    </button>
+                    <button
+                      onClick={() => handleToggleStatus(user._id, user.isActive)}
+                      className={`text-xs font-semibold ${
+                        user.isActive 
+                          ? 'text-amber-600 hover:text-amber-700' 
+                          : 'text-emerald-600 hover:text-emerald-700'
+                      }`}
+                    >
+                      {user.isActive ? 'Deactivate' : 'Activate'}
+                    </button>
+                    <button
+                      onClick={() => handleDeleteUser(user._id, user.name)}
+                      className="text-rose-600 hover:text-rose-700 text-xs font-semibold"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
+        </TableBody>
+      </Table>
+
+      {/* Pagination Controls */}
+      {filteredUsers.length > 0 && (
+        <div className="px-4 py-3 border-t border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-gray-600 dark:text-slate-400">
+              Showing <span className="font-semibold text-gray-900 dark:text-white">{Math.min((currentPage - 1) * itemsPerPage + 1, filteredUsers.length)}</span> to{' '}
+              <span className="font-semibold text-gray-900 dark:text-white">{Math.min(currentPage * itemsPerPage, filteredUsers.length)}</span> of{' '}
+              <span className="font-semibold text-gray-900 dark:text-white">{filteredUsers.length}</span> users
+            </span>
+            <select
+              value={itemsPerPage}
+              onChange={(e) => {
+                setItemsPerPage(Number(e.target.value));
+                setCurrentPage(1);
+              }}
+              className="border border-gray-300 dark:border-slate-700 rounded-lg px-2 py-1 text-xs bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-2xs"
+            >
+              <option value={5}>5 / page</option>
+              <option value={10}>10 / page</option>
+              <option value={20}>20 / page</option>
+              <option value={50}>50 / page</option>
+            </select>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className="px-2.5 py-1 text-xs font-medium rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-slate-700"
+            >
+              Previous
+            </button>
+            <span className="text-xs text-gray-600 dark:text-slate-400 px-2">
+              Page {currentPage} of {totalPages}
+            </span>
+            <button
+              onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="px-2.5 py-1 text-xs font-medium rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-300 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-slate-700"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* User Details Modal */}
+      {selectedUser && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-slate-900 rounded-2xl max-w-md w-full p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">User Details</h2>
+              <button
+                onClick={() => setSelectedUser(null)}
+                className="text-gray-400 hover:text-gray-600 text-xl font-bold"
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <div className="relative w-16 h-16 rounded-full overflow-hidden shrink-0 border border-gray-200">
+                <Image
+                  src={selectedUser.profilePic || '/profile.jpg'}
+                  alt={selectedUser.name}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div>
+                <h3 className="font-bold text-slate-900 dark:text-white">{selectedUser.name}</h3>
+                <p className="text-xs text-gray-500">{selectedUser.email}</p>
+                <span className="inline-block mt-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-blue-100 text-blue-800 capitalize">
+                  {selectedUser.role}
+                </span>
               </div>
             </div>
+
+            <div className="space-y-2 text-xs text-gray-600 dark:text-slate-300 border-t border-gray-100 dark:border-slate-800 pt-3">
+              <p><span className="font-semibold">Status:</span> {selectedUser.isActive ? 'Active' : 'Inactive'}</p>
+              <p><span className="font-semibold">Verified:</span> {selectedUser.isVerified ? 'Yes' : 'No'}</p>
+              <p><span className="font-semibold">Joined:</span> {formatDate(selectedUser.createdAt)}</p>
+            </div>
+
+            <div className="pt-2">
+              <button
+                onClick={() => setSelectedUser(null)}
+                className="w-full py-2 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 text-slate-800 dark:text-slate-200 text-xs font-semibold rounded-xl transition-colors"
+              >
+                Close
+              </button>
+            </div>
           </div>
-        )}
-      </main>
+        </div>
+      )}
     </div>
   );
 }

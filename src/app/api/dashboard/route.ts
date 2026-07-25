@@ -24,8 +24,8 @@ export async function GET(request: NextRequest) {
     const userId = (session.user as any).id;
     const role = (session.user as any).role || 'tourist';
     
-    let bookings = [];
-    let tours = [];
+    let bookings: any[] = [];
+    let tours: any[] = [];
     let stats = {};
 
     // Fetch user-specific data based on role

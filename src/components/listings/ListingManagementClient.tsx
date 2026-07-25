@@ -5,6 +5,9 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import Link from 'next/link';
+import Swal from 'sweetalert2';
+import { toast } from 'react-hot-toast';
 
 interface Tour {
   _id: string;
@@ -34,12 +37,16 @@ export function ListingManagementClient() {
   const userRole = (session?.user as any)?.role || 'tourist';
 
   useEffect(() => {
-    if (userId && userRole === 'user') {
+    if (userRole === 'admin') {
+      router.replace('/dashboard/admin/manage-listings');
+      return;
+    }
+    if (userId) {
       fetchMyTours();
     } else if (status === 'unauthenticated') {
       setIsLoadingData(false);
     }
-  }, [userId, userRole, status]);
+  }, [userId, userRole, status, router]);
 
   useEffect(() => {
     let results = tours;
@@ -114,9 +121,23 @@ export function ListingManagementClient() {
   };
 
   const handleDeleteTour = async (tourId: string) => {
-    if (!confirm('Are you sure you want to delete this tour? This action cannot be undone.')) {
-      return;
-    }
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you really want to delete this tour? This action cannot be undone.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'rounded-2xl',
+        confirmButton: 'rounded-xl font-semibold px-4 py-2',
+        cancelButton: 'rounded-xl font-semibold px-4 py-2',
+      }
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       const response = await fetch(`/api/listings/${tourId}`, {
@@ -124,11 +145,14 @@ export function ListingManagementClient() {
       });
 
       if (response.ok) {
-        // Remove from local state
         setTours(tours.filter(tour => tour._id !== tourId));
+        toast.success('Tour listing deleted successfully!');
+      } else {
+        toast.error('Failed to delete tour listing');
       }
     } catch (error) {
       console.error('Error deleting tour:', error);
+      toast.error('An error occurred while deleting');
     }
   };
 
@@ -324,7 +348,9 @@ export function ListingManagementClient() {
               {/* Tour Content */}
               <div className="p-6">
                 <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
-                  {tour.title || 'Untitled Tour'}
+                  <Link href={`/tours/${tour._id}`} className="hover:text-blue-600 hover:underline transition-colors">
+                    {tour.title}
+                  </Link>
                 </h3>
                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">
                   {tour.description || 'No description'}

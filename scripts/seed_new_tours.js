@@ -221,9 +221,15 @@ async function seed() {
   const deleteResult = await toursCollection.deleteMany({});
   console.log(`Deleted ${deleteResult.deletedCount} old tours.`);
 
+  // Sample dates and times
+  const sampleDates = ["2026-08-05", "2026-08-10", "2026-08-12", "2026-08-15", "2026-08-20", "2026-08-25"];
+  const sampleTimes = ["08:00 AM", "09:30 AM", "10:00 AM", "11:00 AM", "02:00 PM"];
+
   // Prepare tours
-  const preparedTours = newTours.map(t => ({
+  const preparedTours = newTours.map((t, index) => ({
     ...t,
+    tourDate: t.tourDate || sampleDates[index % sampleDates.length],
+    tourTime: t.tourTime || sampleTimes[index % sampleTimes.length],
     guide: user._id,
     createdAt: new Date(),
     updatedAt: new Date()

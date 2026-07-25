@@ -120,7 +120,7 @@ export function MapView({ tours, isLoading }: MapViewProps) {
                       ? 'bg-blue-600 text-white' 
                       : 'bg-white text-blue-600'
                   }`}>
-                    ${tour.tourFee}
+                    ৳{tour.tourFee}
                   </div>
                 </button>
               );
@@ -178,7 +178,7 @@ export function MapView({ tours, isLoading }: MapViewProps) {
               </div>
               <div className="flex justify-between">
                 <span>Price:</span>
-                <span className="font-semibold text-green-600">${selectedTour.tourFee}</span>
+                <span className="font-semibold text-green-600">৳{selectedTour.tourFee}</span>
               </div>
             </div>
 

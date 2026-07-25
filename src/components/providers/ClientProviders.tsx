@@ -9,7 +9,7 @@ export default function ClientProviders({
   children: React.ReactNode;
 }) {
   return (
-    <SessionProvider>
+    <SessionProvider refetchOnWindowFocus={false}>
       <AuthProvider>
         {children}
       </AuthProvider>

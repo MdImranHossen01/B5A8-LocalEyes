@@ -4,6 +4,24 @@
 import { useState, useEffect } from 'react';
 import { useProtectedRoute } from '@/hooks/useProtectedRoute';
 
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from '@/components/ui/table';
+
+interface StatCardProps {
+  title: string;
+  value: string | number;
+  change?: string;
+  changeType?: 'positive' | 'negative' | 'neutral';
+  icon: string;
+  description?: string;
+}
+
 interface PlatformStats {
   totalUsers: number;
   totalGuides: number;
@@ -215,53 +233,51 @@ export function AdminDashboard() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Recent Activity</h2>
           
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-200">
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Type</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">User</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Details</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Date</th>
-                  <th className="text-left py-3 px-4 text-sm font-medium text-gray-900">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stats.recentSignups.slice(0, 5).map((activity, index) => (
-                  <tr key={index} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="py-3 px-4">
-                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                        activity.type === 'user_signup' ? 'bg-blue-100 text-blue-800' :
-                        activity.type === 'tour_created' ? 'bg-green-100 text-green-800' :
-                        activity.type === 'booking_created' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-purple-100 text-purple-800'
-                      }`}>
-                        {activity.type.replace('_', ' ')}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-sm text-gray-900">
-                      {activity.userName}
-                    </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">
-                      {activity.details}
-                    </td>
-                    <td className="py-3 px-4 text-sm text-gray-600">
-                      {formatDate(activity.createdAt)}
-                    </td>
-                    <td className="py-3 px-4">
-                      <span className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
-                        activity.status === 'active' ? 'bg-green-100 text-green-800' :
-                        activity.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
-                        {activity.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table className="min-w-[550px]">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[120px] min-w-[100px]">Type</TableHead>
+                <TableHead className="w-[140px] min-w-[120px]">User</TableHead>
+                <TableHead className="w-[180px] min-w-[150px]">Details</TableHead>
+                <TableHead className="w-[110px] min-w-[90px]">Date</TableHead>
+                <TableHead className="w-[100px] min-w-[80px]">Status</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {stats.recentSignups.slice(0, 5).map((activity, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold ${
+                      activity.type === 'user_signup' ? 'bg-blue-100 text-blue-800' :
+                      activity.type === 'tour_created' ? 'bg-green-100 text-green-800' :
+                      activity.type === 'booking_created' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-purple-100 text-purple-800'
+                    }`}>
+                      {activity.type.replace('_', ' ')}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-xs font-semibold text-gray-900">
+                    {activity.userName}
+                  </TableCell>
+                  <TableCell className="text-xs text-gray-600">
+                    {activity.details}
+                  </TableCell>
+                  <TableCell className="text-xs text-gray-600">
+                    {formatDate(activity.createdAt)}
+                  </TableCell>
+                  <TableCell>
+                    <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${
+                      activity.status === 'active' ? 'bg-emerald-50 text-emerald-700' :
+                      activity.status === 'pending' ? 'bg-amber-50 text-amber-700' :
+                      'bg-rose-50 text-rose-700'
+                    }`}>
+                      {activity.status}
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </main>
 

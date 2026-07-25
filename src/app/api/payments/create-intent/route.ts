@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
         tourId: booking.tour?._id?.toString(),
         guideId: booking.guide?.toString(),
       },
-      description: `Booking for ${booking.tour?.title || 'Tour'}`,
+      description: `Booking for ${(booking.tour as any)?.title || 'Tour'}`,
       automatic_payment_methods: {
         enabled: true,
       },

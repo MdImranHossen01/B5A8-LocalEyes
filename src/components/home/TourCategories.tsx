@@ -1,18 +1,14 @@
-'use client';
-
-import React, { useRef } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
 import {
   EffectCoverflow,
-  Navigation,
   Autoplay,
 } from 'swiper/modules';
-import { ArrowLeft, ArrowRight, Star, Clock } from 'lucide-react';
+import { Star } from 'lucide-react';
 import Image from 'next/image';
 
 interface Category {
@@ -34,9 +30,6 @@ interface Category {
 
 export function TourCategories() {
   const router = useRouter();
-  const prevRef = useRef<HTMLButtonElement>(null);
-  const nextRef = useRef<HTMLButtonElement>(null);
-
   const categories: Category[] = [
     {
       id: 'flight-bookings',
@@ -122,10 +115,6 @@ export function TourCategories() {
     { from: "from-blue-500", to: "to-cyan-500", glow: "blue" },
   ];
 
-  const handleCategoryClick = (category: string) => {
-    router.push(`/explore?category=${encodeURIComponent(category)}`);
-  };
-
   return (
     <>
       <style>{`
@@ -142,20 +131,6 @@ export function TourCategories() {
           background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
           background-size: 200% 100%;
           animation: shimmer 3s infinite;
-        }
-        
-        .swiper-pagination-bullet {
-          width: 12px;
-          height: 12px;
-          background: #3b82f6;
-          opacity: 0.5;
-          transition: all 0.3s;
-        }
-        .swiper-pagination-bullet-active {
-          opacity: 1;
-          width: 32px;
-          border-radius: 6px;
-          background: linear-gradient(90deg, #3b82f6, #8b5cf6);
         }
       `}</style>
 
@@ -175,7 +150,7 @@ export function TourCategories() {
         <div className="relative">
           <Swiper
             effect={"coverflow"}
-            grabCursor={true}
+            grabCursor={false}
             centeredSlides={true}
             loop={true}
             slidesPerView={1}
@@ -188,10 +163,6 @@ export function TourCategories() {
               slideShadows: false,
             }}
             pagination={false}
-            navigation={{
-              nextEl: ".pagination-next",
-              prevEl: ".pagination-pre",
-            }}
             breakpoints={{
               640: { slidesPerView: 1.5, spaceBetween: 25 },
               1024: { slidesPerView: 2.5, spaceBetween: 30 },
@@ -202,7 +173,7 @@ export function TourCategories() {
               disableOnInteraction: false,
               pauseOnMouseEnter: true,
             }}
-            modules={[EffectCoverflow, Navigation, Autoplay]}
+            modules={[EffectCoverflow, Autoplay]}
             className="!pb-4"
           >
             {categories.map((category, index) => {
@@ -210,8 +181,8 @@ export function TourCategories() {
               return (
                 <SwiperSlide key={index} className="!h-auto">
                   <div
-                    onClick={() => handleCategoryClick(category.id)}
-                    className="group relative h-full rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] bg-white dark:bg-gray-800 cursor-pointer"
+                    onClick={() => router.push(`/explore?category=${encodeURIComponent(category.name)}`)}
+                    className="group relative h-full rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-[1.02] bg-white dark:bg-gray-800 select-none cursor-pointer"
                   >
                     <div className="relative h-48 sm:h-56 overflow-hidden">
                       <Image
@@ -221,24 +192,6 @@ export function TourCategories() {
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
-              
-                      <div className="absolute top-4 left-4">
-                        <div
-                          className="px-4 py-2 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-full shadow-lg border-2 border-white/50"
-                        >
-                          <span
-                            className={`text-lg font-bold bg-gradient-to-r ${colorScheme.from} ${colorScheme.to} bg-clip-text text-transparent`}
-                          >
-                            {category.name}
-                          </span>
-                        </div>
-                      </div>
-                      
-                      <div className="absolute top-4 right-4">
-                        <div className="w-12 h-12 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm rounded-full shadow-lg flex items-center justify-center text-2xl animate-float-up border-2 border-white/50">
-                          {category.icon}
-                        </div>
-                      </div>
                       
                       <div className="absolute bottom-4 left-4 right-4">
                         <div className="flex justify-between items-center">
@@ -246,7 +199,6 @@ export function TourCategories() {
                             <Star className="w-4 h-4 text-yellow-400 fill-current" />
                             <span className="text-white text-sm font-semibold">{category.rating}</span>
                           </div>
-                         
                         </div>
                       </div>
                     </div>
@@ -267,15 +219,8 @@ export function TourCategories() {
                       </p>
                       
                       <div className="flex items-center justify-between">
-                        <div
-                          className={`px-4 py-2 bg-gradient-to-r ${colorScheme.from} ${colorScheme.to} rounded-xl shadow-lg backdrop-blur-sm`}
-                        >
-                          <div className="flex items-center justify-center gap-2 text-white font-bold text-sm">
-                            <span>{category.highlight}</span>
-                          </div>
-                        </div>
                         <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-                          {category.tourCount} tours →
+                          {category.tourCount} tours
                         </span>
                       </div>
                       
@@ -283,7 +228,7 @@ export function TourCategories() {
                         className={`mt-4 h-1 w-16 bg-gradient-to-r ${colorScheme.from} ${colorScheme.to} rounded-full group-hover:w-full transition-all duration-500`}
                       ></div>
                     </div>
-                    
+
                     <div
                       className={`absolute inset-0 bg-gradient-to-r ${colorScheme.from} ${colorScheme.to} opacity-0 group-hover:opacity-10 transition-opacity duration-500 pointer-events-none`}
                     ></div>
@@ -292,29 +237,8 @@ export function TourCategories() {
               );
             })}
           </Swiper>
-          
-          {/* Desktop Nav Arrows — absolute overlay */}
-          <button className="pagination-pre hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-white dark:bg-gray-800 rounded-full shadow-xl hover:shadow-2xl items-center justify-center group transition-all duration-300 hover:scale-110 border-2 border-blue-500/20">
-            <ArrowLeft className="w-5 h-5 text-blue-600 dark:text-blue-400 group-hover:-translate-x-0.5 transition-transform" />
-          </button>
-
-          <button className="pagination-next hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-white dark:bg-gray-800 rounded-full shadow-xl hover:shadow-2xl items-center justify-center group transition-all duration-300 hover:scale-110 border-2 border-blue-500/20">
-            <ArrowRight className="w-5 h-5 text-blue-600 dark:text-blue-400 group-hover:translate-x-0.5 transition-transform" />
-          </button>
-
-
-        </div>
-
-        {/* View All Button */}
-        <div className="text-center mt-12">
-          <button
-            onClick={() => router.push('/explore')}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-3 rounded-lg hover:shadow-xl transition-all duration-300 font-semibold text-lg hover:scale-105"
-          >
-            Browse All Categories
-          </button>
         </div>
       </div>
     </>
   );
-}
+}

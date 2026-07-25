@@ -15,18 +15,55 @@ export default function NewStoryPage() {
     content: '',
     imageUrl: '',
   });
+  const [isUploading, setIsUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
-  const sampleImages = [
-    { label: 'Sundarbans', url: '/assets/package/sundarbans.webp' },
-    { label: 'Cox\'s Bazar', url: '/assets/package/coxs-bazar.webp' },
-    { label: 'Sajek Valley', url: '/assets/package/sajek-valley.webp' },
-    { label: 'Sylhet Waterfalls', url: '/assets/package/sylhet.webp' },
-    { label: 'Sreemangal Tea', url: '/assets/package/sreemangal.webp' },
-    { label: 'Dubai Desert', url: '/assets/package/dubai-safari.webp' },
-    { label: 'Rome Heritage', url: '/assets/package/italy-rome.webp' },
-  ];
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setError('Please select an image file.');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image must be smaller than 5MB.');
+      return;
+    }
+
+    const apiKey = process.env.NEXT_PUBLIC_IMGBB_API_KEY;
+    if (!apiKey) {
+      setError('ImgBB API key is missing.');
+      return;
+    }
+
+    setIsUploading(true);
+    setError('');
+
+    try {
+      const uploadData = new FormData();
+      uploadData.append('image', file);
+
+      const res = await fetch(`https://api.imgbb.com/1/upload?key=${apiKey}`, {
+        method: 'POST',
+        body: uploadData,
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setFormData(prev => ({ ...prev, imageUrl: data.data.url }));
+      } else {
+        setError('Upload failed. Try again.');
+      }
+    } catch (err) {
+      console.error('ImgBB upload error:', err);
+      setError('Upload failed. Check your connection.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,6 +71,11 @@ export default function NewStoryPage() {
 
     if (!formData.title || !formData.location || !formData.content) {
       setError('Please fill in title, location, and story content.');
+      return;
+    }
+
+    if (!formData.imageUrl) {
+      setError('Please upload a cover photo first.');
       return;
     }
 
@@ -46,7 +88,7 @@ export default function NewStoryPage() {
           title: formData.title,
           location: formData.location,
           content: formData.content,
-          images: [formData.imageUrl || '/assets/package/sundarbans.webp'],
+          images: [formData.imageUrl],
         }),
       });
 
@@ -130,28 +172,68 @@ export default function NewStoryPage() {
               </div>
             </div>
 
-            {/* Select Image */}
+            {/* Cover Photo Upload */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-2">
-                Cover Photo (Select from Assets)
+                Cover Photo
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {sampleImages.map((img) => (
-                  <div
-                    key={img.url}
-                    onClick={() => setFormData(prev => ({ ...prev, imageUrl: img.url }))}
-                    className={`cursor-pointer rounded-2xl p-2 border transition-all text-center ${
-                      formData.imageUrl === img.url
-                        ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/50 text-blue-600'
-                        : 'border-gray-200 dark:border-gray-800 hover:border-gray-400'
-                    }`}
-                  >
-                    <div className="relative h-16 w-full rounded-xl overflow-hidden mb-1">
-                      <img src={img.url} alt={img.label} className="w-full h-full object-cover" />
-                    </div>
-                    <span className="text-[11px] font-bold block truncate">{img.label}</span>
+              
+              <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-2xl p-6 bg-gray-50 dark:bg-gray-800/50 hover:bg-gray-100 transition-colors relative">
+                {isUploading ? (
+                  <div className="flex flex-col items-center gap-2 py-4">
+                    <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                    <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">Uploading to ImgBB...</span>
                   </div>
-                ))}
+                ) : formData.imageUrl ? (
+                  <div className="relative w-full h-48 rounded-xl overflow-hidden group">
+                    <img 
+                      src={formData.imageUrl} 
+                      alt="Cover Preview" 
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const input = document.getElementById('story-img-upload') as HTMLInputElement;
+                          if (input) input.click();
+                        }}
+                        className="bg-white/90 hover:bg-white text-gray-800 text-xs font-bold px-3 py-1.5 rounded-lg transition-colors"
+                      >
+                        Change Photo
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, imageUrl: '' }))}
+                        className="bg-red-600 hover:bg-red-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg transition-colors"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div 
+                    onClick={() => {
+                      const input = document.getElementById('story-img-upload') as HTMLInputElement;
+                      if (input) input.click();
+                    }}
+                    className="flex flex-col items-center gap-2 cursor-pointer py-6"
+                  >
+                    <div className="p-3 bg-white dark:bg-gray-800 rounded-full shadow-sm border border-gray-100 dark:border-gray-700 text-gray-400">
+                      <ImageIcon className="w-6 h-6" />
+                    </div>
+                    <span className="text-sm font-bold text-gray-600 dark:text-gray-400">Click to Upload Image</span>
+                    <span className="text-xs text-gray-400">Supports JPG, PNG, GIF, WebP. Max 5MB.</span>
+                  </div>
+                )}
+
+                <input
+                  id="story-img-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
               </div>
             </div>
 

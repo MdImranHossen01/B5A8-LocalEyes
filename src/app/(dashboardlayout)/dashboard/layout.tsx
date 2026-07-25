@@ -29,13 +29,11 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   const userRole = user.role || 'user';
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="flex items-start">
-        <LeftSideNav userRole={userRole} />
-        <main className="flex-1 p-6 min-w-0">
-          {children}
-        </main>
-      </div>
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+      <LeftSideNav userRole={userRole} />
+      <main className="flex-1 min-w-0 w-full p-2 sm:p-4">
+        {children}
+      </main>
     </div>
   );
 }
@@ -47,7 +45,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <SessionProvider>
+    <SessionProvider refetchOnWindowFocus={false}>
       <AuthProvider>
         <DashboardContent>{children}</DashboardContent>
       </AuthProvider>

@@ -98,11 +98,11 @@ export function TourGrid({ tours, isLoading }: TourGridProps) {
       {tours.map((tour) => (
         <div
           key={tour._id}
-          className="bg-white rounded-2xl shadow-lg overflow-hidden card-hover cursor-pointer"
+          className="bg-white rounded-2xl shadow-lg overflow-hidden card-hover cursor-pointer flex flex-col h-full"
           onClick={() => handleTourClick(tour._id)}
         >
           {/* Tour Image */}
-          <div className="relative h-48">
+          <div className="relative h-48 flex-shrink-0">
             {tour.images?.[0] ? (
               <Image
                 src={tour.images[0]}
@@ -119,7 +119,7 @@ export function TourGrid({ tours, isLoading }: TourGridProps) {
             )}
             <div className="absolute top-3 left-3">
               <span className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-sm font-semibold text-gray-900">
-                ${tour.tourFee}
+                ৳{tour.tourFee}
               </span>
             </div>
             <div className="absolute top-3 right-3">
@@ -130,29 +130,31 @@ export function TourGrid({ tours, isLoading }: TourGridProps) {
           </div>
 
           {/* Tour Content */}
-          <div className="p-6">
-            {/* Tour Title & Description */}
-            <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2">
-              {tour.title}
-            </h3>
-            <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-              {tour.description}
-            </p>
+          <div className="p-6 flex-1 flex flex-col justify-between">
+            <div>
+              {/* Tour Title & Description */}
+              <h3 className="font-bold text-lg text-gray-900 mb-2 line-clamp-2 min-h-[3.5rem]" title={tour.title}>
+                {tour.title}
+              </h3>
+              <p className="text-gray-600 text-sm mb-4 line-clamp-2 min-h-[2.5rem]">
+                {tour.description}
+              </p>
 
-            {/* Tour Details */}
-            <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
-              <div className="flex items-center">
-                <span className="mr-2">📍</span>
-                {tour.city}
-              </div>
-              <div className="flex items-center">
-                <span className="mr-2">⏱️</span>
-                {formatDuration(tour.duration)}
+              {/* Tour Details */}
+              <div className="flex items-center justify-between text-sm text-gray-600 mb-4">
+                <div className="flex items-center">
+                  <span className="mr-2">📍</span>
+                  {tour.city}
+                </div>
+                <div className="flex items-center">
+                  <span className="mr-2">⏱️</span>
+                  {formatDuration(tour.duration)}
+                </div>
               </div>
             </div>
 
             {/* Action Button */}
-            <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+            <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-semibold mt-auto">
               View Details
             </button>
           </div>

@@ -46,6 +46,19 @@ export async function POST(request: NextRequest) {
 
     const data = await request.json();
     
+    // Check if tour exists
+    const tour = await Tour.findById(data.tour);
+    if (!tour || !tour.isActive) {
+      return NextResponse.json(
+        { error: 'This tour package no longer exists. Please browse active tours from Explore.' },
+        { status: 404 }
+      );
+    }
+
+    if (!data.guide) {
+      data.guide = tour.guide ? String(tour.guide) : '';
+    }
+
     // Validate required fields
     const requiredFields = ['guide', 'tour', 'date', 'numberOfPeople', 'totalAmount', 'name', 'email', 'phone'];
     for (const field of requiredFields) {
@@ -57,20 +70,11 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Check if tour exists and is active
-    const tour = await Tour.findById(data.tour);
-    if (!tour || !tour.isActive) {
-      return NextResponse.json(
-        { error: 'Tour is not available' },
-        { status: 400 }
-      );
-    }
-
     // Check what status values are available in the Booking model
     console.log('Checking Booking model schema...');
     
     // Get the available status enum values from the schema
-    const statusPath = Booking.schema.path('status');
+    const statusPath = Booking.schema.path('status') as any;
     if (statusPath && statusPath.enumValues) {
       console.log('Available status values:', statusPath.enumValues);
     }

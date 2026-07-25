@@ -26,5 +26,10 @@ export default function ListingManagementPage() {
     redirect('/login');
   }
 
+  // Redirect admin to manage-listings page
+  if ((session?.user as any)?.role === 'admin') {
+    redirect('/dashboard/admin/manage-listings');
+  }
+
   return <ListingManagementClient />;
 }

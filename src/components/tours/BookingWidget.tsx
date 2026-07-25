@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { toast } from 'react-hot-toast';
 
 interface Tour {
   _id: string;
@@ -12,6 +13,8 @@ interface Tour {
   tourFee: number;
   duration: number;
   maxGroupSize: number;
+  tourDate?: string;
+  tourTime?: string;
   guide: {
     _id: string;
   };
@@ -65,28 +68,29 @@ export function BookingWidget({ tour, user }: BookingWidgetProps) {
   const createBooking = async () => {
 
     if (!bookingData.name.trim()) {
-      alert('Please enter your name');
+      toast.error('Please enter your name');
       return false;
     }
 
     if (!bookingData.email.trim()) {
-      alert('Please enter your email address');
+      toast.error('Please enter your email address');
       return false;
     }
 
     if (!bookingData.phone.trim()) {
-      alert('Please enter your mobile number');
+      toast.error('Please enter your mobile number');
       return false;
     }
 
     setIsSubmitting(true);
 
     try {
+      const guideId = typeof tour.guide === 'object' ? (tour.guide?._id || tour.guide) : (tour.guide || currentUser?.id);
       const bookingPayload = {
         tourist: currentUser?.id || undefined,
-        guide: tour.guide._id,
+        guide: guideId,
         tour: tour._id,
-        date: new Date(`${bookingData.date}T${bookingData.time}`),
+        date: new Date(),
         numberOfPeople: bookingData.numberOfPeople,
         totalAmount: tour.tourFee * bookingData.numberOfPeople,
         specialRequests: bookingData.specialRequests,
@@ -108,14 +112,15 @@ export function BookingWidget({ tour, user }: BookingWidgetProps) {
 
       if (response.ok) {
         setCreatedBookingId(data.booking._id);
+        toast.success('Booking created successfully!');
         return data.booking._id;
       } else {
-        alert(data.error || 'Failed to create booking');
+        toast.error(data.error || 'Failed to create booking');
         return false;
       }
     } catch (error) {
       console.error('Booking error:', error);
-      alert('An error occurred while creating your booking');
+      toast.error('An error occurred while creating your booking');
       return false;
     } finally {
       setIsSubmitting(false);
@@ -140,6 +145,18 @@ export function BookingWidget({ tour, user }: BookingWidgetProps) {
             <span className="text-gray-600">per person</span>
           </div>
           <p className="text-sm text-gray-600">All taxes and fees included</p>
+
+          {(tour.tourDate || tour.tourTime) && (
+            <div className="mt-4 p-3 bg-blue-50/80 rounded-xl border border-blue-100 text-sm text-gray-800">
+              <span className="text-xs font-bold uppercase tracking-wider text-blue-700 block mb-1">
+                Tour Schedule
+              </span>
+              <div className="flex flex-wrap items-center gap-3 font-medium">
+                {tour.tourDate && <span>📅 {tour.tourDate}</span>}
+                {tour.tourTime && <span>⏰ {tour.tourTime}</span>}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">
@@ -183,35 +200,6 @@ export function BookingWidget({ tour, user }: BookingWidgetProps) {
               value={bookingData.phone}
               onChange={(e) => handleInputChange('phone', e.target.value)}
               placeholder="Enter your mobile number"
-              className="w-full text-gray-800 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            />
-          </div>
-
-          {/* Tour Date Picker */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tour Date
-            </label>
-            <input
-              type="date"
-              min={minDate}
-              value={bookingData.date}
-              onChange={(e) => handleInputChange('date', e.target.value)}
-              className="w-full text-gray-800 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-            />
-          </div>
-
-          {/* Tour Time Picker */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Tour Time
-            </label>
-            <input
-              type="time"
-              value={bookingData.time}
-              onChange={(e) => handleInputChange('time', e.target.value)}
               className="w-full text-gray-800 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />

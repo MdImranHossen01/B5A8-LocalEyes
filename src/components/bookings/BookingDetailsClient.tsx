@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { PaymentModal } from "../payment/PaymentModal";
 import Image from "next/image";
+import Swal from "sweetalert2";
+import { toast } from "react-hot-toast";
 
 interface Booking {
   _id: string;
@@ -93,9 +95,23 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
   };
 
   const handleStatusUpdate = async (newStatus: string) => {
-    if (!confirm(`Are you sure you want to ${newStatus} this booking?`)) {
-      return;
-    }
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you really want to mark this booking as ${newStatus}?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#2563eb',
+      cancelButtonColor: '#64748b',
+      confirmButtonText: 'Yes, proceed',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'rounded-2xl',
+        confirmButton: 'rounded-xl font-semibold px-4 py-2',
+        cancelButton: 'rounded-xl font-semibold px-4 py-2',
+      }
+    });
+
+    if (!result.isConfirmed) return;
 
     setIsUpdating(true);
     try {
@@ -109,12 +125,13 @@ export function BookingDetailsClient({ booking }: BookingDetailsClientProps) {
 
       if (response.ok) {
         setStatus(newStatus as any);
+        toast.success(`Booking status updated to ${newStatus}`);
       } else {
-        alert("Failed to update booking status");
+        toast.error("Failed to update booking status");
       }
     } catch (error) {
       console.error("Error updating booking:", error);
-      alert("An error occurred while updating the booking");
+      toast.error("An error occurred while updating the booking");
     } finally {
       setIsUpdating(false);
     }

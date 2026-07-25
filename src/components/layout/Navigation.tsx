@@ -75,7 +75,7 @@ export function Navigation() {
   };
 
   return (
-    <nav className="bg-white shadow-lg sticky top-0 z-50">
+    <nav className="bg-white shadow-lg sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4">
         <div className="relative flex justify-between items-center h-16">
           {/* --- MOBILE HAMBURGER (LEFT) --- */}
