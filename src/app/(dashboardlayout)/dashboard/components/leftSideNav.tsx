@@ -94,7 +94,7 @@ export default function LeftSideNav({ userRole }: LeftSideNavProps) {
       <aside
         id="mobile-drawer"
         aria-hidden={!isMobileOpen}
-        {...(!isMobileOpen ? { inert: '' } : {})}
+        {...(!isMobileOpen ? { inert: true } : {})}
         className={`md:hidden fixed inset-y-0 left-0 w-72 bg-white z-50 flex flex-col justify-between overflow-y-auto shadow-2xl transition-transform duration-300 ease-in-out ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
